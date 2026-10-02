@@ -1,6 +1,6 @@
 # Word Snap Showdown
 
-A two-player reading race for a young reader and a grown-up. Luna the snow fox says a word, both players race to tap it, and the grown-up's cards appear after an adjustable head start.
+A two-player reading race for a young reader and a grown-up. Luna the bunny says a word, both players race to tap it, and the grown-up's cards appear after an adjustable head start.
 
 ## Play
 

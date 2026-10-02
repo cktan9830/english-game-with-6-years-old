@@ -135,7 +135,7 @@ def stamp_version(version):
     """Point the game and the offline cache at this set of clips, so tablets drop old recordings."""
     for name, pattern, repl in (
         ("index.html", r'const VOICE_VERSION="[^"]*";', f'const VOICE_VERSION="{version}";'),
-        ("sw.js", r'const CACHE = "word-snap-[^"]*";', f'const CACHE = "word-snap-{version}";'),
+        ("sw.js", r'const VOICE = "word-snap-[^"]*";', f'const VOICE = "word-snap-{version}";'),
     ):
         path = os.path.join(ROOT, name)
         text = open(path, encoding="utf-8").read()
