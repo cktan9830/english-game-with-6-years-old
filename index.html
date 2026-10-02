@@ -68,14 +68,43 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 .luna.bounce svg{animation:hop .75s cubic-bezier(.3,1.5,.5,1)}
 .luna.wave svg{transform-origin:50% 90%;animation:sway 3.2s ease-in-out infinite}
 
-/* ---------- setup ---------- */
-.setup{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.setup-inner{max-width:800px;margin-inline:auto;padding-block:8px 48px;display:grid;gap:16px}
-.hero{display:flex;align-items:center;gap:18px;min-width:0}
-.hero .luna{width:clamp(88px,18vw,136px);flex:none}
-.hero-text{min-width:0}
-.title{margin:0;font-family:var(--font-display);font-weight:900;font-size:clamp(2.1rem,6.4vw,3.6rem);line-height:.95;text-wrap:balance;background:linear-gradient(90deg,var(--sun),var(--berry) 38%,var(--grape) 68%,var(--mint));-webkit-background-clip:text;background-clip:text;color:transparent}
-.tag{margin:.5rem 0 0;color:var(--frost);font-size:clamp(1rem,2.4vw,1.2rem);max-width:34ch}
+/* ---------- home (start screen) ---------- */
+.home{position:relative;height:100%;display:grid;place-items:center;overflow:hidden}
+.drift{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.drift i{position:absolute;bottom:-70px;font:700 clamp(1.1rem,2.6vw,1.6rem) var(--font-read);font-style:normal;color:var(--ink);background:var(--snow);padding:.15em .6em .2em;border-radius:12px;opacity:.2;box-shadow:0 4px 0 var(--snow-2);animation:drift linear infinite}
+.home-stage{position:relative;display:grid;justify-items:center;gap:clamp(6px,2vh,18px);text-align:center;padding-block:8px 56px;min-width:0;max-width:100%}
+.title{margin:0;font-family:var(--font-display);font-weight:900;font-size:clamp(2.3rem,8.2vw,5.2rem);line-height:1.05;display:flex;flex-wrap:wrap;justify-content:center;column-gap:.3em;row-gap:0}
+.title .w{display:inline-flex}
+.title .l{display:inline-block;color:var(--c);text-shadow:0 .07em 0 rgba(10,6,40,.5);animation:wave 2.6s ease-in-out infinite;animation-delay:calc(var(--i) * .09s)}
+.hello{margin:0;font-family:var(--font-display);font-weight:700;font-size:clamp(1.2rem,3.4vw,1.9rem);color:var(--frost)}
+.luna-wrap{position:relative;width:clamp(150px,40vmin,340px);max-width:100%;aspect-ratio:1;display:grid;place-items:center}
+.luna-btn{appearance:none;border:0;background:none;padding:0;width:74%;border-radius:50%}
+.luna.idle svg{animation:float 3s ease-in-out infinite}
+.luna.idle.bounce svg{animation:hop .75s cubic-bezier(.3,1.5,.5,1)}
+.orbit{position:absolute;inset:0;pointer-events:none;animation:spin 12s linear infinite}
+.orbit svg{position:absolute;width:15%;height:auto;animation:twinkle 1.8s ease-in-out infinite}
+.orbit path{fill:var(--sun);stroke:var(--sun-deep);stroke-width:5;stroke-linejoin:round}
+.orbit svg:nth-child(1){top:0;left:42.5%}
+.orbit svg:nth-child(2){bottom:10%;left:2%;width:11%;animation-delay:.6s}
+.orbit svg:nth-child(3){bottom:10%;right:2%;width:12%;animation-delay:1.2s}
+.orbit svg:nth-child(2) path{fill:var(--berry);stroke:var(--berry-deep)}
+.orbit svg:nth-child(3) path{fill:var(--mint);stroke:var(--mint-deep)}
+.start{appearance:none;border:0;border-radius:999px;position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:.3em;padding:.36em 1.2em .4em .95em;font-family:var(--font-display);font-weight:900;font-size:clamp(2rem,6.6vw,3.4rem);line-height:1.1;color:var(--ink);background:linear-gradient(180deg,#ffe08a,var(--sun));box-shadow:0 .14em 0 var(--sun-deep),0 .5em 1.2em rgba(255,201,60,.35);animation:breathe 1.8s ease-in-out infinite}
+.start svg{width:.85em;height:.85em;flex:none}
+.start svg path{fill:var(--berry)}
+.start::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.8),transparent);transform:skewX(-18deg);animation:shine 3.2s ease-in-out infinite}
+.start:active{animation:none;transform:translateY(.08em) scale(.98);box-shadow:0 .05em 0 var(--sun-deep)}
+.hint{margin:0;font-size:clamp(.95rem,2.2vw,1.1rem);color:var(--snow-2);opacity:.8}
+.gear{position:absolute;right:0;bottom:4px;width:48px;height:48px;border-radius:50%;border:0;padding:0;display:grid;place-items:center;background:rgba(253,251,255,.14);color:var(--snow);opacity:.8}
+.gear svg{width:26px;height:26px}
+.gear:active{transform:scale(.92)}
+
+/* ---------- settings sheet ---------- */
+.overlay.sheet-ov{place-items:start center;background:rgba(22,17,64,.72)}
+.sheet{width:100%;max-width:820px;margin-block:auto;display:grid;gap:14px;padding:16px;border-radius:28px;background:linear-gradient(180deg,var(--night-2),var(--night));border:1px solid rgba(253,251,255,.16);box-shadow:0 30px 80px rgba(0,0,0,.45);transform-origin:100% 100%;animation:sheetIn .32s cubic-bezier(.3,1.3,.5,1) both}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sheet-head h2{margin:0;font-family:var(--font-display);font-weight:900;font-size:clamp(1.5rem,3.6vw,2rem);color:var(--snow)}
+.btn.done{background:var(--snow);color:var(--ink)}
 .panel{background:rgba(253,251,255,.07);border:1px solid rgba(253,251,255,.14);border-radius:24px;padding:18px;display:grid;gap:14px;min-width:0}
 .panel h2{margin:0;font-family:var(--font-display);font-weight:700;font-size:1.25rem;color:var(--snow)}
 .label{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--frost);font-weight:700}
@@ -222,8 +251,17 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 @keyframes yes{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1.04)}}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
 @keyframes glow{0%{box-shadow:0 0 0 0 rgba(255,201,60,0)}30%{box-shadow:0 0 0 6px rgba(255,201,60,.85),0 0 60px rgba(255,201,60,.55)}100%{box-shadow:0 0 0 0 rgba(255,201,60,0)}}
+@keyframes wave{0%,55%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-.16em) rotate(-5deg)}40%{transform:translateY(.02em) rotate(3deg)}}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-7%) rotate(3deg)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes twinkle{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.35) rotate(25deg)}}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+@keyframes shine{0%,55%{left:-60%}85%,100%{left:130%}}
+@keyframes drift{from{transform:translateY(0) rotate(var(--r,0deg))}to{transform:translateY(-125vh) rotate(calc(var(--r,0deg) * -1))}}
+@keyframes sheetIn{from{opacity:0;transform:scale(.86) translateY(24px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){
-  .flake{display:none}
+  .flake,.drift{display:none}
+  .title .l,.luna.idle svg,.orbit,.orbit svg,.start,.start::after,.sheet{animation:none!important}
   .luna-eyes,.luna.bounce svg,.luna.wave svg,.listen svg,.slot.pop,.side.glow,.cards:not(.veiled) .card,.card.yes,.card.nope{animation:none!important}
   .big-star.go{animation:none;opacity:1;transform:none}
   .plus{animation:fadeHold 1.25s ease-out forwards}
@@ -251,15 +289,36 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
 <canvas id="fx" aria-hidden="true"></canvas>
 
 <main class="app">
-  <section id="setup" class="setup" aria-labelledby="gameTitle">
-    <div class="setup-inner">
-      <header class="hero">
-        <div class="luna wave" data-luna></div>
-        <div class="hero-text">
-          <h1 class="title" id="gameTitle">Word Snap Showdown</h1>
-          <p class="tag">Luna the snow fox says a word. Race to find it and tap it first!</p>
-        </div>
-      </header>
+  <section id="home" class="home" aria-labelledby="gameTitle">
+    <div class="drift" id="drift" aria-hidden="true"></div>
+    <div class="home-stage">
+      <h1 class="title" id="gameTitle">Word Snap Showdown</h1>
+      <p class="hello" id="hello">Ready to read?</p>
+      <div class="luna-wrap">
+        <div class="orbit" id="orbit" aria-hidden="true"></div>
+        <button type="button" class="luna-btn" id="lunaBtn" aria-label="Say hi to Luna"><div class="luna idle" id="homeLuna" data-luna></div></button>
+      </div>
+      <button type="button" class="start" id="startBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.6v14.8a1.1 1.1 0 0 0 1.7.93l11.6-7.4a1.1 1.1 0 0 0 0-1.86L8.7 3.67A1.1 1.1 0 0 0 7 4.6z"/></svg><span>Start!</span></button>
+      <p class="hint">Tap Luna to say hi!</p>
+    </div>
+    <button type="button" class="gear" id="gearBtn" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.55 3.52"/><circle cx="12" cy="12" r="6.2" fill="none" stroke="currentColor" stroke-width="3.6"/></svg></button>
+  </section>
+
+  <section id="game" class="game" hidden aria-label="Game board">
+    <div class="side top" id="side1"></div>
+    <div class="hub">
+      <div class="luna" data-luna></div>
+      <div class="bubble" id="bubble" aria-live="polite">Listen…</div>
+      <button type="button" class="round-btn hear" id="hearBtn" aria-label="Hear the word again" disabled></button>
+      <button type="button" class="round-btn pause" id="pauseBtn" aria-label="Pause the game"></button>
+    </div>
+    <div class="side bottom" id="side0"></div>
+  </section>
+</main>
+
+<div id="settingsOv" class="overlay sheet-ov" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <div class="sheet-head"><h2 id="settingsTitle">Settings</h2><button type="button" class="btn done" id="doneBtn">Done</button></div>
 
       <div class="panel">
         <h2>Who's playing?</h2>
@@ -300,25 +359,12 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
       </div>
 
       <div class="actions">
-        <button class="btn big" id="startBtn" type="button">Start the showdown</button>
         <button class="btn" id="testBtn" type="button">Hear Luna</button>
         <button class="btn" id="fsBtn" type="button" hidden>Full screen</button>
       </div>
       <p class="note" id="ttsNote" hidden>This browser can't speak words out loud, so Luna's voice is off. Each round, the word appears on your side for you to say, then her cards appear.</p>
     </div>
-  </section>
-
-  <section id="game" class="game" hidden aria-label="Game board">
-    <div class="side top" id="side1"></div>
-    <div class="hub">
-      <div class="luna" data-luna></div>
-      <div class="bubble" id="bubble" aria-live="polite">Listen…</div>
-      <button type="button" class="round-btn hear" id="hearBtn" aria-label="Hear the word again" disabled></button>
-      <button type="button" class="round-btn pause" id="pauseBtn" aria-label="Pause the game"></button>
-    </div>
-    <div class="side bottom" id="side0"></div>
-  </section>
-</main>
+</div>
 
 <div id="win" class="overlay" hidden>
   <div class="win-card">
@@ -327,7 +373,7 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
     <p class="winner" id="winnerName"></p>
     <p class="final" id="finalScore"></p>
     <div class="win-luna"><div class="luna" data-luna></div><div class="bubble" id="winBubble"></div></div>
-    <div class="actions center"><button class="btn big" id="againBtn" type="button">Play again</button><button class="btn" id="settingsBtn" type="button">Change settings</button></div>
+    <div class="actions center"><button class="btn big" id="againBtn" type="button">Play again</button><button class="btn" id="settingsBtn" type="button">Home</button></div>
   </div>
 </div>
 
@@ -335,7 +381,7 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
   <div class="panel pause-card">
     <h2>Paused</h2>
     <p id="pauseScore"></p>
-    <div class="actions center"><button class="btn big" id="resumeBtn" type="button">Keep playing</button><button class="btn" id="newBtn" type="button">New game</button><button class="btn" id="quitBtn" type="button">Settings</button></div>
+    <div class="actions center"><button class="btn big" id="resumeBtn" type="button">Keep playing</button><button class="btn" id="newBtn" type="button">New game</button><button class="btn" id="quitBtn" type="button">Home</button></div>
   </div>
 </div>
 
@@ -528,7 +574,7 @@ function renderScore(p,popFrom){
 }
 function renderHeadStart(){const el=$("hs");if(el)el.textContent=`Your wait: ${fmtSec(S.delay)}`;}
 function setBubble(t){$("bubble").textContent=t;}
-function bounceLuna(){document.querySelectorAll(".luna:not(.wave)").forEach(l=>{l.classList.remove("bounce");void l.offsetWidth;l.classList.add("bounce");});}
+function bounceLuna(){document.querySelectorAll(".luna:not(.wave):not(.idle)").forEach(l=>{l.classList.remove("bounce");void l.offsetWidth;l.classList.add("bounce");});}
 function setListen(p,text,word){$("listen"+p).innerHTML=`${SPEAKER}<span>${esc(text)}</span>${word?`<b class="say">${esc(word)}</b>`:""}`;$("listen"+p).hidden=false;}
 function renderCards(p,words){
   const el=$("cards"+p);el.innerHTML="";
@@ -580,7 +626,7 @@ function startGame(){
   token++;clearTimers();
   S.scores=[0,0];S.round=0;S.delay=S.settings.headStart;S.streak=[0,0];S.word="";
   S.level=levelById(S.settings.level);S.deck=shuffle(S.level.pool.slice());S.deckPos=0;S.target=S.settings.target;
-  $("setup").hidden=true;$("win").hidden=true;$("pauseOv").hidden=true;$("game").hidden=false;
+  $("home").hidden=true;$("settingsOv").hidden=true;$("win").hidden=true;$("pauseOv").hidden=true;$("game").hidden=false;
   renderNames();renderScore(0);renderScore(1);renderHeadStart();resetSides();$("hearBtn").disabled=true;
   S.phase="intro";
   const g=guard();
@@ -700,10 +746,43 @@ function openPause(){
   $("pauseOv").hidden=false;
 }
 function resume(){$("pauseOv").hidden=true;audio();S.phase="race";nextRound();}
-function showSetup(){
+function showHome(){
   token++;clearTimers();hush();S.phase="setup";
-  $("game").hidden=true;$("win").hidden=true;$("pauseOv").hidden=true;$("setup").hidden=false;
-  renderSetup();
+  $("game").hidden=true;$("win").hidden=true;$("pauseOv").hidden=true;$("settingsOv").hidden=true;$("home").hidden=false;
+  renderHome();
+}
+function renderHome(){
+  const named=(S.settings.kid||"").trim();
+  $("hello").textContent=named?`Hi, ${named}!`:"Ready to read?";
+}
+function openSettings(){
+  renderSetup();$("settingsOv").hidden=false;$("settingsOv").scrollTop=0;
+  try{$("doneBtn").focus({preventScroll:true});}catch(e){}
+}
+function closeSettings(){
+  if($("settingsOv").hidden)return;
+  $("settingsOv").hidden=true;hush();renderHome();
+  try{$("gearBtn").focus({preventScroll:true});}catch(e){}
+}
+const HI_LINES=["Hi {kid}! Let's read some words!","Hello {kid}! Tap Start to play!","I love reading with you, {kid}!","Ready, {kid}? Let's beat {dad}!"];
+function hiLuna(){
+  audio();pickVoice();
+  const l=$("homeLuna");l.classList.remove("bounce");void l.offsetWidth;l.classList.add("bounce");
+  setTimeout(()=>l.classList.remove("bounce"),800);
+  burstAt(l,20,.8);sfx.sparkle();
+  if(voiceOn())speak(fill(pick(HI_LINES)),{rate:.92});
+}
+function buildTitle(){
+  const cols=["var(--sun)","var(--berry)","var(--mint)","var(--frost)","#c9b0ff"];
+  let i=0;const h=$("gameTitle"),text=h.textContent.trim();
+  h.setAttribute("aria-label",text);
+  h.innerHTML=text.split(" ").map(w=>`<span class="w" aria-hidden="true">${[...w].map(ch=>{const s=`<span class="l" style="--i:${i};--c:${cols[i%cols.length]}">${esc(ch)}</span>`;i++;return s;}).join("")}</span>`).join(" ");
+}
+function buildHomeDecor(){
+  $("orbit").innerHTML=starSvg("")+starSvg("")+starSvg("");
+  if(REDUCED)return;
+  const words=shuffle(CVC.slice()).slice(0,9);
+  $("drift").innerHTML=words.map((w,i)=>`<i style="left:${(3+i*10.4+Math.random()*3).toFixed(1)}%;--r:${Math.round(Math.random()*24-12)}deg;animation-duration:${(16+Math.random()*10).toFixed(1)}s;animation-delay:-${(Math.random()*24).toFixed(1)}s">${w}</i>`).join("");
 }
 
 /* ---------- setup screen ---------- */
@@ -728,7 +807,7 @@ function renderSteps(){
   $("steps").innerHTML=steps.map(s=>`<li>${s}</li>`).join("");
 }
 function bind(){
-  $("kidIn").addEventListener("input",e=>{S.settings.kid=e.target.value;saveSettings();renderSteps();});
+  $("kidIn").addEventListener("input",e=>{S.settings.kid=e.target.value;saveSettings();renderSteps();renderHome();});
   $("dadIn").addEventListener("input",e=>{S.settings.dad=e.target.value;saveSettings();renderSteps();});
   $("levels").addEventListener("click",e=>{const b=e.target.closest("[data-level]");if(!b)return;S.settings.level=b.dataset.level;saveSettings();document.querySelectorAll("#levels .level").forEach(x=>x.setAttribute("aria-checked",String(x===b)));});
   $("targets").addEventListener("click",e=>{const b=e.target.closest("[data-target]");if(!b)return;S.settings.target=Number(b.dataset.target);saveSettings();document.querySelectorAll("#targets button").forEach(x=>x.setAttribute("aria-checked",String(x===b)));renderSteps();});
@@ -741,9 +820,14 @@ function bind(){
   $("pauseBtn").addEventListener("click",openPause);
   $("resumeBtn").addEventListener("click",resume);
   $("newBtn").addEventListener("click",startGame);
-  $("quitBtn").addEventListener("click",showSetup);
+  $("quitBtn").addEventListener("click",showHome);
   $("againBtn").addEventListener("click",startGame);
-  $("settingsBtn").addEventListener("click",showSetup);
+  $("settingsBtn").addEventListener("click",showHome);
+  $("gearBtn").addEventListener("click",openSettings);
+  $("doneBtn").addEventListener("click",closeSettings);
+  $("settingsOv").addEventListener("click",e=>{if(e.target===e.currentTarget)closeSettings();});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSettings();});
+  $("lunaBtn").addEventListener("click",hiLuna);
   $("judge1").addEventListener("click",e=>{const b=e.target.closest("[data-ok]");if(b)judge(b.dataset.ok==="1");});
   document.addEventListener("visibilitychange",()=>{if(document.hidden){if(!$("game").hidden)openPause();}else if(!$("game").hidden)wakeLock();});
 }
@@ -767,11 +851,12 @@ function init(data){
   if(HAS_TTS){pickVoice();try{speechSynthesis.addEventListener("voiceschanged",pickVoice);}catch(e){speechSynthesis.onvoiceschanged=pickVoice;}}
   else $("ttsNote").hidden=false;
   if(document.fullscreenEnabled)$("fsBtn").hidden=false;
-  bind();renderSetup();
+  buildTitle();buildHomeDecor();
+  bind();renderSetup();renderHome();
   if(data.inGame&&Array.isArray(data.scores)){
     S.level=levelById(S.settings.level);S.deck=shuffle(S.level.pool.slice());S.deckPos=0;S.target=S.settings.target;
     S.scores=[data.scores[0]|0,data.scores[1]|0];S.round=data.round|0;S.delay=typeof data.delay==="number"?data.delay:S.settings.headStart;S.streak=[0,0];
-    $("setup").hidden=true;$("game").hidden=false;renderNames();renderScore(0);renderScore(1);renderHeadStart();resetSides();
+    $("home").hidden=true;$("game").hidden=false;renderNames();renderScore(0);renderScore(1);renderHeadStart();resetSides();
     S.phase="race";openPause();
   }
 }
