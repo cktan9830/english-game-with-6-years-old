@@ -13,6 +13,14 @@
   "p/hi2": "889ac922476f",
   "p/hi3": "cf6308a749ac",
   "p/hi4": "86f88e02d015",
+  "p/hi_dad": "a1995785d07a",
+  "p/hi_daddy": "4378558cc8c9",
+  "p/hi_elyse": "e07e984efe95",
+  "p/hi_mama": "3f474a1e7ecf",
+  "p/hi_mommy": "34bb443b2e73",
+  "p/hi_mum": "ab3b82a68eaa",
+  "p/hi_mummy": "37397f23315c",
+  "p/hi_papa": "d4705372640e",
   "p/intro10": "6edab268388c",
   "p/intro15": "659e7caaaad2",
   "p/intro5": "fece9c0354fa",
@@ -177,6 +185,6 @@
   "w/you": "58407f59b064",
   "w/zip": "726c86657990"
  },
- "version": "21e49df5",
+ "version": "90fa4d92",
  "voice": "af_heart|en-us|v3"
 }

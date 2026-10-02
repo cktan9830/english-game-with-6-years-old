@@ -41,6 +41,14 @@ LINE_SPEED = 1.0     # normal speed
 WORD_LIFT = 1.18     # reading words: a touch less (+2.9 semitones) so every sound stays crisp
 WORD_SPEED = 0.95    # normal speed, a hair slower so single words aren't clipped
 SETTINGS_TAG = f"{VOICE}|{LANG}|v3"
+# Names the voice would mispronounce, respelled the way they should sound.
+SAY_AS = {"Elyse": "Eleese"}   # "eh-LEES" (the voice reads "Elyse" as "EH-lize")
+
+
+def spoken(text):
+    for name, sound in SAY_AS.items():
+        text = re.sub(rf"\b{name}\b", sound, text)
+    return text
 
 
 def read_game():
@@ -89,7 +97,7 @@ def main():
     args = ap.parse_args()
 
     lines, words = read_game()
-    jobs = [("p/" + k, t, LINE_SPEED, LINE_LIFT) for k, t in lines.items()]
+    jobs = [("p/" + k, spoken(t), LINE_SPEED, LINE_LIFT) for k, t in lines.items()]
     jobs += [("w/" + w, w + ".", WORD_SPEED, WORD_LIFT) for w in words]
 
     list_path = os.path.join(ROOT, "audio", "list.json")

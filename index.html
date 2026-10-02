@@ -416,7 +416,15 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
   "hi2": "Hello! Tap Start to play!",
   "hi3": "I love reading with you!",
   "hi4": "Ready? Let's go, go, go!",
-  "hello": "Hi! I'm Luna! Let's read some words together!"
+  "hello": "Hi! I'm Luna! Let's read some words together!",
+  "hi_elyse": "Hello Elyse!",
+  "hi_daddy": "Hello Daddy!",
+  "hi_dad": "Hello Dad!",
+  "hi_papa": "Hello Papa!",
+  "hi_mummy": "Hello Mummy!",
+  "hi_mommy": "Hello Mommy!",
+  "hi_mum": "Hello Mum!",
+  "hi_mama": "Hello Mama!"
 }
 </script>
 <script>
@@ -504,8 +512,16 @@ const HI_LINES=["hi1","hi2","hi3","hi4"];
 
 /* ---------- settings ---------- */
 const KEY="word-snap-showdown-settings";
-const DEFAULTS={kid:"",dad:"Daddy",level:"easy",target:10,headStart:1.5,autoBalance:true,bonus:true,sound:true,voice:true};
-function loadSettings(){try{const raw=localStorage.getItem(KEY);if(raw)return Object.assign({},DEFAULTS,JSON.parse(raw));}catch(e){}return Object.assign({},DEFAULTS);}
+const DEFAULTS={kid:"Elyse",dad:"Daddy",level:"easy",target:10,headStart:1.5,autoBalance:true,bonus:true,sound:true,voice:true};
+function loadSettings(){
+  let s=Object.assign({},DEFAULTS);
+  try{const raw=localStorage.getItem(KEY);if(raw)s=Object.assign(s,JSON.parse(raw));}catch(e){}
+  if(!String(s.kid||"").trim())s.kid=DEFAULTS.kid;
+  if(!String(s.dad||"").trim())s.dad=DEFAULTS.dad;
+  return s;
+}
+/* A recorded "Hello <name>!" clip exists for the default names and common family names. */
+function nameKey(name){const k="hi_"+String(name||"").trim().toLowerCase();return LINES[k]?k:null;}
 function saveSettings(){try{localStorage.setItem(KEY,JSON.stringify(S.settings));}catch(e){}}
 const S={settings:loadSettings(),scores:[0,0],round:0,delay:1.5,streak:[0,0],level:LEVELS[0],deck:[],deckPos:0,target:10,word:"",phase:"setup",shown:[false,false],frozenUntil:[0,0]};
 const kidName=()=>(S.settings.kid||"").trim()||"Superstar";
@@ -546,7 +562,7 @@ function speak(text,opt){
   later(finish,1500+text.length*90/rate);
 }
 /* Main voice: Luna's recorded clips (audio/p/* for lines, audio/w/* for words), played back to back. */
-const VOICE_VERSION="21e49df5";  /* set by tools/make_voice.py whenever the clips change */
+const VOICE_VERSION="90fa4d92";  /* set by tools/make_voice.py whenever the clips change */
 const clipCache=new Map();
 let sayGen=0,sayNodes=[];
 function loadClip(key){
@@ -707,10 +723,16 @@ function startGame(){
   renderNames();renderScore(0);renderScore(1);renderHeadStart();resetSides();$("hearBtn").disabled=true;
   S.phase="intro";
   const g=guard();
-  setBubble(`First to ${S.target} stars wins!`);bounceLuna();
   if(voiceOn())preloadClips(["p/says","p/kid1","p/dad1"].concat([...new Set(S.level.pool)].map(w=>"w/"+w)));
-  const intro="intro"+S.target;
-  say(["p/"+intro],LINES[intro]||`Ready? Listen to the word, then find it! First to ${S.target} stars wins!`,{onend:g(()=>later(g(nextRound),400))});
+  const intro="intro"+S.target,introText=LINES[intro]||`Ready? Listen to the word, then find it! First to ${S.target} stars wins!`;
+  const runIntro=g(()=>{
+    setBubble(`First to ${S.target} stars wins!`);bounceLuna();
+    say(["p/"+intro],introText,{onend:g(()=>later(g(nextRound),400))});
+  });
+  const kid=kidName(),dad=dadName(),hello=`Hello ${kid}! Hello ${dad}!`,kk=nameKey(kid),dk=nameKey(dad);
+  setBubble(hello);bounceLuna();sfx.sparkle();
+  if(kk&&dk)say(["p/"+kk,"p/"+dk],hello,{gap:.25,onend:()=>later(runIntro,250)});
+  else speak(hello,{onend:()=>later(runIntro,250)});
 }
 function nextRound(){
   token++;clearTimers();hush();
@@ -848,7 +870,7 @@ function hiLuna(){
   const l=$("homeLuna");l.classList.remove("bounce");void l.offsetWidth;l.classList.add("bounce");
   setTimeout(()=>l.classList.remove("bounce"),800);
   burstAt(l,20,.8);sfx.sparkle();
-  if(voiceOn()){const k=pick(HI_LINES);say(["p/"+k],LINES[k]);}
+  if(voiceOn()){const kk=nameKey(kidName()),k=pick(kk?HI_LINES.concat([kk,kk]):HI_LINES);say(["p/"+k],LINES[k]);}
 }
 function buildTitle(){
   const cols=["var(--sun)","var(--berry)","var(--mint)","var(--frost)","#c9b0ff"];

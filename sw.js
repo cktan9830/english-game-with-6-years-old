@@ -1,7 +1,7 @@
 // Keeps Word Snap Showdown playable offline. The game page is fetched fresh when online
 // (so updates show up), with the saved copy used when there is no internet.
 // Luna's voice clips (listed in audio/list.json) are saved in the background on first open.
-const CACHE = "word-snap-21e49df5";  // set by tools/make_voice.py to the voice version
+const CACHE = "word-snap-90fa4d92";  // set by tools/make_voice.py to the voice version
 const FILES = [
   "./", "index.html", "manifest.webmanifest", "audio/list.json",
   "fonts/andika-400.woff2", "fonts/andika-700.woff2",
