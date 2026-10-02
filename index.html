@@ -546,6 +546,7 @@ function speak(text,opt){
   later(finish,1500+text.length*90/rate);
 }
 /* Main voice: Luna's recorded clips (audio/p/* for lines, audio/w/* for words), played back to back. */
+const VOICE_VERSION="21e49df5";  /* set by tools/make_voice.py whenever the clips change */
 const clipCache=new Map();
 let sayGen=0,sayNodes=[];
 function loadClip(key){
@@ -553,7 +554,7 @@ function loadClip(key){
   if(!p){
     const ctx=audio();
     if(!ctx)return Promise.reject(new Error("no audio"));
-    p=fetch("audio/"+key+".mp3").then(r=>{if(!r.ok)throw new Error("missing "+key);return r.arrayBuffer();})
+    p=fetch(`audio/${key}.mp3?v=${VOICE_VERSION}`).then(r=>{if(!r.ok)throw new Error("missing "+key);return r.arrayBuffer();})
       .then(buf=>new Promise((res,rej)=>ctx.decodeAudioData(buf,res,rej)));
     clipCache.set(key,p);
     p.catch(()=>clipCache.delete(key));

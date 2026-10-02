@@ -1,7 +1,7 @@
 // Keeps Word Snap Showdown playable offline. The game page is fetched fresh when online
 // (so updates show up), with the saved copy used when there is no internet.
 // Luna's voice clips (listed in audio/list.json) are saved in the background on first open.
-const CACHE = "word-snap-v2";
+const CACHE = "word-snap-21e49df5";  // set by tools/make_voice.py to the voice version
 const FILES = [
   "./", "index.html", "manifest.webmanifest", "audio/list.json",
   "fonts/andika-400.woff2", "fonts/andika-700.woff2",
@@ -11,7 +11,7 @@ const FILES = [
 async function cacheVoice(cache) {
   try {
     const list = await (await fetch("audio/list.json", { cache: "no-cache" })).json();
-    const urls = Object.keys(list.clips).map((k) => `audio/${k}.mp3?v=${list.clips[k]}`);
+    const urls = Object.keys(list.clips).map((k) => `audio/${k}.mp3?v=${list.version}`);
     for (let i = 0; i < urls.length; i += 8) {
       await Promise.allSettled(urls.slice(i, i + 8).map(async (u) => {
         const res = await fetch(u);

@@ -117,8 +117,24 @@ def main():
             if path not in wanted:
                 os.remove(path)
 
-    json.dump({"voice": SETTINGS_TAG, "clips": clips}, open(list_path, "w"), indent=1, sort_keys=True)
-    print(f"{len(clips)} clips ({len(lines)} lines, {len(words)} words); recorded {made}.")
+    version = hashlib.sha1(json.dumps(clips, sort_keys=True).encode()).hexdigest()[:8]
+    json.dump({"voice": SETTINGS_TAG, "version": version, "clips": clips}, open(list_path, "w"), indent=1, sort_keys=True)
+    stamp_version(version)
+    print(f"{len(clips)} clips ({len(lines)} lines, {len(words)} words); recorded {made}; voice version {version}.")
+
+
+def stamp_version(version):
+    """Point the game and the offline cache at this set of clips, so tablets drop old recordings."""
+    for name, pattern, repl in (
+        ("index.html", r'const VOICE_VERSION="[^"]*";', f'const VOICE_VERSION="{version}";'),
+        ("sw.js", r'const CACHE = "word-snap-[^"]*";', f'const CACHE = "word-snap-{version}";'),
+    ):
+        path = os.path.join(ROOT, name)
+        text = open(path, encoding="utf-8").read()
+        new, n = re.subn(pattern, repl, text)
+        if n != 1:
+            raise SystemExit(f"Could not find the version line in {name}")
+        open(path, "w", encoding="utf-8").write(new)
 
 
 if __name__ == "__main__":
