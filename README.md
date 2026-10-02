@@ -17,12 +17,27 @@ Open it once while online. After that it works offline.
 
 GitHub Pages serves this repository's `main` branch. Every push to `main` updates the live game within a minute or two.
 
+## Luna's voice
+
+Luna's cheers and every reading word are pre-recorded clips in `audio/`, made with the open Kokoro text-to-speech model (voice `af_heart`, lifted slightly for a younger, livelier sound). If a clip can't play, the game falls back to the device's own voice.
+
+To change a line, edit the `<script id="lines">` block in `index.html`, then re-record from the repository root:
+
+```
+pip install kokoro-onnx soundfile
+python3 tools/make_voice.py
+```
+
+Only clips whose text changed are re-recorded. New words added to the word lists are recorded the same way.
+
 ## Files
 
 | File | What it does |
 |---|---|
 | `index.html` | The whole game |
-| `sw.js` | Keeps the game playable offline |
+| `sw.js` | Keeps the game playable offline, including Luna's voice |
+| `audio/` | Luna's recorded lines (`p/`) and reading words (`w/`) |
+| `tools/make_voice.py` | Records the voice clips |
 | `manifest.webmanifest` | App name, icon and full-screen setting |
 | `fonts/` | Andika (reading font) and Grandstander (title font) |
 | `icons/` | Home-screen icons |

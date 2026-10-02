@@ -1,12 +1,25 @@
 // Keeps Word Snap Showdown playable offline. The game page is fetched fresh when online
 // (so updates show up), with the saved copy used when there is no internet.
-const CACHE = "word-snap-v1";
+// Luna's voice clips (listed in audio/list.json) are saved in the background on first open.
+const CACHE = "word-snap-v2";
 const FILES = [
-  "./", "index.html", "manifest.webmanifest",
+  "./", "index.html", "manifest.webmanifest", "audio/list.json",
   "fonts/andika-400.woff2", "fonts/andika-700.woff2",
   "fonts/grandstander-500.woff2", "fonts/grandstander-700.woff2", "fonts/grandstander-900.woff2",
   "icons/icon-192.png", "icons/icon-512.png", "icons/icon-maskable-512.png", "icons/apple-touch-icon.png"
 ];
+async function cacheVoice(cache) {
+  try {
+    const list = await (await fetch("audio/list.json", { cache: "no-cache" })).json();
+    const urls = Object.keys(list.clips).map((k) => `audio/${k}.mp3?v=${list.clips[k]}`);
+    for (let i = 0; i < urls.length; i += 8) {
+      await Promise.allSettled(urls.slice(i, i + 8).map(async (u) => {
+        const res = await fetch(u);
+        if (res.ok) await cache.put(u.split("?")[0], res);
+      }));
+    }
+  } catch (e) { /* the game still plays clips as it fetches them */ }
+}
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting()));
 });
@@ -15,6 +28,7 @@ self.addEventListener("activate", (e) => {
     caches.keys()
       .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
+      .then(() => caches.open(CACHE).then(cacheVoice))
   );
 });
 self.addEventListener("fetch", (e) => {

@@ -385,6 +385,40 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
   </div>
 </div>
 
+<script type="application/json" id="lines">
+{
+  "intro5": "Ready? Listen to the word, then find it! First to five stars wins!",
+  "intro10": "Ready? Listen to the word, then find it! First to ten stars wins!",
+  "intro15": "Ready? Listen to the word, then find it! First to fifteen stars wins!",
+  "kid1": "Yes! You found it!",
+  "kid2": "Super reading!",
+  "kid3": "Wow! So fast!",
+  "kid4": "Brilliant! Woohoo!",
+  "kid5": "You got it! High five!",
+  "kid6": "Star reader!",
+  "kid7": "Amazing! Keep going!",
+  "kid8": "Hooray! Great job!",
+  "dad1": "Ooh, so close! You can get the next one!",
+  "dad2": "Oh no! Quick, let's catch up!",
+  "dad3": "Almost! Get ready for the next one!",
+  "says": "It says...",
+  "bonus": "Bonus round! Read this word out loud, and win two stars!",
+  "byes1": "Wow! You read it all by yourself!",
+  "byes2": "Brilliant reading! Two stars for you!",
+  "byes3": "Super star reader! Woohoo!",
+  "bno": "Good try! It says...",
+  "sayit": "Say it with me!",
+  "win1": "Hooray! You are the Word Champion! Your reading is like magic!",
+  "win2": "You did it! You're a reading superstar!",
+  "win3": "Woohoo! Champion! You read so many words!",
+  "lose": "Great game! You were so close! Let's play again and win next time!",
+  "hi1": "Hi there, superstar! Let's read some words!",
+  "hi2": "Hello! Tap Start to play!",
+  "hi3": "I love reading with you!",
+  "hi4": "Ready? Let's go, go, go!",
+  "hello": "Hi! I'm Luna! Let's read some words together!"
+}
+</script>
 <script>
 (function(){
 "use strict";
@@ -460,11 +494,13 @@ const LEVELS=[
 const levelById=id=>LEVELS.find(l=>l.id===id)||LEVELS[0];
 
 /* ---------- lines Luna says ---------- */
-const KID_ROUND=["Yes! You found it!","Super reading, {kid}!","Wow, so fast!","Brilliant, {kid}!","You got it!","Star reader!","Amazing!"];
-const DAD_ROUND=["{dad} got that one!","Ooh, {dad} was quick!","{dad} scores! You can get the next one!"];
-const BONUS_YES=["Wow! You read it all by yourself!","Brilliant reading, {kid}! Two stars!","Super star reader!"];
-const WIN_KID=["Amazing, {kid}! You are the Word Champion! Your reading is like magic!","Hooray for {kid}! You beat {dad}! What a super reader!","{kid}, you did it! {target} stars! You are a reading superstar!"];
-const WIN_DAD="Great game! {dad} wins this time. {kid}, you got {n} {stars}! Let's beat {dad} next time!";
+/* Luna's lines. Each one has a matching recording at audio/p/<key>.mp3 (made by tools/make_voice.py). */
+const LINES=JSON.parse(document.getElementById("lines").textContent);
+const KID_ROUND=["kid1","kid2","kid3","kid4","kid5","kid6","kid7","kid8"];
+const DAD_ROUND=["dad1","dad2","dad3"];
+const BONUS_YES=["byes1","byes2","byes3"];
+const WIN_KID=["win1","win2","win3"];
+const HI_LINES=["hi1","hi2","hi3","hi4"];
 
 /* ---------- settings ---------- */
 const KEY="word-snap-showdown-settings";
@@ -493,21 +529,61 @@ function pickVoice(){
   for(const re of pref){const v=en.find(x=>re.test(x.name));if(v){voice=v;return;}}
   voice=en.find(x=>/GB/i.test(x.lang))||en.find(x=>/US/i.test(x.lang))||en[0]||null;
 }
-const voiceOn=()=>HAS_TTS&&S.settings.voice;
+const HAS_AC=!!(window.AudioContext||window.webkitAudioContext);
+const voiceOn=()=>S.settings.voice&&(HAS_AC||HAS_TTS);
+/* Backup voice: the device's built-in speech, used only if a recording can't be played. */
 function speak(text,opt){
   opt=opt||{};let done=false;const finish=()=>{if(done)return;done=true;if(opt.onend)opt.onend();};
-  const rate=opt.rate||.9;
-  if(!voiceOn()){later(finish,600+text.length*40);return;}
+  const rate=opt.rate||1;
+  if(!HAS_TTS||!S.settings.voice){later(finish,600+text.length*40);return;}
   try{
     if(speechSynthesis.speaking||speechSynthesis.pending)speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(text);
-    if(voice){u.voice=voice;u.lang=voice.lang;}else u.lang="en-GB";
-    u.rate=rate;u.pitch=opt.pitch||1.12;u.onend=finish;u.onerror=finish;
+    if(voice){u.voice=voice;u.lang=voice.lang;}else u.lang="en-US";
+    u.rate=rate;u.pitch=opt.pitch||1.35;u.onend=finish;u.onerror=finish;
     speechSynthesis.speak(u);
   }catch(e){later(finish,300);return;}
   later(finish,1500+text.length*90/rate);
 }
-function hush(){if(HAS_TTS){try{speechSynthesis.cancel();}catch(e){}}}
+/* Main voice: Luna's recorded clips (audio/p/* for lines, audio/w/* for words), played back to back. */
+const clipCache=new Map();
+let sayGen=0,sayNodes=[];
+function loadClip(key){
+  let p=clipCache.get(key);
+  if(!p){
+    const ctx=audio();
+    if(!ctx)return Promise.reject(new Error("no audio"));
+    p=fetch("audio/"+key+".mp3").then(r=>{if(!r.ok)throw new Error("missing "+key);return r.arrayBuffer();})
+      .then(buf=>new Promise((res,rej)=>ctx.decodeAudioData(buf,res,rej)));
+    clipCache.set(key,p);
+    p.catch(()=>clipCache.delete(key));
+  }
+  return p;
+}
+function preloadClips(keys){
+  let i=0;const next=()=>{if(i>=keys.length)return;loadClip(keys[i++]).catch(()=>{}).then(next);};
+  for(let n=0;n<4;n++)next();
+}
+function say(keys,text,opt){
+  opt=opt||{};let done=false;const finish=()=>{if(done)return;done=true;if(opt.onend)opt.onend();};
+  if(!S.settings.voice){later(finish,600+text.length*40);return;}
+  hush();
+  const gen=sayGen,ctx=audio();let started=false;
+  const viaTTS=()=>{if(gen!==sayGen||started)return;sayGen++;speak(text,{rate:opt.rate,onend:finish});};
+  if(!ctx){viaTTS();return;}
+  const slow=later(viaTTS,2500);
+  Promise.all(keys.map(loadClip)).then(bufs=>{
+    if(gen!==sayGen||started)return;
+    started=true;clearTimeout(slow);
+    const gap=opt.gap==null?.12:opt.gap;let t=ctx.currentTime+.03;
+    bufs.forEach((b,i)=>{const s=ctx.createBufferSource();s.buffer=b;s.connect(ctx.destination);s.start(t);sayNodes.push(s);t+=b.duration+(i<bufs.length-1?gap:0);});
+    later(()=>{if(gen===sayGen)finish();},(t-ctx.currentTime)*1000+80);
+  }).catch(viaTTS);
+}
+function hush(){
+  sayGen++;sayNodes.forEach(n=>{try{n.stop();}catch(e){}});sayNodes=[];
+  if(HAS_TTS){try{speechSynthesis.cancel();}catch(e){}}
+}
 
 /* ---------- sound effects ---------- */
 let ac=null;
@@ -631,7 +707,9 @@ function startGame(){
   S.phase="intro";
   const g=guard();
   setBubble(`First to ${S.target} stars wins!`);bounceLuna();
-  speak(`Ready, ${kidName()}? Listen to the word, then find it. First to ${S.target} stars wins!`,{rate:.95,onend:g(()=>later(g(nextRound),400))});
+  if(voiceOn())preloadClips(["p/says","p/kid1","p/dad1"].concat([...new Set(S.level.pool)].map(w=>"w/"+w)));
+  const intro="intro"+S.target;
+  say(["p/"+intro],LINES[intro]||`Ready? Listen to the word, then find it! First to ${S.target} stars wins!`,{onend:g(()=>later(g(nextRound),400))});
 }
 function nextRound(){
   token++;clearTimers();hush();
@@ -647,7 +725,7 @@ function nextRound(){
   let kidAt;
   if(voiceOn()){
     setListen(0,"Listen!");setListen(1,"Listen!");setBubble("Listen…");
-    later(g(()=>speak(word,{rate:.8})),300);
+    later(g(()=>say(["w/"+word],word,{rate:.85})),300);
     kidAt=1000;
   }else{
     setListen(0,`Listen to ${dadName()}!`);setListen(1,"Say this word out loud:",word);setBubble(`Listen to ${dadName()}!`);
@@ -688,13 +766,13 @@ function roundWon(p,btn){
   const before=S.scores[p];S.scores[p]=Math.min(S.target,before+1);renderScore(p,before);
   balance(p);
   burstAt(btn,p===0?34:20);sfx.point();floatPlus(p,"+1");glow(p);
-  const line=fill(pick(p===0?KID_ROUND:DAD_ROUND));
+  const key=pick(p===0?KID_ROUND:DAD_ROUND),line=LINES[key];
   setBubble(line);bounceLuna();
   const who=p===0?kidName():dadName();
   later(g(()=>{
     for(const q of [0,1])showReveal(q,word,q===p?"You got it!":`${who} got it!`);
     lightUp(word);
-    speak(`${line} It says, ${word}.`,{rate:.85,onend:g(()=>later(g(nextRound),1100))});
+    say(["p/"+key,"p/says","w/"+word],`${line} It says, ${word}.`,{onend:g(()=>later(g(nextRound),1100))});
   }),650);
 }
 function bonusRound(word){
@@ -706,7 +784,7 @@ function bonusRound(word){
   $("judge1").hidden=false;
   setBubble(`Bonus round! Read this word to ${dadName()}!`);bounceLuna();sfx.sparkle();
   burstAt(k.querySelector(".badge"),16,.7);
-  speak(`Bonus round! Read this word to ${dadName()}. You can win two stars!`,{rate:.95});
+  say(["p/bonus"],LINES.bonus);
 }
 function judge(ok){
   if(S.phase!=="bonus")return;
@@ -718,11 +796,11 @@ function judge(ok){
   if(ok){
     const before=S.scores[0];S.scores[0]=Math.min(S.target,before+2);renderScore(0,before);
     burstAt($("reveal0"),46,1.2);sfx.point();floatPlus(0,"+2");glow(0);
-    const line=fill(pick(BONUS_YES));setBubble(line);bounceLuna();
-    speak(`${line} ${word}!`,{rate:.88,onend:g(()=>later(g(nextRound),1100))});
+    const key=pick(BONUS_YES),line=LINES[key];setBubble(line);bounceLuna();
+    say(["p/"+key,"w/"+word],`${line} ${word}!`,{onend:g(()=>later(g(nextRound),1100))});
   }else{
     setBubble(`It says “${word}”. Say it with me!`);
-    speak(`Good try! It says, ${word}. Say it with me. ${word}.`,{rate:.8,onend:g(()=>later(g(nextRound),1400))});
+    say(["p/bno","w/"+word,"p/sayit","w/"+word],`Good try! It says, ${word}. Say it with me. ${word}.`,{gap:.3,rate:.85,onend:g(()=>later(g(nextRound),1400))});
   }
 }
 function endGame(p){
@@ -731,12 +809,12 @@ function endGame(p){
   $("champTitle").textContent=kidWon?"Champion!":"Great game!";
   $("winnerName").textContent=kidWon?kid:`${dad} wins this time`;
   $("finalScore").textContent=`${kid} ${S.scores[0]} · ${dad} ${S.scores[1]}`;
-  const line=kidWon?fill(pick(WIN_KID),{target:S.target}):fill(WIN_DAD,{n:n,stars:n===1?"star":"stars"});
-  $("winBubble").textContent=line;
+  const key=kidWon?pick(WIN_KID):"lose",line=LINES[key];
+  $("winBubble").textContent=kidWon?line:`${line} You got ${n} ${n===1?"star":"stars"}!`;
   const ov=$("win");["bs1","bs2","bs3"].forEach(id=>$(id).classList.remove("go"));ov.hidden=false;void ov.offsetWidth;
   later(()=>{sfx.win();rain(4800);bounceLuna();},120);
   ["bs1","bs2","bs3"].forEach((id,i)=>later(()=>{const s=$(id);s.classList.add("go");sfx.pop(i);burstAt(s,26,1.1);},500+i*420));
-  later(()=>speak(line,{rate:.92,pitch:1.15}),2000);
+  later(()=>say(["p/"+key],line),2000);
   try{$("againBtn").focus({preventScroll:true});}catch(e){}
 }
 function openPause(){
@@ -764,13 +842,12 @@ function closeSettings(){
   $("settingsOv").hidden=true;hush();renderHome();
   try{$("gearBtn").focus({preventScroll:true});}catch(e){}
 }
-const HI_LINES=["Hi {kid}! Let's read some words!","Hello {kid}! Tap Start to play!","I love reading with you, {kid}!","Ready, {kid}? Let's beat {dad}!"];
 function hiLuna(){
   audio();pickVoice();
   const l=$("homeLuna");l.classList.remove("bounce");void l.offsetWidth;l.classList.add("bounce");
   setTimeout(()=>l.classList.remove("bounce"),800);
   burstAt(l,20,.8);sfx.sparkle();
-  if(voiceOn())speak(fill(pick(HI_LINES)),{rate:.92});
+  if(voiceOn()){const k=pick(HI_LINES);say(["p/"+k],LINES[k]);}
 }
 function buildTitle(){
   const cols=["var(--sun)","var(--berry)","var(--mint)","var(--frost)","#c9b0ff"];
@@ -792,14 +869,14 @@ function renderSetup(){
   $("targets").innerHTML=[5,10,15].map(t=>`<button type="button" role="radio" id="tg-${t}" data-target="${t}" aria-checked="${S.settings.target===t}">${starSvg("")}${t}</button>`).join("");
   $("hsIn").value=S.settings.headStart;$("hsOut").textContent=fmtSec(S.settings.headStart);
   document.querySelectorAll(".toggle").forEach(t=>t.setAttribute("aria-checked",String(!!S.settings[t.dataset.key])));
-  if(!HAS_TTS){$("tg-voice").disabled=true;$("testBtn").hidden=true;}
+  if(!HAS_AC&&!HAS_TTS){$("tg-voice").disabled=true;$("testBtn").hidden=true;}
   renderSteps();
 }
 function renderSteps(){
   const kid=esc(kidName()),dad=esc(dadName());
   const steps=[
     `Lay the tablet flat between you. <b>${kid}</b> sits at the pink side, <b>${dad}</b> at the green side.`,
-    S.settings.voice&&HAS_TTS?`Luna says a word. Find it on your side and tap it fast.`:`${dad} says the word shown on the green side. Find it and tap it fast.`,
+    voiceOn()?`Luna says a word. Find it on your side and tap it fast.`:`${dad} says the word shown on the green side. Find it and tap it fast.`,
     `Tap a wrong word and you freeze for 2 seconds.`
   ];
   if(S.settings.bonus)steps.push(`Every 5th word is a bonus: ${kid} reads it out loud to ${dad} for 2 stars.`);
@@ -814,9 +891,9 @@ function bind(){
   $("hsIn").addEventListener("input",e=>{S.settings.headStart=Number(e.target.value);$("hsOut").textContent=fmtSec(S.settings.headStart);saveSettings();});
   document.querySelectorAll(".toggle").forEach(t=>t.addEventListener("click",()=>{const k=t.dataset.key;S.settings[k]=!S.settings[k];t.setAttribute("aria-checked",String(S.settings[k]));saveSettings();renderSteps();}));
   $("startBtn").addEventListener("click",startGame);
-  $("testBtn").addEventListener("click",()=>{audio();pickVoice();sfx.sparkle();if(voiceOn())speak(`Hi ${kidName()}! I'm Luna. Let's read some words!`,{rate:.92});});
+  $("testBtn").addEventListener("click",()=>{audio();pickVoice();sfx.sparkle();if(voiceOn())say(["p/hello"],LINES.hello);});
   $("fsBtn").addEventListener("click",()=>{try{if(document.fullscreenElement)document.exitFullscreen();else{const r=document.documentElement.requestFullscreen();if(r&&r.catch)r.catch(()=>{});}}catch(e){}});
-  $("hearBtn").addEventListener("click",()=>{if(S.phase==="race"&&voiceOn()){speak(S.word,{rate:.72});bounceLuna();}});
+  $("hearBtn").addEventListener("click",()=>{if(S.phase==="race"&&voiceOn()){say(["w/"+S.word],S.word,{rate:.75});bounceLuna();}});
   $("pauseBtn").addEventListener("click",openPause);
   $("resumeBtn").addEventListener("click",resume);
   $("newBtn").addEventListener("click",startGame);
@@ -841,7 +918,7 @@ function buildSnow(){
 function init(data){
   data=data||{};
   if(data.settings)S.settings=Object.assign({},DEFAULTS,data.settings);
-  if(!HAS_TTS)S.settings.voice=false;
+  if(!HAS_AC&&!HAS_TTS)S.settings.voice=false;
   document.querySelectorAll("[data-luna]").forEach(el=>{el.innerHTML=LUNA;});
   $("hearBtn").innerHTML=SPEAKER;$("pauseBtn").innerHTML=PAUSE;
   for(const p of [0,1])$("side"+p).innerHTML=sideHTML(p);
@@ -849,7 +926,7 @@ function init(data){
   buildSnow();
   FX.c=$("fx");FX.ctx=FX.c.getContext("2d");fxResize();addEventListener("resize",fxResize);
   if(HAS_TTS){pickVoice();try{speechSynthesis.addEventListener("voiceschanged",pickVoice);}catch(e){speechSynthesis.onvoiceschanged=pickVoice;}}
-  else $("ttsNote").hidden=false;
+  if(!HAS_AC&&!HAS_TTS)$("ttsNote").hidden=false;
   if(document.fullscreenEnabled)$("fsBtn").hidden=false;
   buildTitle();buildHomeDecor();
   bind();renderSetup();renderHome();
