@@ -19,7 +19,7 @@ GitHub Pages serves this repository's `main` branch. Every push to `main` update
 
 ## Luna's voice
 
-Luna's cheers and every reading word are pre-recorded clips in `audio/`, made with the open Kokoro text-to-speech model (voice `af_heart`, lifted slightly for a younger, livelier sound). If a clip can't play, the game falls back to the device's own voice.
+Luna's cheers and every reading word are pre-recorded clips in `audio/`, made with the open Kokoro text-to-speech model (voice `af_heart`, pitched up for a cute, child-like sound at normal speed). If a clip can't play, the game falls back to the device's own voice.
 
 To change a line, edit the `<script id="lines">` block in `index.html`, then re-record from the repository root:
 

@@ -540,7 +540,7 @@ function speak(text,opt){
     if(speechSynthesis.speaking||speechSynthesis.pending)speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(text);
     if(voice){u.voice=voice;u.lang=voice.lang;}else u.lang="en-US";
-    u.rate=rate;u.pitch=opt.pitch||1.35;u.onend=finish;u.onerror=finish;
+    u.rate=rate;u.pitch=opt.pitch||1.6;u.onend=finish;u.onerror=finish;
     speechSynthesis.speak(u);
   }catch(e){later(finish,300);return;}
   later(finish,1500+text.length*90/rate);

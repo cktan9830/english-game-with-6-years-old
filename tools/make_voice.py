@@ -3,7 +3,7 @@
 
 Uses the open Kokoro text-to-speech model to speak every line in the
 <script id="lines"> block of index.html and every word in the game's word
-lists, then gives the voice a younger, brighter lift and saves small MP3s:
+lists, then gives the voice a cute, child-like lift at normal speed and saves small MP3s:
 
     audio/p/<line key>.mp3   Luna's cheers and instructions
     audio/w/<word>.mp3       each reading word, spoken slowly and clearly
@@ -34,12 +34,13 @@ MODEL_FILES = ("kokoro-v1.0.onnx", "voices-v1.0.bin")
 
 VOICE = "af_heart"   # Kokoro's best-rated voice; the highest and most lively of its American voices
 LANG = "en-us"
-# A "lift" plays the clip back faster, which raises the pitch and brightens the voice.
-LINE_LIFT = 1.14     # cheers: about +2.3 semitones and 14% faster, for a younger, high-energy Luna
-LINE_SPEED = 1.0
-WORD_LIFT = 1.08     # reading words: a gentler lift (+1.3 semitones) so every sound stays clear
-WORD_SPEED = 0.82    # spoken slowly: about 0.89x after the lift
-SETTINGS_TAG = f"{VOICE}|{LANG}|v2"
+# A "lift" raises the pitch and the voice's tone together (a cute, child-like sound),
+# then stretches the clip back to its original length so Luna talks at normal speed.
+LINE_LIFT = 1.22     # cheers: about +3.4 semitones
+LINE_SPEED = 1.0     # normal speed
+WORD_LIFT = 1.18     # reading words: a touch less (+2.9 semitones) so every sound stays crisp
+WORD_SPEED = 0.95    # normal speed, a hair slower so single words aren't clipped
+SETTINGS_TAG = f"{VOICE}|{LANG}|v3"
 
 
 def read_game():
@@ -69,7 +70,8 @@ def record(kokoro, text, speed, lift, out_path):
     samples, sr = kokoro.create(text, voice=VOICE, speed=speed, lang=LANG)
     samples = samples / max(1e-6, float(np.abs(samples).max())) * 0.89
     trim = "silenceremove=start_periods=1:start_threshold=-45dB"
-    chain = f"asetrate={int(sr * lift)},aresample={sr},{trim},areverse,{trim},areverse,adelay=20,apad=pad_dur=0.05"
+    chain = (f"asetrate={int(sr * lift)},aresample={sr},atempo={1 / lift:.5f},"
+             f"{trim},areverse,{trim},areverse,adelay=20,apad=pad_dur=0.05")
     with tempfile.NamedTemporaryFile(suffix=".wav") as tmp:
         sf.write(tmp.name, samples, sr)
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
