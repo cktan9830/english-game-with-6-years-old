@@ -7,6 +7,7 @@ lists, then gives the voice a cute, child-like lift at normal speed and saves sm
 
     audio/p/<line key>.mp3   Luna's cheers and instructions
     audio/w/<word>.mp3       each reading word, spoken slowly and clearly
+    audio/s/<letter>.mp3     each letter's sound for Robot Talk ("c... a... t")
     audio/list.json          every clip, used by sw.js to work offline
 
 Only clips whose text or voice settings changed are re-recorded.
@@ -90,6 +91,113 @@ def record(kokoro, text, speed, lift, out_path):
         )
 
 
+# ---------- letter sounds for Robot Talk ----------
+# A letter's sound is cut out of a short syllable rather than spoken alone, because the
+# model can't say a lone consonant cleanly. Each recipe is (carrier phonemes, how to cut,
+# milliseconds of vowel to keep, length to stretch hums and hisses to).
+#   "before": the consonant before the vowel starts      "tail": the sound after the vowel ends
+#   "whole":  the whole carrier (vowels)
+SOUND_REV = "s2"
+SOUNDS = {
+    # hisses and puffs, cut before the vowel
+    "s": ("sɑː", "before", 0, 380), "f": ("fɑː", "before", 0, 380), "h": ("hɑː", "before", 25, None),
+    # pops: a short burst with a trace of vowel so they can be heard
+    "k": ("kɑː", "before", 15, None), "t": ("tɑː", "before", 15, None), "p": ("pɑː", "before", 15, None),
+    "b": ("bɑː", "before", 55, None), "d": ("dɑː", "before", 55, None), "g": ("ɡɑː", "before", 55, None),
+    "j": ("ʤɑː", "before", 55, None),
+    # glides need a little vowel
+    "w": ("wɑː", "rise", 60, None), "y": ("jɑː", "rise", 60, None),
+    # hums and buzzes are longest at the end of a syllable
+    "m": ("ɑːm", "tail-nasal", 0, 380), "n": ("ɑːn", "tail-nasal", 0, 380),
+    "l": ("ɑːl", "tail-drop70", 0, 340), "v": ("ɑːv", "tail-drop45", 0, 340),
+    "z": ("ɑːz", "tail-hiss", 0, 380), "x": ("ɑks", "tail-unvoiced", 0, None),
+    "r": ("ɹː", "whole", 0, 340),
+    # short vowels
+    "a": ("æː", "whole", 0, None), "e": ("ɛː", "whole", 0, None), "i": ("ɪː", "whole", 0, None),
+    "o": ("ɑː", "whole", 0, None), "u": ("ʌː", "whole", 0, None),
+}
+
+
+def _frames(x, sr):
+    import numpy as np
+    hop, n = int(.01 * sr), int(.02 * sr)
+    out = []
+    for i in range(0, len(x) - n, hop):
+        f = x[i:i + n]
+        w = f * np.hanning(n)
+        ac = np.correlate(w, w, "full")[n - 1:]
+        lo, hi = int(sr / 450), int(sr / 90)
+        sp = np.abs(np.fft.rfft(w))
+        fq = np.fft.rfftfreq(n, 1 / sr)
+        out.append((np.sqrt((f ** 2).mean()), ac[lo:hi].max() / max(1e-9, ac[0]), (sp * fq).sum() / max(1e-9, sp.sum())))
+    return np.array(out), hop
+
+
+def cut_sound(kokoro, letter):
+    import numpy as np
+    ph, how, keep_ms, _ = SOUNDS[letter]
+    x, sr = kokoro.create(ph, voice=VOICE, speed=1.0, lang=LANG, is_phonemes=True)
+    x = x / max(1e-6, float(np.abs(x).max()))
+    F, hop = _frames(x, sr)
+    rms, voiced, bright = F[:, 0], F[:, 1], F[:, 2]
+    peak = rms.max()
+    active = np.where(rms > 0.04 * peak)[0]
+    first, last = int(active[0]), int(active[-1])
+    keep = int(keep_ms / 1000 * sr)
+    if how == "whole":
+        return x[max(0, (first - 1) * hop):(last + 3) * hop], sr
+    if how == "before":
+        on = next((i for i in range(first, len(F) - 3)
+                   if all(voiced[i:i + 3] > .6) and all(rms[i:i + 3] > .2 * peak)), first)
+        return x[max(0, (first - 1) * hop):on * hop + keep], sr
+    if how == "rise":
+        sm = np.convolve(rms, np.ones(3) / 3, "same")
+        d = np.r_[sm[3:] - sm[:-3], [0, 0, 0]]
+        lo, hi = first + 4, first + int(.6 * (len(F) - first))
+        on = lo + int(np.argmax(d[lo:hi]))
+        return x[max(0, (first - 1) * hop):on * hop + keep], sr
+    # tail cuts: after the vowel's loudest point, keep the longest stretch that sounds like the consonant
+    top = int(np.argmax(rms))
+    test = {
+        "tail-nasal": lambda i: voiced[i] > .6 and bright[i] < 1000,
+        "tail-hiss": lambda i: bright[i] > 4000,
+        "tail-unvoiced": lambda i: voiced[i] < .6 or rms[i] < .2 * peak,
+        "tail-drop70": lambda i: rms[i] < .7 * peak,
+        "tail-drop45": lambda i: rms[i] < .45 * peak,
+    }[how]
+    best, run_start = (top + 1, top + 1), None
+    for i in range(top + 1, last + 2):
+        if i <= last and test(i):
+            run_start = i if run_start is None else run_start
+        elif run_start is not None:
+            if i - run_start > best[1] - best[0]:
+                best = (run_start, i)
+            run_start = None
+    return x[best[0] * hop:(best[1] + 1) * hop], sr
+
+
+def record_sound(kokoro, letter, out_path):
+    import numpy as np
+    import soundfile as sf
+
+    seg, sr = cut_sound(kokoro, letter)
+    seg = seg / max(1e-6, float(np.abs(seg).max())) * 0.85
+    stretch_ms = SOUNDS[letter][3]
+    chain = []
+    if stretch_ms and len(seg) / sr < stretch_ms / 1000:
+        chain.append(f"rubberband=tempo={len(seg) / sr / (stretch_ms / 1000):.4f}")
+    chain += [f"asetrate={int(sr * WORD_LIFT)}", f"aresample={sr}", f"atempo={1 / WORD_LIFT:.5f}",
+              "afade=t=in:d=0.008", "areverse", "afade=t=in:d=0.02", "areverse", "adelay=20", "apad=pad_dur=0.04"]
+    with tempfile.NamedTemporaryFile(suffix=".wav") as tmp:
+        sf.write(tmp.name, seg, sr)
+        os.makedirs(os.path.dirname(out_path), exist_ok=True)
+        subprocess.run(
+            ["ffmpeg", "-y", "-loglevel", "error", "-i", tmp.name, "-af", ",".join(chain),
+             "-ac", "1", "-ar", "24000", "-c:a", "libmp3lame", "-b:a", "48k", out_path],
+            check=True,
+        )
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--model-dir", default=os.path.expanduser("~/.cache/kokoro"))
@@ -117,8 +225,17 @@ def main():
             made += 1
         clips[key] = sig
 
+    for letter, recipe in SOUNDS.items():
+        key = "s/" + letter
+        sig = hashlib.sha1(f"{SETTINGS_TAG}|{SOUND_REV}|{WORD_LIFT}|{recipe}".encode()).hexdigest()[:12]
+        out = os.path.join(ROOT, "audio", key + ".mp3")
+        if args.force or old.get(key) != sig or not os.path.exists(out):
+            record_sound(kokoro, letter, out)
+            made += 1
+        clips[key] = sig
+
     wanted = {os.path.join(ROOT, "audio", k + ".mp3") for k in clips}
-    for sub in ("p", "w"):
+    for sub in ("p", "w", "s"):
         folder = os.path.join(ROOT, "audio", sub)
         for name in os.listdir(folder) if os.path.isdir(folder) else []:
             path = os.path.join(folder, name)
