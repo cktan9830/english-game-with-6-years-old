@@ -122,6 +122,13 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 .sheet-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .sheet-head h2{margin:0;font-family:var(--font-display);font-weight:900;font-size:clamp(1.5rem,3.6vw,2rem);color:var(--snow)}
 .btn.done{background:var(--snow);color:var(--ink)}
+.sync-row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px}
+.sync-row .field{flex:1;min-width:min(100%,220px)}
+.sync-row label.btn{cursor:pointer}
+.code-chip{display:inline-flex;align-items:center;gap:8px;padding:.55em 1em;border-radius:999px;background:rgba(253,251,255,.1);color:var(--frost);font-weight:700}
+.code-chip b{font-family:var(--font-display);font-weight:900;color:var(--snow);letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+#backupStatus:empty{display:none}
 .panel{background:rgba(253,251,255,.07);border:1px solid rgba(253,251,255,.14);border-radius:24px;padding:18px;display:grid;gap:14px;min-width:0}
 .panel h2{margin:0;font-family:var(--font-display);font-weight:700;font-size:1.25rem;color:var(--snow)}
 .label{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--frost);font-weight:700}
@@ -494,6 +501,28 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
         </div>
       </div>
 
+      <div class="panel" id="syncPanel">
+        <h2>Keep the sticker book safe</h2>
+        <p class="note" id="syncStatus" aria-live="polite"></p>
+        <div id="syncOnline">
+          <div class="sync-row" id="syncJoin">
+            <label class="field" for="codeIn"><span class="label">Family code</span><input id="codeIn" type="text" maxlength="16" placeholder="ABCD-1234-EFGH" autocomplete="off" autocapitalize="characters" spellcheck="false"></label>
+            <button class="btn done" id="codeBtn" type="button">Connect</button>
+          </div>
+          <div class="sync-row" id="syncLinked" hidden>
+            <span class="code-chip">Family code <b id="codeShow"></b></span>
+            <button class="btn" id="syncBtn" type="button">Save now</button>
+            <button class="btn" id="unlinkBtn" type="button">Disconnect</button>
+          </div>
+        </div>
+        <div class="sync-row">
+          <button class="btn" id="backupBtn" type="button">Save a backup file</button>
+          <label class="btn" for="restoreIn">Restore from a file</label>
+          <input class="vh" type="file" id="restoreIn" accept=".json,application/json">
+        </div>
+        <p class="note" id="backupStatus" aria-live="polite"></p>
+      </div>
+
       <div class="panel">
         <h2>How to play</h2>
         <ol class="steps" id="steps"></ol>
@@ -683,22 +712,125 @@ const BOOK_KEY="word-snap-sticker-book";
 const BOOK_LEVELS=[
   {at:0,name:"Plain book"},{at:10,name:"Rainbow book"},{at:25,name:"Ribbon book"},{at:45,name:"Sparkly book"},
   {at:70,name:"Jewel book"},{at:100,name:"Royal book"},{at:140,name:"Magic golden book"}];
+/* Each tablet keeps its own stickers ("mine") and a copy of the other tablets' stickers ("others",
+   fetched from the family Google Sheet). The book shows them all added together, so two tablets
+   playing on the same day never overwrite each other. */
 function loadBook(){
-  const b={total:0,words:{},tricky:{},seenLevel:0};
-  try{const raw=localStorage.getItem(BOOK_KEY);if(raw)Object.assign(b,JSON.parse(raw));}catch(e){}
+  const b={device:"",mine:{words:{},tricky:{}},others:{},seenLevel:0};
+  try{
+    const raw=localStorage.getItem(BOOK_KEY);
+    if(raw){const o=JSON.parse(raw);
+      if(o.mine)Object.assign(b,o);
+      else{b.mine.words=o.words||{};b.mine.tricky=o.tricky||{};b.seenLevel=o.seenLevel||0;}}
+  }catch(e){}
+  if(!/^[a-z0-9-]{6,40}$/i.test(b.device))b.device="d-"+Math.random().toString(36).slice(2,10)+Date.now().toString(36);
+  return tallyBook(b);
+}
+function tallyBook(b){
+  const words={},tricky={},add=(into,src)=>Object.keys(src||{}).forEach(k=>{into[k]=(into[k]||0)+src[k];});
+  add(words,b.mine.words);Object.values(b.others).forEach(o=>add(words,o.words));
+  Object.values(b.others).forEach(o=>add(tricky,o.tricky));add(tricky,b.mine.tricky);
+  b.words=words;b.tricky=tricky;b.total=Object.values(words).reduce((s,n)=>s+n,0);
   return b;
 }
 const BOOK=loadBook();
-function saveBook(){try{localStorage.setItem(BOOK_KEY,JSON.stringify(BOOK));}catch(e){}}
+function saveBook(){try{localStorage.setItem(BOOK_KEY,JSON.stringify({device:BOOK.device,mine:BOOK.mine,others:BOOK.others,seenLevel:BOOK.seenLevel}));}catch(e){}}
 function bookLevel(n){let l=0;BOOK_LEVELS.forEach((b,i)=>{if(n>=b.at)l=i;});return l;}
-/* A word she reads right earns a sticker; a word she misses comes back more often until she gets it right twice. */
+/* A word she reads right earns a sticker; a word she misses comes back more often on this tablet until she gets it right twice. */
 function earnSticker(word,n){
-  n=n||1;BOOK.total+=n;BOOK.words[word]=(BOOK.words[word]||0)+n;S.gameStickers+=n;
-  if(BOOK.tricky[word]){BOOK.tricky[word]--;if(BOOK.tricky[word]<=0)delete BOOK.tricky[word];}
-  saveBook();popSticker(word);
+  n=n||1;const m=BOOK.mine;m.words[word]=(m.words[word]||0)+n;S.gameStickers+=n;
+  if(m.tricky[word]){m.tricky[word]--;if(m.tricky[word]<=0)delete m.tricky[word];}
+  tallyBook(BOOK);saveBook();popSticker(word);queueSync();
 }
-function markTricky(word){BOOK.tricky[word]=2;saveBook();}
-function trickyPick(pool,avoid){const t=pool.filter(w=>BOOK.tricky[w]&&w!==avoid);return t.length&&Math.random()<.35?pick(t):null;}
+function markTricky(word){BOOK.mine.tricky[word]=2;tallyBook(BOOK);saveBook();queueSync();}
+function trickyPick(pool,avoid){const t=pool.filter(w=>BOOK.mine.tricky[w]&&w!==avoid);return t.length&&Math.random()<.35?pick(t):null;}
+
+/* ---------- saving the book online (family Google Sheet) and to a backup file ---------- */
+const SYNC_URL="";  /* the family Google Sheet's web app; only answers when the family code matches */
+const CODE_KEY="word-snap-family-code";
+const SYNC={busy:false,timer:0,ok:null,at:0,msg:""};
+function familyCode(){try{return localStorage.getItem(CODE_KEY)||"";}catch(e){return "";}}
+const tidyCode=c=>{const r=String(c||"").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,12);return (r.match(/.{1,4}/g)||[]).join("-");};
+function deviceName(){
+  const u=navigator.userAgent;
+  if(/iPad/.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1))return "iPad";
+  if(/Android/.test(u))return /Mobile/.test(u)?"Android phone":"Android tablet";
+  if(/iPhone/.test(u))return "iPhone";
+  return "Computer";
+}
+function queueSync(ms){if(!SYNC_URL||!familyCode())return;clearTimeout(SYNC.timer);SYNC.timer=setTimeout(syncNow,ms==null?4000:ms);}
+async function syncNow(){
+  const code=familyCode();
+  if(!SYNC_URL||!code||SYNC.busy)return null;
+  SYNC.busy=true;renderSync();
+  try{
+    const res=await fetch(SYNC_URL,{method:"POST",body:JSON.stringify({action:"save",code,device:BOOK.device,name:deviceName(),words:BOOK.mine.words,tricky:BOOK.mine.tricky})});
+    const data=await res.json();
+    if(!data.ok){Object.assign(SYNC,{ok:false,at:Date.now(),msg:data.error==="wrong-code"?"wrong-code":"error"});return data;}
+    const others={};
+    (data.devices||[]).forEach(d=>{if(d.device&&d.device!==BOOK.device)others[d.device]={name:d.name||"Tablet",words:d.words||{},tricky:d.tricky||{},saved:d.saved||""};});
+    BOOK.others=others;tallyBook(BOOK);saveBook();
+    Object.assign(SYNC,{ok:true,at:Date.now(),msg:""});
+    renderHome();if(!$("bookOv").hidden)renderBook();
+    return data;
+  }catch(e){Object.assign(SYNC,{ok:false,at:Date.now(),msg:"offline"});return null;}
+  finally{SYNC.busy=false;renderSync();}
+}
+function ago(t){const s=Math.round((Date.now()-t)/1000);return s<60?"just now":s<3600?`${Math.round(s/60)} min ago`:`${Math.round(s/3600)} h ago`;}
+function renderSync(){
+  const panel=$("syncPanel");if(!panel)return;
+  const code=familyCode(),on=!!(SYNC_URL&&code);
+  $("syncOnline").hidden=!SYNC_URL;
+  $("syncJoin").hidden=on;$("syncLinked").hidden=!on;
+  const st=$("syncStatus");
+  if(!SYNC_URL)st.textContent="Saved on this tablet only. Use a backup file to keep a copy.";
+  else if(!on)st.textContent="Saved on this tablet only. Type your family code to keep the book safe online and share it with your other tablet.";
+  else if(SYNC.busy)st.textContent="Saving to the family Google Sheet…";
+  else if(SYNC.ok){const names=[...new Set(Object.values(BOOK.others).map(o=>o.name))];st.textContent=`Connected ✓ Saved to the family Google Sheet ${ago(SYNC.at)}.${names.length?` Also has stickers from: ${names.join(", ")}.`:""}`;}
+  else if(SYNC.msg==="wrong-code")st.textContent="That family code isn't right. Check it and try again.";
+  else if(SYNC.msg)st.textContent="Connected, but couldn't reach the internet. It will save next time.";
+  else st.textContent="Connected to the family Google Sheet.";
+  $("codeShow").textContent=tidyCode(code);
+}
+async function connectCode(){
+  const code=tidyCode($("codeIn").value);
+  if(code.replace(/-/g,"").length!==12){SYNC.ok=false;SYNC.msg="wrong-code";renderSyncJoinError();return;}
+  try{localStorage.setItem(CODE_KEY,code);}catch(e){}
+  const data=await syncNow();
+  if(data&&data.ok===false&&data.error==="wrong-code"){try{localStorage.removeItem(CODE_KEY);}catch(e){}renderSyncJoinError();}
+  else{$("codeIn").value="";renderSync();}
+}
+function renderSyncJoinError(){renderSync();$("syncStatus").textContent="That family code isn't right. It has 12 letters and numbers, like ABCD-1234-EFGH.";}
+function disconnect(){try{localStorage.removeItem(CODE_KEY);}catch(e){}Object.assign(SYNC,{ok:null,msg:""});renderSync();}
+async function backupFile(){
+  const data={app:"word-snap-sticker-book",version:2,saved:new Date().toISOString(),child:kidName(),words:BOOK.words,mine:BOOK.mine};
+  const name=`${kidName().replace(/[^A-Za-z0-9]+/g,"-")||"sticker"}-sticker-book-${new Date().toISOString().slice(0,10)}.json`;
+  const blob=new Blob([JSON.stringify(data,null,1)],{type:"application/json"});
+  try{
+    const file=new File([blob],name,{type:"application/json"});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:"Sticker book backup"});return;}
+  }catch(e){if(e&&e.name==="AbortError")return;}
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},3000);
+}
+/* Restoring never removes stickers: each word keeps whichever count is higher. */
+function restoreFile(file){
+  const r=new FileReader();
+  r.onload=()=>{
+    let d=null;try{d=JSON.parse(r.result);}catch(e){}
+    const st=$("backupStatus");
+    if(!d||d.app!=="word-snap-sticker-book"||!d.words){st.textContent="That file isn't a sticker book backup.";return;}
+    const others={};Object.values(BOOK.others).forEach(o=>Object.keys(o.words||{}).forEach(k=>{others[k]=(others[k]||0)+o.words[k];}));
+    let added=0;
+    Object.keys(d.words).forEach(w=>{
+      const want=Math.max(0,Math.floor(Number(d.words[w])||0)-(others[w]||0)),have=BOOK.mine.words[w]||0;
+      if(/^[a-z]{1,15}$/.test(w)&&want>have){BOOK.mine.words[w]=want;added+=want-have;}
+    });
+    tallyBook(BOOK);saveBook();renderHome();queueSync(500);
+    st.textContent=added?`Restored ${added} ${added===1?"sticker":"stickers"} from the backup.`:"The book already has everything in that backup.";
+  };
+  r.readAsText(file);
+}
 function popSticker(word){
   const host=!$("turn").hidden?$("tbar0"):$("side0");if(!host)return;
   const el=document.createElement("div");el.className="sticker-pop";el.textContent=PICS[word]||EMOJI[word]||"⭐";
@@ -766,7 +898,7 @@ function renderBook(){
   $("tricky").innerHTML=tricky.length?`Tricky words (they'll come up more often): <b>${tricky.map(esc).join(", ")}</b>`:"";
 }
 function openBook(){
-  audio();renderBook();
+  audio();renderBook();queueSync(0);
   const ov=$("bookOv");ov.hidden=false;ov.scrollTop=0;
   const lvl=bookLevel(BOOK.total);
   if(lvl>BOOK.seenLevel){
@@ -1247,6 +1379,7 @@ function endGame(p){
   $("finalScore").textContent=`${kid} ${S.scores[0]} · ${dad} ${S.scores[1]}`;
   const key=kidWon?pick(WIN_KID):"lose",line=LINES[key];
   $("winBubble").textContent=kidWon?line:`${line} You got ${n} ${n===1?"star":"stars"}!`;
+  queueSync(300);
   const got=S.gameStickers,lvl=bookLevel(BOOK.total),up=lvl>BOOK.seenLevel,ws=$("winStickers");
   ws.hidden=!got;$("winBookBtn").hidden=!got;
   if(got)ws.innerHTML=`<span class="mini-book">${bookSVG(lvl)}</span><span><b>+${got} ${got===1?"sticker":"stickers"}</b><em>${up?"Your sticker book got prettier! Open it to see.":`for ${esc(kid)}'s sticker book`}</em></span>`;
@@ -1279,7 +1412,7 @@ function renderHome(){
   $("bookBtnCount").textContent=`${BOOK.total} ${BOOK.total===1?"sticker":"stickers"} · ${BOOK_LEVELS[bookLevel(BOOK.total)].name}`;
 }
 function openSettings(){
-  renderSetup();$("settingsOv").hidden=false;$("settingsOv").scrollTop=0;
+  renderSetup();renderSync();$("backupStatus").textContent="";$("settingsOv").hidden=false;$("settingsOv").scrollTop=0;
   try{$("doneBtn").focus({preventScroll:true});}catch(e){}
 }
 function closeSettings(){
@@ -1342,6 +1475,13 @@ function bind(){
   document.querySelectorAll(".toggle").forEach(t=>t.addEventListener("click",()=>{const k=t.dataset.key;S.settings[k]=!S.settings[k];t.setAttribute("aria-checked",String(S.settings[k]));saveSettings();renderSteps();}));
   document.querySelectorAll("[data-game]").forEach(b=>b.addEventListener("click",()=>startMode(b.dataset.game)));
   $("bookBtn").addEventListener("click",openBook);
+  $("codeIn").addEventListener("input",e=>{const v=tidyCode(e.target.value);if(v!==e.target.value)e.target.value=v;});
+  $("codeIn").addEventListener("keydown",e=>{if(e.key==="Enter")connectCode();});
+  $("codeBtn").addEventListener("click",connectCode);
+  $("syncBtn").addEventListener("click",()=>syncNow());
+  $("unlinkBtn").addEventListener("click",disconnect);
+  $("backupBtn").addEventListener("click",backupFile);
+  $("restoreIn").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];if(f)restoreFile(f);e.target.value="";});
   $("winBookBtn").addEventListener("click",()=>{showHome();openBook();});
   $("bookDone").addEventListener("click",closeBook);
   $("bookOv").addEventListener("click",e=>{if(e.target===e.currentTarget)closeBook();});
@@ -1365,7 +1505,7 @@ function bind(){
   document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeSettings();closeBook();}});
   $("lunaBtn").addEventListener("click",hiLuna);
   $("judge1").addEventListener("click",e=>{const b=e.target.closest("[data-ok]");if(b)judge(b.dataset.ok==="1");});
-  document.addEventListener("visibilitychange",()=>{if(document.hidden){if(inGame())openPause();}else if(inGame())wakeLock();});
+  document.addEventListener("visibilitychange",()=>{if(document.hidden){if(inGame())openPause();syncNow();}else{if(inGame())wakeLock();queueSync(800);}});
 }
 function buildSnow(){
   if(REDUCED)return;let h="";
@@ -1388,7 +1528,8 @@ function init(data){
   if(!HAS_AC&&!HAS_TTS)$("ttsNote").hidden=false;
   if(document.fullscreenEnabled)$("fsBtn").hidden=false;
   buildTitle();buildHomeDecor();
-  bind();renderSetup();renderHome();
+  bind();renderSetup();renderHome();renderSync();
+  queueSync(1200);
 }
 init({});
 if("serviceWorker" in navigator&&/^https?:$/.test(location.protocol)){addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{});});}
