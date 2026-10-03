@@ -8,6 +8,7 @@ lists, then gives the voice a cute, child-like lift at normal speed and saves sm
     audio/p/<line key>.mp3   Luna's cheers and instructions
     audio/w/<word>.mp3       each reading word, spoken slowly and clearly
     audio/s/<letter>.mp3     each letter's sound for Robot Talk ("c... a... t")
+    audio/n/<number>.mp3     every number from 0 to 100 for the maths games
     audio/list.json          every clip, used by sw.js to work offline
 
 Only clips whose text or voice settings changed are re-recorded.
@@ -44,6 +45,19 @@ WORD_SPEED = 0.95    # normal speed, a hair slower so single words aren't clippe
 SETTINGS_TAG = f"{VOICE}|{LANG}|v3"
 # Names the voice would mispronounce, respelled the way they should sound.
 SAY_AS = {"Elyse": "Eleese"}   # "eh-LEES" (the voice reads "Elyse" as "EH-lize")
+
+
+ONES = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen".split()
+TENS = "twenty thirty forty fifty sixty seventy eighty ninety".split()
+
+
+def number_word(n):
+    if n < 20:
+        return ONES[n]
+    if n == 100:
+        return "one hundred"
+    t, o = divmod(n, 10)
+    return TENS[t - 2] + ("-" + ONES[o] if o else "")
 
 
 def spoken(text):
@@ -207,6 +221,7 @@ def main():
     lines, words = read_game()
     jobs = [("p/" + k, spoken(t), LINE_SPEED, LINE_LIFT) for k, t in lines.items()]
     jobs += [("w/" + w, w + ".", WORD_SPEED, WORD_LIFT) for w in words]
+    jobs += [("n/" + str(n), number_word(n) + ".", WORD_SPEED, WORD_LIFT) for n in range(101)]
 
     list_path = os.path.join(ROOT, "audio", "list.json")
     old = {}
@@ -235,7 +250,7 @@ def main():
         clips[key] = sig
 
     wanted = {os.path.join(ROOT, "audio", k + ".mp3") for k in clips}
-    for sub in ("p", "w", "s"):
+    for sub in ("p", "w", "s", "n"):
         folder = os.path.join(ROOT, "audio", sub)
         for name in os.listdir(folder) if os.path.isdir(folder) else []:
             path = os.path.join(folder, name)

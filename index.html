@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <title>Word Snap Showdown</title>
-<meta name="description" content="A two-player reading race: Luna the bunny says a word, and a young reader races a grown-up to tap it.">
+<meta name="description" content="Reading and maths games for a young reader and a grown-up, hosted by Luna the bunny.">
 <meta name="theme-color" content="#1c1748">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -107,10 +107,39 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 .book-btn small{font-family:var(--font-read);font-weight:700;color:var(--frost);font-size:.95rem}
 .book-btn:active{transform:scale(.97)}
 .mini-book svg{display:block;width:100%;height:auto}
+/* reading / maths tabs */
+.subj{display:inline-flex;gap:6px;padding:5px;border-radius:999px;background:rgba(253,251,255,.12)}
+.subj button{appearance:none;border:0;border-radius:999px;padding:.38em 1.25em;font:900 clamp(1.05rem,2.4vw,1.4rem) var(--font-display);color:var(--snow);background:transparent}
+.subj button[aria-selected="true"]{background:var(--snow);color:var(--ink);box-shadow:0 4px 0 var(--sun-deep)}
+.games.four{grid-template-columns:repeat(4,minmax(0,1fr));width:min(100%,920px)}
+.game-btn.count{background:linear-gradient(180deg,#ffd6e6,#ff9cc6);box-shadow:0 7px 0 var(--berry-deep),0 14px 28px rgba(255,79,154,.22)}
+.game-btn.make10{background:linear-gradient(180deg,#ffdcb0,#ffad52);box-shadow:0 7px 0 #c46a10,0 14px 28px rgba(255,160,60,.25)}
+.game-btn.sum{background:linear-gradient(180deg,#d4f0ff,#86ccff);box-shadow:0 7px 0 #2f7fc2,0 14px 28px rgba(90,169,255,.25)}
+.game-btn.hop{background:linear-gradient(180deg,#e6dbff,#b897ff);box-shadow:0 7px 0 #6a43c8,0 14px 28px rgba(155,107,255,.25)}
+@media (max-width:760px){.games.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:600px){
   .games{grid-template-columns:1fr;gap:10px}
   .game-btn{grid-template-columns:auto 1fr;justify-items:start;column-gap:12px;padding:10px 16px;text-align:left}
   .game-btn .gico{grid-row:span 2;font-size:2.2rem}
+  .games.four .game-btn{grid-template-columns:none;justify-items:center;text-align:center;padding:10px 8px 12px}
+  .games.four .game-btn .gico{grid-row:auto}
+}
+/* phones held sideways: a compact start screen so every game button fits */
+@media (max-height:560px){
+  .home-stage{gap:6px;padding-block:2px 6px}
+  .title{font-size:clamp(1.5rem,7vh,2.6rem)}
+  .hello,.hint{display:none}
+  .luna-wrap{width:clamp(64px,19vh,120px)}
+  .games,.games.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .games:not(.four){grid-template-columns:repeat(3,minmax(0,1fr))}
+  .game-btn,.games.four .game-btn{grid-template-columns:none;justify-items:center;text-align:center;padding:6px 8px 8px;border-radius:20px}
+  .game-btn .gico,.games.four .game-btn .gico{font-size:1.5rem;grid-row:auto}
+  .game-btn b{font-size:1.05rem}
+  .game-btn small{display:none}
+  .subj button{padding:.22em 1em;font-size:1rem}
+  .book-btn{padding:4px 14px 4px 6px}
+  .book-btn .mini-book{width:30px}
+  .book-btn small{display:none}
 }
 .gear{position:absolute;right:0;bottom:4px;width:48px;height:48px;border-radius:50%;border:0;padding:0;display:grid;place-items:center;background:rgba(253,251,255,.14);color:var(--snow);opacity:.8}
 .gear svg{width:26px;height:26px}
@@ -276,6 +305,117 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 .sticker-pop{position:absolute;right:18px;top:-8px;font-size:clamp(2rem,5vw,3rem);line-height:1;pointer-events:none;z-index:6;filter:drop-shadow(0 0 0 #fff) drop-shadow(0 3px 6px rgba(0,0,0,.3));animation:stickerFly 1.5s ease-out forwards}
 @media (max-aspect-ratio:1/1){.tchoices{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}}
 
+/* ---------- maths games (same turn-taking board) ---------- */
+.turn.math .tstage{grid-template-rows:auto minmax(0,1fr) auto}
+.turn.math .tprompt{align-content:center;min-height:0;overflow:hidden}
+.turn.math .tchoices{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:none;height:clamp(84px,17vh,150px)}
+.ncard{appearance:none;border:0;border-radius:24px;--c:#ffe08a;background:var(--c);color:var(--ink);font:900 clamp(2.4rem,min(8vw,9vh),5rem)/1 var(--font-display);font-variant-numeric:tabular-nums;min-width:0;min-height:0;padding:0;opacity:1;box-shadow:0 7px 0 rgba(36,31,79,.35),0 12px 22px rgba(0,0,0,.2);transition:transform .08s,box-shadow .08s;animation:cardIn .3s cubic-bezier(.3,1.4,.5,1) both}
+.ncard:nth-child(2){--c:#b8f5e6;animation-delay:.05s}.ncard:nth-child(3){--c:#ffc8df;animation-delay:.1s}.ncard:nth-child(4){--c:#cdeeff;animation-delay:.15s}
+.ncard:disabled{cursor:default;color:var(--ink);opacity:1}
+.ncard:not(:disabled):active{transform:translateY(5px);box-shadow:0 2px 0 rgba(36,31,79,.35)}
+.ncard.yes{background:var(--sun);box-shadow:0 7px 0 var(--sun-deep),0 0 44px rgba(255,201,60,.85);animation:yes .5s ease-out both}
+.ncard.nope{background:var(--nope);animation:shake .42s ease-in-out both;opacity:.5}
+.ncard.right{box-shadow:0 0 0 6px var(--mint),0 7px 0 var(--mint-deep)}
+.mq{margin:0;font:900 clamp(1.2rem,3.2vw,2.1rem)/1.15 var(--font-display);color:var(--snow);text-align:center;text-wrap:balance}
+.objs{display:flex;flex-wrap:wrap;justify-content:center;align-content:center;gap:clamp(4px,1.1vw,14px);max-width:min(100%,820px);padding:14px 18px;border-radius:26px;background:rgba(253,251,255,.13);font-size:var(--os);line-height:1}
+.objs span{position:relative;display:grid;place-items:center;transition:transform .2s,opacity .45s}
+.objs.gone span{opacity:0;transform:scale(.2)}
+.objs.wiggle span{animation:shake .5s ease-in-out}
+.objs span.on{transform:scale(1.3)}
+.objs span b{position:absolute;left:50%;bottom:-.3em;transform:translateX(-50%);font:900 .4em/1 var(--font-display);background:var(--sun);color:var(--ink);border-radius:999px;padding:.14em .42em;box-shadow:0 2px 0 var(--sun-deep)}
+.eq{display:inline-flex;align-items:center;gap:.28em;background:var(--snow);color:var(--ink);font:900 clamp(2.4rem,min(9vw,10vh),6rem)/1 var(--font-display);padding:.12em .55em .16em;border-radius:24px;box-shadow:0 7px 0 var(--team-deep);font-variant-numeric:tabular-nums}
+.eq .q{color:var(--berry)}
+.eq.small{font-size:clamp(1.8rem,min(9vw,7vh),3.6rem)}
+.frames{display:flex;gap:clamp(8px,2vw,22px);flex-wrap:wrap;justify-content:center}
+.frame{display:grid;grid-template-columns:repeat(5,clamp(38px,min(7.2vw,9vh),84px));grid-auto-rows:clamp(38px,min(7.2vw,9vh),84px);gap:6px;padding:10px;border-radius:20px;background:#fff4e2;box-shadow:0 6px 0 #d99a4c}
+.frame i{display:grid;place-items:center;border-radius:14px;background:#ffe6c2;border:3px dashed #eda75a;font-size:clamp(1.3rem,min(4.4vw,5.4vh),3rem);font-style:normal;line-height:1}
+.frame i.c{border-style:solid;border-color:#ffd59a;background:#fffaf1}
+.frame i.c::before{content:"🥕"}
+.frame i.new{animation:bigpop .5s cubic-bezier(.3,1.7,.5,1) both}
+.frame.pulse i:not(.c){animation:pulse .6s ease-in-out 2}
+.groups{display:flex;align-items:center;gap:.35em;flex-wrap:wrap;justify-content:center;font-size:clamp(1.3rem,min(6.5vw,6vh),2.6rem);line-height:1.1;padding:8px 16px;border-radius:20px;background:rgba(253,251,255,.12)}
+.groups .op{font:900 1.15em var(--font-display);color:var(--sun)}
+.groups s{position:relative;text-decoration:none;opacity:.4}
+.groups s::after{content:"✕";position:absolute;inset:0;display:grid;place-items:center;color:var(--berry);font:900 .9em var(--font-display)}
+.mrev{display:grid;justify-items:center;gap:clamp(8px,1.6vh,16px);max-width:100%}
+.big-ans{font:900 clamp(3rem,12vh,7rem)/1 var(--font-display);color:var(--berry-deep)}
+.streak{font:900 clamp(.95rem,2.3vw,1.35rem)/1 var(--font-display);color:var(--ink);background:linear-gradient(90deg,#ffd970,#ff9a3c);padding:.25em .65em;border-radius:999px;box-shadow:0 3px 0 #c86f12;white-space:nowrap;animation:pulse 1s ease-in-out infinite}
+.prize{position:fixed;left:0;top:0;z-index:70;font-size:clamp(2.4rem,6vw,4rem);line-height:1;pointer-events:none;filter:drop-shadow(0 4px 8px rgba(0,0,0,.35))}
+.objs .br{flex-basis:100%;height:0}
+.cnt{position:relative;display:inline-grid;place-items:center;transition:transform .2s,opacity .45s}
+.cnt.on{transform:scale(1.3)}
+.cnt b{position:absolute;left:50%;bottom:-.3em;transform:translateX(-50%);font:900 .42em/1 var(--font-display);background:var(--sun);color:var(--ink);border-radius:999px;padding:.14em .42em;box-shadow:0 2px 0 var(--sun-deep)}
+.frame i.on{border-style:solid;border-color:var(--sun-deep);background:var(--sun);color:var(--ink);font:900 clamp(1.1rem,min(3.8vw,4.6vh),2.6rem)/1 var(--font-display)}
+.sq b.hc{position:absolute;top:-9px;left:50%;transform:translateX(-50%);font:900 .62em/1 var(--font-display);background:var(--sun);color:var(--ink);border-radius:999px;padding:.14em .42em;box-shadow:0 2px 0 var(--sun-deep);z-index:3}
+.sq.right{box-shadow:0 0 0 4px var(--mint),0 4px 0 var(--mint-deep)}
+.tbar .streak{flex:none}
+.sticker-pop.num{width:1.9em;height:1.9em;border-radius:50%;display:grid;place-items:center;font:900 clamp(1.5rem,3.6vw,2.2rem)/1 var(--font-display);color:#fff;background:radial-gradient(circle at 35% 30%,#a8dcff,#3d86ff);box-shadow:0 0 0 3px #fff}
+/* the board stays put facing her; on the grown-up's turn only the dice and question turn to face him */
+.turn.hopmode .tstage.p1{transform:none}
+.turn.hopmode .tstage.p1 .thead,.turn.hopmode .tstage.p1 .tprompt,.turn.hopmode .tstage.p1 .tcover{transform:rotate(180deg)}
+/* phones held sideways: slimmer bars, and the maths answer cards move beside the question */
+@media (max-height:560px){
+  .turn{gap:6px}
+  .tbar{padding:4px 10px;border-radius:16px}
+  .tbar .slot{width:16px;height:16px}
+  .tbar .score{font-size:1.3rem}
+  .tstage{padding:8px 10px;gap:6px;border-radius:20px}
+  .tturn{font-size:1rem;box-shadow:0 3px 0 var(--team-deep)}
+  .hub{gap:8px}
+  .hub .luna{width:40px}
+  .bubble{font-size:.95rem;padding:.35em .75em;border-radius:14px}
+  .round-btn{width:44px;height:44px}
+  .mq{font-size:1rem}
+  .ncard{font-size:clamp(1.6rem,9vh,3rem);border-radius:16px}
+  .hopq .die{--d:42px}
+  .hopq .roll{font-size:1.2rem}
+  .turn.hopmode .tstage{grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+  .turn.hopmode .tchoices{grid-column:1 / -1}
+  .turn.hopmode .hopq{justify-content:flex-start;flex-wrap:nowrap;gap:10px}
+  .turn.hopmode .hopq .mq{max-width:none}
+  .turn.hopmode .hopq .mq br{display:none}
+  .turn.hopmode .ttimer{min-width:110px}
+  .track .sq{border-radius:8px;font-size:clamp(.8rem,4.4vh,1.2rem)}
+  .track .tok{font-size:clamp(.9rem,5vh,1.4rem)}
+  .eq{font-size:clamp(1.8rem,11vh,3rem);border-radius:16px}
+  .eq.small{font-size:clamp(1.4rem,8vh,2.2rem)}
+  .groups{font-size:clamp(1rem,6vh,1.6rem)!important;padding:4px 10px}
+  .frame{grid-template-columns:repeat(5,clamp(22px,7.5vh,40px));grid-auto-rows:clamp(22px,7.5vh,40px);gap:4px;padding:6px;border-radius:14px}
+  .frame i{border-radius:8px;border-width:2px;font-size:clamp(.9rem,4.6vh,1.5rem)}
+  .objs{padding:6px 10px;gap:4px}
+  .turn.math:not(.hopmode) .tstage{grid-template-columns:minmax(0,1fr) minmax(0,36%);grid-template-rows:auto minmax(0,1fr)}
+  .turn.math:not(.hopmode) .thead{grid-column:1 / -1}
+  .turn.math:not(.hopmode) .tchoices{height:auto;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:8px}
+}
+.hopq .mq{max-width:30ch}
+.hopq .mq b{color:var(--sun);font-size:1.25em}
+/* bunny hop */
+.turn.hopmode .stars{display:none}
+.turn.hopmode .score{margin-left:auto}
+.turn.hopmode .tstage{grid-template-rows:auto auto minmax(0,1fr)}
+.turn.hopmode .tchoices{display:block;height:auto;min-height:0}
+.hopq{display:flex;align-items:center;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap}
+.die{--d:clamp(60px,9vw,92px);flex:none;width:var(--d);height:var(--d);border-radius:22%;background:#fff;box-shadow:0 6px 0 #c9bfe6,inset 0 -5px 0 #ece6ff;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:calc(var(--d) * .12)}
+.die i{width:72%;aspect-ratio:1;border-radius:50%;background:var(--ink);place-self:center;visibility:hidden}
+.die i.on{visibility:visible}
+.die.rolling{animation:shake .22s linear infinite}
+.roll{appearance:none;border:0;border-radius:999px;padding:.32em 1.1em .36em;font:900 clamp(1.6rem,4.4vw,2.6rem)/1.1 var(--font-display);color:var(--ink);background:linear-gradient(180deg,#ffe08a,var(--sun));box-shadow:0 6px 0 var(--sun-deep);animation:breathe 1.6s ease-in-out infinite}
+.roll:disabled{animation:none;opacity:.5}
+.track{display:grid;gap:clamp(4px,.8vw,8px);height:100%;min-height:0;grid-template-columns:repeat(var(--cols),minmax(0,1fr));grid-auto-rows:minmax(0,clamp(44px,13vh,124px));align-content:center}
+.sq{appearance:none;border:0;border-radius:14px;position:relative;background:rgba(253,251,255,.92);color:var(--ink);font:900 clamp(1rem,min(2.8vw,4vh),2rem)/1 var(--font-display);display:grid;place-items:center;min-height:0;min-width:0;padding:0;opacity:1;box-shadow:0 4px 0 rgba(36,31,79,.3);transition:transform .15s,box-shadow .15s,background .15s}
+.sq:nth-child(even){background:rgba(255,244,226,.95)}
+.sq:disabled{cursor:default;color:var(--ink);opacity:1}
+.sq.start{font-size:clamp(.75rem,min(1.7vw,2.6vh),1.1rem)}
+.sq.carrot::after{content:"🥕";position:absolute;right:3px;top:2px;font-size:.62em}
+.sq.finish{background:linear-gradient(180deg,#ffe08a,var(--sun))}
+.sq.finish::after{content:"🏁";position:absolute;right:3px;top:2px;font-size:.62em}
+.sq.hint{box-shadow:0 0 0 4px var(--sun),0 4px 0 rgba(36,31,79,.3);transform:scale(1.06)}
+.sq.yes{background:var(--sun);animation:yes .5s ease-out both}
+.sq.nope{background:var(--nope);animation:shake .42s ease-in-out both}
+.tok{position:absolute;bottom:-5px;font-size:clamp(1.2rem,min(3.4vw,5vh),2.4rem);line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35));z-index:2}
+.tok.t0{left:-3px}.tok.t1{right:-3px}
+.tok.jump{animation:hopjump .3s ease-out}
+
 /* ---------- sticker book ---------- */
 .book-sheet{max-width:920px}
 .book-top{display:grid;grid-template-columns:minmax(140px,230px) minmax(0,1fr);gap:20px;align-items:center}
@@ -298,6 +438,8 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 .stk{position:relative;display:grid;justify-items:center;gap:4px;min-width:0}
 .stk .disc{width:70px;height:70px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:2.2rem;line-height:1;box-shadow:0 0 0 4px #fff,0 0 0 6px #f0e2cf,0 5px 10px rgba(36,31,79,.18);transform:rotate(var(--r))}
 .stk .disc.txt{font-family:var(--font-read);font-weight:700;font-size:1.25rem;color:var(--ink);background:radial-gradient(circle at 35% 30%,#fff7c9,#ffd56a)}
+.stk .disc.num{font:900 2.1rem/1 var(--font-display);color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.25);background:radial-gradient(circle at 35% 30%,#a8dcff,#3d86ff)}
+.page h3.more{margin-top:20px}
 .stk b{font-family:var(--font-read);font-weight:700;font-size:1.05rem;color:var(--ink)}
 .stk .n{position:absolute;top:-6px;right:calc(50% - 44px);background:var(--berry);color:#fff;border-radius:999px;font:900 .8rem/1 var(--font-display);padding:4px 7px;box-shadow:0 2px 0 var(--berry-deep)}
 .page .empty{margin:0;font-size:1.1rem;color:var(--ink-soft)}
@@ -352,10 +494,12 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 @keyframes stickerFly{0%{opacity:0;transform:translateY(14px) scale(.3) rotate(-20deg)}22%{opacity:1;transform:translateY(-12px) scale(1.25) rotate(8deg)}100%{opacity:0;transform:translateY(-70px) scale(1) rotate(0)}}
 @keyframes evolve{0%{transform:scale(.55) rotate(-14deg);filter:brightness(2.2)}55%{transform:scale(1.14) rotate(5deg);filter:brightness(1.3)}100%{transform:none;filter:none}}
+@keyframes hopjump{0%{transform:translateY(0)}45%{transform:translateY(-55%) scale(1.15)}100%{transform:translateY(0)}}
 @keyframes goldGlow{0%,100%{filter:drop-shadow(0 0 6px rgba(255,201,60,.5))}50%{filter:drop-shadow(0 0 18px rgba(255,220,120,.95))}}
 @media (prefers-reduced-motion:reduce){
   .flake,.drift{display:none}
-  .title .l,.luna.idle svg,.orbit,.orbit svg,.game-btn,.game-btn::after,.sheet,.pcard,.tcover b,.sticker-pop,.book-cover.evolve svg,.bk-gold{animation:none!important}
+  .title .l,.luna.idle svg,.orbit,.orbit svg,.game-btn,.game-btn::after,.sheet,.pcard,.ncard,.tcover b,.sticker-pop,.book-cover.evolve svg,.bk-gold,.streak,.roll,.die.rolling,.tok.jump,.frame i.new{animation:none!important}
+  .prize{display:none}
   .tstage{transition:none}
   .luna-eyes,.luna.bounce svg,.luna.wave svg,.listen svg,.slot.pop,.side.glow,.cards:not(.veiled) .card,.card.yes,.card.nope{animation:none!important}
   .big-star.go{animation:none;opacity:1;transform:none}
@@ -397,10 +541,20 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
         <div class="orbit" id="orbit" aria-hidden="true"></div>
         <button type="button" class="luna-btn" id="lunaBtn" aria-label="Say hi to Luna"><div class="luna idle" id="homeLuna" data-luna></div></button>
       </div>
-      <div class="games" role="group" aria-label="Pick a game">
+      <div class="subj" role="tablist" aria-label="Pick a subject">
+        <button type="button" role="tab" id="tabRead" data-subj="read" aria-controls="gamesRead" aria-selected="true">📖 Reading</button>
+        <button type="button" role="tab" id="tabMath" data-subj="math" aria-controls="gamesMath" aria-selected="false">🔢 Maths</button>
+      </div>
+      <div class="games" id="gamesRead" role="tabpanel" aria-labelledby="tabRead">
         <button type="button" class="game-btn snap" data-game="snap" style="--d:0"><span class="gico" aria-hidden="true">⚡</span><b>Word Snap</b><small>Race to tap the word</small></button>
         <button type="button" class="game-btn robot" data-game="robot" style="--d:1"><span class="gico" aria-hidden="true">🤖</span><b>Robot Talk</b><small>Listen, then find it</small></button>
         <button type="button" class="game-btn match" data-game="match" style="--d:2"><span class="gico" aria-hidden="true">🔍</span><b>Read &amp; Match</b><small>Read, then find it</small></button>
+      </div>
+      <div class="games four" id="gamesMath" role="tabpanel" aria-labelledby="tabMath" hidden>
+        <button type="button" class="game-btn count" data-game="count" style="--d:0"><span class="gico" aria-hidden="true">🍓</span><b>Count &amp; Catch</b><small>How many?</small></button>
+        <button type="button" class="game-btn make10" data-game="make10" style="--d:1"><span class="gico" aria-hidden="true">🥕</span><b>Make Ten</b><small>Fill the basket</small></button>
+        <button type="button" class="game-btn sum" data-game="sum" style="--d:2"><span class="gico" aria-hidden="true">➕</span><b>Sum Snap</b><small>Add and take away</small></button>
+        <button type="button" class="game-btn hop" data-game="hop" style="--d:3"><span class="gico" aria-hidden="true">🎲</span><b>Bunny Hop</b><small>Roll and race</small></button>
       </div>
       <button type="button" class="book-btn" id="bookBtn"><span class="mini-book" id="miniBook" aria-hidden="true"></span><span><b id="bookBtnTitle">My Sticker Book</b><small id="bookBtnCount">0 stickers</small></span></button>
       <p class="hint">Tap Luna to say hi!</p>
@@ -455,6 +609,8 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
       <h3>Words I can read</h3>
       <div class="stickers" id="stickers"></div>
       <p class="tricky" id="tricky" hidden></p>
+      <h3 class="more" id="numHead" hidden>Numbers I know</h3>
+      <div class="stickers" id="numStickers" hidden></div>
     </div>
   </div>
 </div>
@@ -477,6 +633,14 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
       </div>
 
       <div class="panel">
+        <h2>Maths numbers</h2>
+        <div class="opt">
+          <div class="seg" id="mathMaxSeg" role="radiogroup" aria-label="Maths numbers"></div>
+          <p class="note">How far she counts and adds. The grown-up always gets harder sums.</p>
+        </div>
+      </div>
+
+      <div class="panel">
         <div class="opts">
           <div class="opt">
             <span class="label" id="targetLabel">First to</span>
@@ -488,9 +652,9 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
             <p class="note">Your cards appear this long after hers.</p>
           </div>
           <div class="opt">
-            <label class="label" for="dtIn">Robot Talk, Read &amp; Match: grown-up's timer</label>
+            <label class="label" for="dtIn">Take-turns games: grown-up's timer</label>
             <div class="range-row"><input id="dtIn" type="range" min="1" max="10" step="0.5"><output id="dtOut" for="dtIn"></output></div>
-            <p class="note">On your turn you must answer within this time. She has no timer.</p>
+            <p class="note">On your turn you must answer within this time (maths sums get 2 extra seconds). She has no timer.</p>
           </div>
         </div>
         <div class="switches">
@@ -618,7 +782,38 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
   "turn_mummy": "Mummy's turn!",
   "turn_mommy": "Mommy's turn!",
   "turn_mum": "Mum's turn!",
-  "turn_mama": "Mama's turn!"
+  "turn_mama": "Mama's turn!",
+  "cc_intro": "Count and Catch! Count them, then tap the number!",
+  "mk_intro": "Make Ten! How many more carrots fill the basket?",
+  "ss_intro": "Sum Snap! Work it out, then tap the answer!",
+  "bh_intro": "Bunny Hop! Roll the dice and hop to the finish!",
+  "howmany": "How many?",
+  "letscount": "Let's count!",
+  "howmore10": "How many more to make ten?",
+  "howmore20": "How many more to make twenty?",
+  "howmore100": "How many more to make one hundred?",
+  "plus": "plus",
+  "takeaway": "take away",
+  "and": "and",
+  "makes": "makes",
+  "leaves": "leaves",
+  "roll": "Roll the dice!",
+  "youreon": "You're on",
+  "hop": "Hop",
+  "whereland": "Where will you land?",
+  "carrot": "Carrot bonus! Two extra hops!",
+  "finish": "You made it to the finish!",
+  "counthops": "Oops! Let's count the hops together!",
+  "streak2": "Two in a row!",
+  "streak3": "Three in a row! Bonus star!",
+  "streak5": "Five in a row! You're on fire!",
+  "streakbig": "Another bonus star! You're on fire!",
+  "math1": "Super counting!",
+  "math2": "Maths superstar!",
+  "math3": "You're a number wizard!",
+  "mwin1": "Hooray! You are the Maths Champion! Your counting is like magic!",
+  "mwin2": "You did it! You're a maths superstar!",
+  "mwin3": "Woohoo! Champion! You know so many numbers!"
 }
 </script>
 <script>
@@ -645,6 +840,15 @@ const PICS={cat:"🐱",hat:"🎩",bat:"🦇",rat:"🐀",pan:"🍳",cap:"🧢",ma
 const PIC_WORDS=Object.keys(PICS);
 /* Each letter's sound clip (audio/s/<sound>.mp3); c sounds like k. */
 const soundKeys=w=>[...w].map(ch=>"s/"+(ch==="c"?"k":ch));
+/* Numbers for the maths games: Luna says each one from audio/n/<number>.mp3. */
+const ONES="zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen".split(" ");
+const TENS=["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
+const numWord=n=>n===100?"one hundred":n<20?ONES[n]:TENS[Math.floor(n/10)]+(n%10?" "+ONES[n%10]:"");
+/* A number sticker is saved as "num" plus the number in letters ("numseven"), the same shape as a word sticker. */
+const numKey=n=>"num"+numWord(n).replace(/ /g,"");
+const NUM_OF={};for(let i=0;i<=100;i++)NUM_OF[numKey(i)]=i;
+const isNumKey=k=>Object.prototype.hasOwnProperty.call(NUM_OF,k);
+const nk=n=>"n/"+n;
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=(Math.random()*(i+1))|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
 const pick=a=>a[(Math.random()*a.length)|0];
 function diff(a,b){if(a.length!==b.length)return 99;let d=0;for(let i=0;i<a.length;i++)if(a[i]!==b[i])d++;return d;}
@@ -691,10 +895,12 @@ const BONUS_YES=["byes1","byes2","byes3"];
 const WIN_KID=["win1","win2","win3"];
 const HI_LINES=["hi1","hi2","hi3","hi4"];
 const GU_LINES=["gu1","gu2","gu3"];
+const MATH_ROUND=["kid3","kid4","kid5","kid7","kid8","math1","math2","math3"];
+const MATH_WIN=["mwin1","mwin2","mwin3"];
 
 /* ---------- settings ---------- */
 const KEY="word-snap-showdown-settings";
-const DEFAULTS={kid:"Elyse",dad:"Daddy",level:"easy",target:10,headStart:1.5,daddyTime:3,autoBalance:true,bonus:true,sound:true,voice:true};
+const DEFAULTS={kid:"Elyse",dad:"Daddy",level:"easy",target:10,headStart:1.5,daddyTime:3,autoBalance:true,bonus:true,sound:true,voice:true,mathMax:10,subject:"read"};
 function loadSettings(){
   let s=Object.assign({},DEFAULTS);
   try{const raw=localStorage.getItem(KEY);if(raw)s=Object.assign(s,JSON.parse(raw));}catch(e){}
@@ -705,7 +911,7 @@ function loadSettings(){
 /* A recorded "Hello <name>!" clip exists for the default names and common family names. */
 function nameKey(name){const k="hi_"+String(name||"").trim().toLowerCase();return LINES[k]?k:null;}
 function saveSettings(){try{localStorage.setItem(KEY,JSON.stringify(S.settings));}catch(e){}}
-const S={settings:loadSettings(),mode:"snap",scores:[0,0],round:0,delay:1.5,streak:[0,0],level:LEVELS[0],deck:[],deckPos:0,target:10,word:"",phase:"setup",shown:[false,false],frozenUntil:[0,0],turn:0,tries:0,dTime:3,gameStickers:0};
+const S={settings:loadSettings(),mode:"snap",scores:[0,0],round:0,delay:1.5,streak:[0,0],level:LEVELS[0],deck:[],deckPos:0,target:10,word:"",phase:"setup",shown:[false,false],frozenUntil:[0,0],turn:0,tries:0,dTime:3,gameStickers:0,q:null,mstreak:0,N:20,carrots:[],timeoutFn:null};
 function turnKey(name){const k="turn_"+String(name||"").trim().toLowerCase();return LINES[k]?k:null;}
 
 /* ---------- sticker book (kept on this tablet) ---------- */
@@ -852,7 +1058,7 @@ function restoreFile(file){
 }
 function popSticker(word){
   const host=!$("turn").hidden?$("tbar0"):$("side0");if(!host)return;
-  const el=document.createElement("div");el.className="sticker-pop";el.textContent=PICS[word]||EMOJI[word]||"⭐";
+  const num=isNumKey(word),el=document.createElement("div");el.className="sticker-pop"+(num?" num":"");el.textContent=num?String(NUM_OF[word]):PICS[word]||EMOJI[word]||"⭐";
   host.appendChild(el);setTimeout(()=>el.remove(),1600);
 }
 let bookN=0;
@@ -907,11 +1113,18 @@ function renderBook(){
   $("bookMeter").style.width=next?`${Math.round(100*(BOOK.total-from)/(to-from))}%`:"100%";
   $("bookNext").textContent=next?`${to-BOOK.total} more ${to-BOOK.total===1?"sticker":"stickers"} to make your book even prettier!`:"Your book is fully magic! Keep collecting stickers.";
   $("bookSteps").innerHTML=BOOK_LEVELS.map((b,i)=>`<span class="${i<=lvl?"got":""}${i===lvl?" now":""}" title="${b.name} · ${b.at} stickers">${bookSVG(i)}</span>`).join("");
-  const words=Object.keys(BOOK.words).sort((a,b)=>BOOK.words[b]-BOOK.words[a]||a.localeCompare(b));
+  const all=Object.keys(BOOK.words),nums=all.filter(isNumKey).sort((a,b)=>NUM_OF[a]-NUM_OF[b]);
+  const words=all.filter(k=>!isNumKey(k)).sort((a,b)=>BOOK.words[b]-BOOK.words[a]||a.localeCompare(b));
+  const many=(k,c)=>c>1?`<span class="n">×${c}</span>`:"";
   $("stickers").innerHTML=words.length?words.map((w,i)=>{
     const e=PICS[w]||EMOJI[w],c=BOOK.words[w];
-    return `<div class="stk" style="--r:${((i*37)%15)-7}deg">${c>1?`<span class="n">×${c}</span>`:""}<span class="disc${e?"":" txt"}">${e||esc(w)}</span><b>${esc(w)}</b></div>`;
-  }).join(""):`<p class="empty">Play a game to earn your first sticker!</p>`;
+    return `<div class="stk" style="--r:${((i*37)%15)-7}deg">${many(w,c)}<span class="disc${e?"":" txt"}">${e||esc(w)}</span><b>${esc(w)}</b></div>`;
+  }).join(""):`<p class="empty">${nums.length?"Play a reading game to earn word stickers!":"Play a game to earn your first sticker!"}</p>`;
+  const NUM_COLS=["#3d86ff","#ff4f9a","#13b394","#9b6bff","#ff8a1c"];
+  $("numHead").hidden=$("numStickers").hidden=!nums.length;
+  $("numStickers").innerHTML=nums.map((k,i)=>{const n=NUM_OF[k];
+    return `<div class="stk" style="--r:${((i*37)%15)-7}deg">${many(k,BOOK.words[k])}<span class="disc num" style="background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.65),${NUM_COLS[n%5]} 62%)">${n}</span><b>${esc(numWord(n))}</b></div>`;
+  }).join("");
   const tricky=Object.keys(BOOK.tricky);
   $("tricky").hidden=!tricky.length;
   $("tricky").innerHTML=tricky.length?`Tricky words (they'll come up more often): <b>${tricky.map(esc).join(", ")}</b>`:"";
@@ -967,7 +1180,7 @@ function speak(text,opt){
   later(finish,1500+text.length*90/rate);
 }
 /* Main voice: Luna's recorded clips (audio/p/* for lines, audio/w/* for words), played back to back. */
-const VOICE_VERSION="a7916102";  /* set by tools/make_voice.py whenever the clips change */
+const VOICE_VERSION="d1d198da";  /* set by tools/make_voice.py whenever the clips change */
 const clipCache=new Map();
 let sayGen=0,sayNodes=[];
 function loadClip(key){
@@ -1022,6 +1235,8 @@ const sfx={
   tick(i){if(!this.ok())return;const t=ac.currentTime+.01;tone([659,784,988,1175,1319][i%5],t,.22,"sine",.11);},
   sparkle(){if(!this.ok())return;const t=ac.currentTime+.01;for(let i=0;i<7;i++)tone(1400+Math.random()*1700,t+i*.05,.2,"sine",.045);},
   pop(i){if(!this.ok())return;const t=ac.currentTime+.01;tone([523,659,784][i],t,.4,"triangle",.17);tone([1047,1319,1568][i],t+.05,.5,"sine",.06);},
+  coin(){if(!this.ok())return;const t=ac.currentTime+.01;tone(988,t,.09,"square",.045);tone(1319,t+.09,.38,"square",.045);},
+  hop(){if(!this.ok())return;const t=ac.currentTime+.01;tone(300,t,.2,"sine",.13,720);},
   win(){if(!this.ok())return;const t=ac.currentTime+.01;[[523,0],[659,.12],[784,.24],[1047,.36],[784,.52],[1047,.64]].forEach(([f,d])=>tone(f,t+d,.3,"triangle",.15));[523,659,784,1047].forEach(f=>tone(f,t+.82,1.3,"triangle",.07));}
 };
 
@@ -1131,10 +1346,10 @@ function showOnly(id){
 }
 const inGame=()=>!$("game").hidden||!$("turn").hidden;
 /* "Hello Elyse! Hello Daddy!", then the game's intro, then play. */
-function greet(introKeys,introText,after){
+function greet(introKeys,introText,after,bubble){
   const g=guard();
   const runIntro=g(()=>{
-    setBubble(`First to ${S.target} stars wins!`);bounceLuna();
+    setBubble(bubble||`First to ${S.target} stars wins!`);bounceLuna();
     say(introKeys,introText,{gap:.2,onend:g(()=>later(g(after),400))});
   });
   const kid=kidName(),dad=dadName(),hello=`Hello ${kid}! Hello ${dad}!`,kk=nameKey(kid),dk=nameKey(dad);
@@ -1142,7 +1357,7 @@ function greet(introKeys,introText,after){
   if(kk&&dk)say(["p/"+kk,"p/"+dk],hello,{gap:.25,onend:()=>later(runIntro,250)});
   else speak(hello,{onend:()=>later(runIntro,250)});
 }
-function startMode(mode){if(mode==="robot"||mode==="match")startTurnGame(mode);else startGame();}
+function startMode(mode){if(isMath(mode))startMathGame(mode);else if(mode==="robot"||mode==="match")startTurnGame(mode);else startGame();}
 function startGame(){
   audio();pickVoice();wakeLock();
   token++;clearTimers();hush();
@@ -1254,7 +1469,7 @@ function judge(ok){
    One player at a time, so the iPad only ever needs one finger. The play area turns to face
    whoever's turn it is. She has no timer; the grown-up has a countdown that auto-balances. */
 const MODE_INFO={robot:{name:"Robot Talk",intro:"rt_intro"},match:{name:"Read & Match",intro:"rm_intro"}};
-function tbarHTML(p){return `<div class="banner"><span class="pname" id="tname${p}"></span><span class="stars" id="tstars${p}"></span>${p===1?'<span class="headstart" id="ths"></span>':""}<span class="score" id="tscore${p}">0</span></div>`;}
+function tbarHTML(p){return `<div class="banner"><span class="pname" id="tname${p}"></span><span class="stars" id="tstars${p}"></span>${p===1?'<span class="headstart" id="ths"></span>':'<span class="streak" id="tstreak" hidden></span>'}<span class="score" id="tscore${p}">0</span></div>`;}
 function renderDTime(){const el=$("ths");if(el)el.textContent=`Your timer: ${fmtSec(S.dTime)}`;}
 function setFacing(p){$("tstage").classList.toggle("p1",p===1);}
 function beadsHTML(word){return `<div class="beads" aria-hidden="true"><span class="robo">🤖</span>${[...word].map(()=>'<i class="bead"></i>').join("")}</div>`;}
@@ -1275,10 +1490,10 @@ function drawPic(){
 function startTurnGame(mode){
   audio();pickVoice();wakeLock();
   token++;clearTimers();hush();
-  S.mode=mode;S.gameStickers=0;S.scores=[0,0];S.turn=0;S.word="";S.tries=0;
+  S.mode=mode;S.gameStickers=0;S.scores=[0,0];S.turn=0;S.word="";S.tries=0;S.timeoutFn=null;
   S.deck=shuffle(PIC_WORDS.slice());S.deckPos=0;S.target=S.settings.target;S.dTime=S.settings.daddyTime;
-  showOnly("turn");
-  renderNames();renderScore(0);renderScore(1);renderDTime();
+  showOnly("turn");$("turn").classList.remove("math","hopmode");
+  renderNames();renderScore(0);renderScore(1);renderDTime();renderStreak();
   $("tprompt").innerHTML="";$("tchoices").innerHTML="";$("treveal").hidden=true;$("tcover").hidden=true;$("ttimer").hidden=true;
   setFacing(0);$("tturn").textContent=MODE_INFO[mode].name;$("thearBtn").disabled=true;
   S.phase="intro";
@@ -1332,7 +1547,7 @@ function startDTimer(){
   const g=guard(),ms=Math.round(S.dTime*1000),bar=$("ttimerBar");
   $("ttimer").hidden=false;bar.style.transition="none";bar.style.transform="scaleX(1)";void bar.offsetWidth;
   bar.style.transition=`transform ${ms}ms linear`;bar.style.transform="scaleX(0)";
-  later(g(()=>{if(S.phase==="answer"&&S.turn===1){sfx.wrong();missTurn(1,true);}}),ms);
+  later(g(()=>{if(S.phase==="answer"&&S.turn===1){sfx.wrong();if(S.timeoutFn)S.timeoutFn();else missTurn(1,true);}}),ms);
 }
 function onPick(btn){
   if(S.phase!=="answer"||btn.disabled)return;
@@ -1390,14 +1605,335 @@ function balanceD(dadRight){
   renderDTime();
 }
 
+/* ---------- maths games: Count & Catch, Make Ten, Sum Snap, Bunny Hop ----------
+   The same take-turns board as Robot Talk. She gets small numbers with pictures to count, no timer,
+   and Luna counts along with her after a wrong tap. The grown-up gets bigger sums against his timer.
+   Every right answer pays out: a star, a prize flying into her bar, a number sticker for her book,
+   and bonus stars for answers in a row. */
+const MATH_INFO={count:{name:"Count & Catch",intro:"cc_intro"},make10:{name:"Make Ten",intro:"mk_intro"},sum:{name:"Sum Snap",intro:"ss_intro"},hop:{name:"Bunny Hop",intro:"bh_intro"}};
+const isMath=m=>Object.prototype.hasOwnProperty.call(MATH_INFO,m);
+const OBJS=["🍓","🍎","🐥","🎈","🐞","🍪","🌸","🐟","🦋","🍩","🧁","🍊"];
+const PRIZES=["🍭","🎈","🦄","🌈","🍩","🧁","🎁","💎","🐣","🍦","🌟","🍬"];
+const KID_NEAR=[1,-1,2,-2,3,-3],DAD_NEAR=[1,-1,10,-10,2,-2,9,-9,11,-11];
+const mathMax=()=>Number(S.settings.mathMax)===20?20:10;
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const cntHTML=e=>`<span class="cnt">${e}</span>`;
+/* Four answer cards in counting order: the answer and near misses, so she has to really count. */
+function numChoices(ans,lo,hi,near){
+  const out=new Set([ans]);
+  for(const n of shuffle(near.map(d=>ans+d)))if(out.size<4&&n>=lo&&n<=hi)out.add(n);
+  for(let d=1;out.size<4&&d<=hi-lo;d++)for(const n of [ans+d,ans-d])if(out.size<4&&n>=lo&&n<=hi)out.add(n);
+  return [...out].sort((a,b)=>a-b);
+}
+function makeCount(p){
+  const kid=p===0,big=mathMax()===20;
+  const n=kid?rnd(big?4:2,big?15:10):rnd(11,20),e=pick(OBJS);
+  let h="";
+  for(let i=0;i<n;i++){
+    if(kid&&i&&i%5===0)h+='<i class="br"></i>';  /* hers come in neat rows of five */
+    h+=kid?cntHTML(e):`<span class="cnt" style="margin:${rnd(0,16)}px ${rnd(0,12)}px">${e}</span>`;
+  }
+  const size=n<=10?"clamp(2.2rem,min(8vw,10vh),5rem)":"clamp(1.7rem,min(6vw,7.4vh),3.8rem)";
+  return {ans:n,choices:numChoices(n,kid?1:5,kid?20:30,KID_NEAR),
+    html:`<p class="mq">How many?</p><div class="objs" id="objs" style="--os:${size}">${h}</div>`,
+    bubble:"How many? Count them!",say:["p/howmany"],sayText:LINES.howmany,
+    flash:!kid,answer:[nk(n)],answerText:`${n}!`,
+    teach(after){countAlong([...document.querySelectorAll("#objs .cnt")],after);},
+    show(){const o=$("objs");if(o)o.classList.remove("gone");}};
+}
+function makeTen(p){
+  if(p===1){
+    let k=rnd(11,88);if(k%10===0)k+=3;
+    const ans=100-k;
+    return {ans,choices:numChoices(ans,1,99,DAD_NEAR),
+      html:`<p class="mq">How many more to make 100?</p><div class="eq">${k} + <span class="q">?</span> = 100</div>`,
+      bubble:"How many more to make 100?",say:["p/howmore100"],sayText:LINES.howmore100,
+      answer:[nk(ans)],answerText:`${ans}!`};
+  }
+  const T=mathMax()===20&&Math.random()<.5?20:10,k=T===10?rnd(1,9):rnd(11,19),ans=T-k;
+  const frame=start=>`<div class="frame">${Array.from({length:10},(_,i)=>`<i class="${start+i<k?"c":""}"></i>`).join("")}</div>`;
+  return {ans,choices:numChoices(ans,0,10,KID_NEAR),
+    html:`<p class="mq">How many more to make ${T}?</p><div class="frames" id="frames">${frame(0)}${T===20?frame(10):""}</div>`,
+    bubble:`How many more carrots to make ${T}?`,say:["p/howmore"+T],sayText:LINES["howmore"+T],
+    answer:[nk(k),"p/and",nk(ans),"p/makes",nk(T)],answerText:`${k} and ${ans} makes ${T}.`,
+    teach(after){countAlong([...document.querySelectorAll("#frames i:not(.c)")],after);},
+    show(){document.querySelectorAll("#frames i:not(.c)").forEach((el,i)=>later(()=>{el.textContent="";el.classList.remove("on");el.classList.add("c","new");sfx.tick(i);},i*150));}};
+}
+/* The grown-up's sums are two-digit and usually need a carry or a borrow. */
+function dadSum(plus){
+  for(let t=0;;t++){
+    if(plus){const a=rnd(15,79),b=rnd(12,99-a);if(t<20&&(a%10)+(b%10)<10)continue;return [a,b,a+b];}
+    const a=rnd(31,99),b=rnd(12,a-12);if(t<20&&(a%10)>=(b%10))continue;return [a,b,a-b];
+  }
+}
+function makeSum(p){
+  const plus=Math.random()<.6,op=plus?"+":"−",opKey=plus?"p/plus":"p/takeaway",opWord=plus?"plus":"take away";
+  if(p===1){
+    const [a,b,ans]=dadSum(plus);
+    return {ans,choices:numChoices(ans,0,100,DAD_NEAR),
+      html:`<div class="eq">${a} ${op} ${b} = <span class="q">?</span></div>`,
+      bubble:`${a} ${opWord} ${b} is…?`,say:[nk(a),opKey,nk(b)],sayText:`${a} ${opWord} ${b}`,
+      answer:[nk(ans)],answerText:`${ans}!`};
+  }
+  const M=mathMax();let a,b,ans;
+  if(plus){ans=rnd(2,M);a=rnd(1,ans-1);b=ans-a;}else{a=rnd(2,M);b=rnd(1,a-1);ans=a-b;}
+  const e=pick(OBJS),many=a+b>12;
+  const pics=plus?`${cntHTML(e).repeat(a)}<span class="op">+</span>${cntHTML(e).repeat(b)}`:`${cntHTML(e).repeat(ans)}${`<s>${e}</s>`.repeat(b)}`;
+  return {ans,choices:numChoices(ans,0,M,KID_NEAR),
+    html:`<div class="eq small">${a} ${op} ${b} = <span class="q">?</span></div><div class="groups" id="groups"${many?' style="font-size:clamp(1.1rem,3vw,2rem)"':""}>${pics}</div>`,
+    bubble:`${a} ${opWord} ${b} is…?`,say:[nk(a),opKey,nk(b)],sayText:`${a} ${opWord} ${b}`,
+    answer:[nk(a),opKey,nk(b),plus?"p/makes":"p/leaves",nk(ans)],answerText:`${a} ${opWord} ${b} ${plus?"makes":"leaves"} ${ans}.`,
+    teach(after){countAlong([...document.querySelectorAll("#groups .cnt")],after);}};
+}
+const MAKERS={count:makeCount,make10:makeTen,sum:makeSum};
+/* Luna counts out loud, and each thing lights up with its number as she says it. */
+function countAlong(els,after){
+  const g=guard();
+  if(!els.length){if(after)after();return;}
+  const mark=(el,j)=>{
+    if(el.matches(".frame i")){el.classList.add("on");el.textContent=j+1;}
+    else if(el.matches(".sq")){el.classList.add("hint");if(!el.querySelector(".hc"))el.insertAdjacentHTML("beforeend",`<b class="hc">${j+1}</b>`);}
+    else{els.forEach(x=>{if(x.matches(".cnt"))x.classList.remove("on");});el.classList.add("on");if(!el.querySelector("b"))el.insertAdjacentHTML("beforeend",`<b>${j+1}</b>`);}
+    sfx.tick(j);
+  };
+  const done=g(()=>{els.forEach(x=>{if(x.matches(".cnt"))x.classList.remove("on");});if(after)after();});
+  if(!voiceOn()){els.forEach((el,j)=>later(g(()=>mark(el,j)),j*600));later(done,els.length*600+300);return;}
+  say(els.map((_,j)=>nk(j+1)),els.map((_,j)=>j+1).join(", "),{gap:.2,onclip:i=>{if(els[i])mark(els[i],i);},onend:done});
+}
+function renderStreak(){
+  const el=$("tstreak");if(!el)return;
+  const n=S.mstreak||0,on=isMath(S.mode)&&n>=2;
+  el.hidden=!on;if(on)el.textContent=`🔥 ${n} in a row`;
+}
+function tplus(text){const el=document.createElement("div");el.className="plus";el.innerHTML=`${starSvg("")}${esc(text)}`;$("tstage").appendChild(el);setTimeout(()=>el.remove(),1400);}
+/* A prize (lollipop, unicorn, rainbow...) jumps out of the right answer and flies into the player's bar. */
+function prizePop(from,p,n){
+  if(REDUCED||!from)return;
+  const a=from.getBoundingClientRect(),b=$("tbar"+p).getBoundingClientRect();
+  for(let i=0;i<(n||1);i++){
+    const el=document.createElement("div");el.className="prize";el.textContent=pick(PRIZES);
+    if(!el.animate)return;
+    document.body.appendChild(el);
+    const x0=a.left+a.width/2-26,y0=a.top+a.height/2-26,x1=b.left+b.width*(.3+.4*Math.random())-26,y1=b.top+b.height/2-26;
+    const mx=(x0+x1)/2+(Math.random()-.5)*180,my=Math.max(10,Math.min(y0,y1)-100);
+    el.animate([
+      {transform:`translate(${x0}px,${y0}px) scale(.3) rotate(-30deg)`,opacity:0},
+      {transform:`translate(${mx}px,${my}px) scale(1.6) rotate(12deg)`,opacity:1,offset:.45},
+      {transform:`translate(${x1}px,${y1}px) scale(.9) rotate(0)`,opacity:1,offset:.88},
+      {transform:`translate(${x1}px,${y1}px) scale(.2)`,opacity:0}],
+      {duration:1300,delay:i*200,easing:"ease-in-out",fill:"both"});
+    setTimeout(()=>{sfx.coin();},1150+i*200);
+    setTimeout(()=>el.remove(),1600+i*200);
+  }
+}
+function startMathGame(mode){
+  audio();pickVoice();wakeLock();
+  token++;clearTimers();hush();
+  const hop=mode==="hop";
+  S.mode=mode;S.gameStickers=0;S.scores=[0,0];S.turn=0;S.word="";S.tries=0;S.q=null;S.mstreak=0;
+  /* sums take thinking, so his timer starts 2 seconds longer than in the reading games */
+  S.dTime=S.settings.daddyTime+(hop?0:2);
+  S.timeoutFn=()=>mathMiss(1,true);
+  S.N=mathMax()===20?30:20;S.target=hop?S.N:S.settings.target;
+  S.carrots=hop?pickCarrots(S.N):[];
+  showOnly("turn");$("turn").classList.add("math");$("turn").classList.toggle("hopmode",hop);
+  renderNames();
+  if(hop){$("tname0").textContent=`🐰 ${kidName()}`;$("tname1").textContent=`🐻 ${dadName()}`;}
+  renderScore(0);renderScore(1);renderDTime();renderStreak();
+  $("tprompt").innerHTML="";$("treveal").hidden=true;$("tcover").hidden=true;$("ttimer").hidden=true;
+  $("tchoices").innerHTML=hop?trackHTML():"";if(hop)placeTokens();
+  setFacing(0);$("tturn").textContent=MATH_INFO[mode].name;$("thearBtn").disabled=true;
+  S.phase="intro";
+  if(voiceOn()){
+    const top=hop?S.N:mathMax()+5,nums=[];for(let i=0;i<=100;i++)nums.push(nk(i));
+    preloadClips(["p/letscount","p/goodtry","p/kid1","p/streak2","p/streak3","p/howmany","p/plus","p/takeaway","p/makes","p/leaves","p/and","p/roll","p/youreon","p/hop","p/whereland","p/carrot","p/counthops"].concat(nums.slice(0,top+1),nums.slice(top+1)));
+  }
+  const intro=MATH_INFO[mode].intro,first="first"+S.target;
+  if(hop)greet(["p/"+intro],LINES[intro],()=>mathTurnStart(0),"Race to the finish! 🏁");
+  else greet(["p/"+intro,"p/"+first],`${LINES[intro]} ${LINES[first]||""}`,()=>mathTurnStart(0));
+}
+function mathTurnStart(p){
+  token++;clearTimers();hush();
+  if(Math.max(S.scores[0],S.scores[1])>=S.target)return endGame(S.scores[0]>=S.target?0:1);
+  S.turn=p;S.phase="turnIntro";S.tries=0;S.q=null;
+  const g=guard(),name=p===0?kidName():dadName(),text=`${name}'s turn!`,tk=turnKey(name);
+  $("treveal").hidden=true;$("ttimer").hidden=true;$("thearBtn").disabled=true;
+  $("tprompt").innerHTML="";
+  if(S.mode==="hop")placeTokens();else $("tchoices").innerHTML="";
+  setFacing(p);$("tturn").textContent=text;
+  const cover=$("tcover");cover.innerHTML=`<b>${esc(text)}</b>`;cover.hidden=false;
+  setBubble(text);bounceLuna();
+  const go=g(()=>{cover.hidden=true;if(S.mode==="hop")hopRollPrompt();else mathQuestion();});
+  if(tk)say(["p/"+tk],text,{onend:()=>later(go,200)});else speak(text,{onend:()=>later(go,200)});
+}
+function mathQuestion(){
+  const g=guard(),p=S.turn,q=S.q=MAKERS[S.mode](p);
+  S.phase="ask";
+  $("tprompt").innerHTML=q.html;
+  $("tchoices").innerHTML=q.choices.map(n=>`<button type="button" class="ncard" data-n="${n}" disabled>${n}</button>`).join("");
+  setBubble(q.bubble);
+  if(q.flash){  /* the grown-up only gets a quick look at his pile, then counts from memory */
+    say(q.say,q.sayText);
+    later(g(()=>{$("objs").classList.add("gone");mathOpen();}),Math.round(Math.min(4,Math.max(1.2,S.dTime*.5))*1000));
+  }else if(p===1){say(q.say,q.sayText,{gap:.15});later(g(mathOpen),300);}
+  else say(q.say,q.sayText,{gap:.15,onend:g(mathOpen)});
+}
+function mathOpen(){
+  S.phase="answer";
+  const from=S.q&&S.q.from!=null?S.q.from:-1;
+  document.querySelectorAll("#tchoices .ncard,#tchoices .sq").forEach(b=>{b.disabled=b.classList.contains("nope")||(b.matches(".sq")&&Number(b.dataset.n)<=from);});
+  $("thearBtn").disabled=!(voiceOn()&&S.q&&S.q.say);
+  if(S.turn===1)startDTimer();
+}
+function lockChoices(showRight){
+  document.querySelectorAll("#tchoices .ncard,#tchoices .sq").forEach(b=>{b.disabled=true;if(showRight&&S.q&&Number(b.dataset.n)===S.q.ans)b.classList.add("right");});
+}
+function onMathPick(btn){
+  if(S.phase!=="answer"||btn.disabled||!S.q)return;
+  const p=S.turn,q=S.q;
+  if(Number(btn.dataset.n)===q.ans){S.phase="done";btn.classList.add("yes");return mathRight(p,btn);}
+  btn.classList.add("nope");btn.disabled=true;sfx.wrong();
+  if(p===0&&S.tries===0&&q.teach){
+    /* her first miss: Luna counts it out with her, then she tries again */
+    S.tries=1;S.phase="hint";S.mstreak=0;renderStreak();lockChoices();
+    const g=guard(),key=S.mode==="hop"?"counthops":"letscount";
+    setBubble(LINES[key]);
+    say(["p/"+key],LINES[key],{onend:g(()=>q.teach(g(()=>{setBubble(S.mode==="hop"?"Tap the square where you land!":q.bubble);mathOpen();})))});
+    return;
+  }
+  mathMiss(p,false);
+}
+function mathRight(p,btn){
+  const g=guard(),q=S.q,hop=S.mode==="hop";
+  $("ttimer").hidden=true;$("thearBtn").disabled=true;lockChoices();
+  let key,gain=1,party=false;
+  if(p===0){
+    const st=++S.mstreak;
+    if(!hop&&(st===3||(st>5&&(st-5)%3===0))){key=st===3?"streak3":"streakbig";gain=2;}
+    else if(st===5){key="streak5";party=true;}
+    else if(st===2)key="streak2";
+    else key=pick(MATH_ROUND);
+    earnSticker(numKey(q.ans));
+  }else{key=pick(GU_LINES);balanceD(true);}
+  if(!hop){const before=S.scores[p];S.scores[p]=Math.min(S.target,before+gain);renderScore(p,before);tplus(gain>1?"+2":"+1");}
+  burstAt(btn,p===0?44:20,p===0?1.15:.8);sfx.point();
+  prizePop(btn,p,p===0?(party?4:gain+1):1);
+  if(gain>1)later(()=>{sfx.sparkle();burstAt($("tbar0"),36,1.1);},500);
+  if(party){rain(3000);later(()=>sfx.win(),300);}
+  renderStreak();
+  const line=LINES[key];setBubble(line);bounceLuna();
+  if(hop)return hopAfterAnswer(p,true,["p/"+key],line);
+  if(q.show)q.show();
+  later(g(()=>say(["p/"+key].concat(q.answer),`${line} ${q.answerText}`,{gap:.3,onend:g(()=>later(g(()=>mathTurnStart(1-p)),900))})),400);
+}
+function mathMiss(p,timeout){
+  const g=guard(),q=S.q,hop=S.mode==="hop";
+  S.phase="done";$("ttimer").hidden=true;$("thearBtn").disabled=true;lockChoices(true);
+  if(p===0){S.mstreak=0;renderStreak();}else balanceD(false);
+  const key=timeout?"timeup":"goodtry",line=LINES[key];
+  setBubble(hop&&p===1?`${line} ${dadName()} stays put.`:line);
+  if(hop)return hopAfterAnswer(p,false,["p/"+key],line);
+  if(q.show)q.show();
+  later(g(()=>say(["p/"+key].concat(q.answer),`${line} ${q.answerText}`,{gap:.3,onend:g(()=>later(g(()=>mathTurnStart(1-p)),1100))})),600);
+}
+
+/* Bunny Hop: a race along a numbered track. Roll the dice, then tap the square you'll land on
+   (counting on: "I'm on 7, hop 4... 8, 9, 10, 11!"). She always hops, even after a miss; the
+   grown-up only hops if he answers in time. Carrot squares give 2 extra hops. */
+const DIE_PIPS={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+const pipsHTML=v=>Array.from({length:9},(_,i)=>`<i class="${(DIE_PIPS[v]||[]).includes(i)?"on":""}"></i>`).join("");
+function pickCarrots(N){
+  const out=[];
+  for(const s of shuffle(Array.from({length:N-6},(_,i)=>i+3))){if(out.length>=(N>20?5:4))break;if(out.every(o=>Math.abs(o-s)>2))out.push(s);}
+  return out.sort((a,b)=>a-b);
+}
+/* A zig-zag track: Start at her bottom-left, the finish flag up near the grown-up. */
+function trackHTML(){
+  const N=S.N,cols=N>20?8:7,rows=Math.ceil((N+1)/cols);
+  let h="";
+  for(let s=0;s<=N;s++){
+    const rb=Math.floor(s/cols),c=s%cols,col=rb%2?cols-1-c:c;
+    const cls=s===0?" start":s===N?" finish":S.carrots.includes(s)?" carrot":"";
+    h+=`<button type="button" class="sq${cls}" data-n="${s}" style="grid-row:${rows-rb};grid-column:${col+1}" disabled aria-label="${s===0?"Start":`Square ${s}`}${cls===" carrot"?", carrot bonus":""}">${s===0?"Start":s}</button>`;
+  }
+  return `<div class="track" id="track" style="--cols:${cols}">${h}</div>`;
+}
+const sqEl=s=>document.querySelector(`#track .sq[data-n="${s}"]`);
+function moveTok(p,s){
+  const old=document.querySelector(`#track .tok.t${p}`);if(old)old.remove();
+  const sq=sqEl(Math.min(S.N,s));if(sq)sq.insertAdjacentHTML("beforeend",`<span class="tok t${p} jump" aria-hidden="true">${p?"🐻":"🐰"}</span>`);
+}
+function placeTokens(){
+  document.querySelectorAll("#track .tok").forEach(t=>t.remove());
+  [0,1].forEach(p=>{const sq=sqEl(Math.min(S.N,S.scores[p]));if(sq)sq.insertAdjacentHTML("beforeend",`<span class="tok t${p}" aria-hidden="true">${p?"🐻":"🐰"}</span>`);});
+}
+function hopRollPrompt(){
+  S.phase="roll";S.q=null;
+  document.querySelectorAll("#track .sq").forEach(b=>{b.disabled=true;b.classList.remove("nope","hint","yes","right");b.querySelectorAll(".hc").forEach(x=>x.remove());});
+  $("tprompt").innerHTML=`<div class="hopq"><div class="die" id="die" role="img" aria-label="Dice">${pipsHTML(rnd(1,6))}</div><button type="button" class="roll" id="rollBtn">Roll!</button></div>`;
+  setBubble(LINES.roll);
+  say(["p/roll"],LINES.roll);
+}
+function rollDice(){
+  if(S.phase!=="roll")return;
+  S.phase="rolling";hush();
+  const g=guard(),p=S.turn,die=$("die");
+  $("rollBtn").disabled=true;die.classList.add("rolling");
+  /* near the finish the dice only rolls what's left, so every hop lands on the board */
+  const v=rnd(1,Math.min(6,S.N-S.scores[p]));
+  for(let k=0;k<10;k++)later(g(()=>{die.innerHTML=pipsHTML(rnd(1,6));sfx.tick(k);}),k*90);
+  later(g(()=>{die.classList.remove("rolling");die.innerHTML=pipsHTML(v);die.setAttribute("aria-label",`Dice shows ${v}`);sfx.pop(1);burstAt(die,14,.6);hopAsk(v);}),950);
+}
+function hopAsk(v){
+  const g=guard(),p=S.turn,from=S.scores[p],ans=from+v;
+  const keys=(from?["p/youreon",nk(from)]:[]).concat(["p/hop",nk(v),"p/whereland"]);
+  const text=`${from?`You're on ${from}. `:""}Hop ${v}. Where will you land?`;
+  S.q={ans,from,roll:v,say:keys,sayText:text,
+    teach(after){const sq=[];for(let s=from+1;s<=ans;s++)sq.push(sqEl(s));countAlong(sq,after);}};
+  S.phase="ask";
+  $("tprompt").innerHTML=`<div class="hopq"><div class="die" role="img" aria-label="Dice shows ${v}">${pipsHTML(v)}</div><p class="mq">${from?`You're on <b>${from}</b>. `:""}Hop <b>${v}</b>. <br>Where will you land?</p></div>`;
+  setBubble(text);
+  if(p===1){say(keys,text,{gap:.15});later(g(mathOpen),300);}
+  else say(keys,text,{gap:.15,onend:g(mathOpen)});
+}
+function hopAfterAnswer(p,right,leadKeys,leadText){
+  const g=guard(),q=S.q;
+  if(p===1&&!right){later(g(()=>say(leadKeys,leadText,{onend:g(()=>later(g(()=>mathTurnStart(0)),700))})),300);return;}
+  later(g(()=>say(leadKeys,leadText,{onend:g(()=>hopMove(p,q.from,q.ans,g(()=>afterLand(p,false))))})),300);
+}
+/* The bunny (or bear) hops one square at a time while Luna counts on: "8, 9, 10, 11!" */
+function hopMove(p,from,to,after){
+  S.scores[p]=to;renderScore(p);  /* saved first, so pausing mid-hop keeps the move */
+  const steps=[];for(let s=from+1;s<=to;s++)steps.push(s);
+  if(!voiceOn()){steps.forEach((s,i)=>later(()=>{moveTok(p,s);sfx.hop();},i*450));later(after,steps.length*450+250);return;}
+  say(steps.map(nk),steps.join(", "),{gap:.15,onclip:i=>{moveTok(p,steps[i]);sfx.hop();},onend:after});
+}
+function afterLand(p,bonusDone){
+  const g=guard(),s=S.scores[p];
+  placeTokens();
+  const sq=sqEl(s);
+  if(s>=S.N){
+    if(sq)burstAt(sq,50,1.3);sfx.win();rain(2200);setBubble(LINES.finish);bounceLuna();
+    say(["p/finish"],LINES.finish,{onend:g(()=>later(g(()=>endGame(p)),500))});
+    return;
+  }
+  if(!bonusDone&&S.carrots.includes(s)){
+    if(sq)burstAt(sq,30,1);sfx.sparkle();setBubble(LINES.carrot);bounceLuna();
+    say(["p/carrot"],LINES.carrot,{onend:g(()=>hopMove(p,s,Math.min(S.N,s+2),g(()=>afterLand(p,true))))});
+    return;
+  }
+  later(g(()=>mathTurnStart(1-p)),800);
+}
+
 function endGame(p){
   token++;clearTimers();hush();S.phase="over";
   const kid=kidName(),dad=dadName(),n=S.scores[0],kidWon=p===0;
   $("champTitle").textContent=kidWon?"Champion!":"Great game!";
   $("winnerName").textContent=kidWon?kid:`${dad} wins this time`;
-  $("finalScore").textContent=`${kid} ${S.scores[0]} · ${dad} ${S.scores[1]}`;
-  const key=kidWon?pick(WIN_KID):"lose",line=LINES[key];
-  $("winBubble").textContent=kidWon?line:`${line} You got ${n} ${n===1?"star":"stars"}!`;
+  const hop=S.mode==="hop",where=s=>s>=S.N?"the finish 🏁":`square ${s}`;
+  $("finalScore").textContent=hop?`🐰 ${kid} reached ${where(S.scores[0])} · 🐻 ${dad} reached ${where(S.scores[1])}`:`${kid} ${S.scores[0]} · ${dad} ${S.scores[1]}`;
+  const key=kidWon?pick(isMath(S.mode)?MATH_WIN:WIN_KID):"lose",line=LINES[key];
+  $("winBubble").textContent=kidWon||hop?line:`${line} You got ${n} ${n===1?"star":"stars"}!`;
   queueSync(300);
   const got=S.gameStickers,lvl=bookLevel(BOOK.total),up=lvl>BOOK.seenLevel,ws=$("winStickers");
   ws.hidden=!got;$("winBookBtn").hidden=!got;
@@ -1416,16 +1952,24 @@ function openPause(){
 }
 function resume(){
   $("pauseOv").hidden=true;audio();
-  if(S.mode==="snap"){S.phase="race";nextRound();}else turnStart(S.turn);
+  if(S.mode==="snap"){S.phase="race";nextRound();}else if(isMath(S.mode))mathTurnStart(S.turn);else turnStart(S.turn);
 }
 function showHome(){
   token++;clearTimers();hush();S.phase="setup";
   showOnly("home");
   renderHome();
 }
+/* Home shows either the reading games or the maths games; the last one picked is remembered. */
+function setSubject(s){
+  s=s==="math"?"math":"read";S.settings.subject=s;saveSettings();
+  $("tabRead").setAttribute("aria-selected",String(s==="read"));$("tabMath").setAttribute("aria-selected",String(s==="math"));
+  $("gamesRead").hidden=s!=="read";$("gamesMath").hidden=s!=="math";
+  const named=(S.settings.kid||"").trim();
+  $("hello").textContent=named?`Hi, ${named}!`:s==="math"?"Ready to count?":"Ready to read?";
+}
 function renderHome(){
   const named=(S.settings.kid||"").trim();
-  $("hello").textContent=named?`Hi, ${named}!`:"Ready to read?";
+  $("hello").textContent=named?`Hi, ${named}!`:S.settings.subject==="math"?"Ready to count?":"Ready to read?";
   $("miniBook").innerHTML=bookSVG(bookLevel(BOOK.total));
   $("bookBtnTitle").textContent=named?`${named}'s Sticker Book`:"My Sticker Book";
   $("bookBtnCount").textContent=`${BOOK.total} ${BOOK.total===1?"sticker":"stickers"} · ${BOOK_LEVELS[bookLevel(BOOK.total)].name}`;
@@ -1464,6 +2008,7 @@ function renderSetup(){
   $("kidIn").value=S.settings.kid;$("dadIn").value=S.settings.dad;
   $("levels").innerHTML=LEVELS.map(l=>`<button type="button" class="level" role="radio" id="lv-${l.id}" data-level="${l.id}" aria-checked="${S.settings.level===l.id}"><b>${l.name}</b><span>${l.hint}</span><small>${l.about}</small></button>`).join("");
   $("targets").innerHTML=[5,10,15].map(t=>`<button type="button" role="radio" id="tg-${t}" data-target="${t}" aria-checked="${S.settings.target===t}">${starSvg("")}${t}</button>`).join("");
+  $("mathMaxSeg").innerHTML=[10,20].map(m=>`<button type="button" role="radio" data-mm="${m}" aria-checked="${mathMax()===m}">Up to ${m}</button>`).join("");
   $("hsIn").value=S.settings.headStart;$("hsOut").textContent=fmtSec(S.settings.headStart);
   $("dtIn").value=S.settings.daddyTime;$("dtOut").textContent=fmtSec(S.settings.daddyTime);
   document.querySelectorAll(".toggle").forEach(t=>t.setAttribute("aria-checked",String(!!S.settings[t.dataset.key])));
@@ -1479,8 +2024,13 @@ function renderSteps(){
     `<b>Robot Talk</b> (take turns): Luna says a word sound by sound, “c… a… t”. Tap the matching picture.`,
     `<b>Read &amp; Match</b> (take turns): read the word, then tap its picture. No sound until a wrong guess.`,
     `In the turn games the play area turns to face whoever's turn it is. ${kid} gets a second try; ${dad} has a timer.`,
-    `Every word ${kid} gets right is a sticker for her book, and the book grows prettier as she collects them.`,
-    `First to <b>${S.settings.target} stars</b> is the champion!`
+    `<b>Count &amp; Catch</b> (maths, take turns): count the pictures and tap the number. ${dad} gets a bigger pile and only a quick look.`,
+    `<b>Make Ten</b>: how many more carrots fill the basket to make ${mathMax()===20?"10 or 20":"10"}? ${dad} makes 100.`,
+    `<b>Sum Snap</b>: add and take away with pictures to count. ${dad} gets two-digit sums.`,
+    `<b>Bunny Hop</b>: roll the dice, count on, and tap the square you'll land on. Carrot squares give 2 extra hops. ${kid} always hops; ${dad} only hops if he answers in time.`,
+    `After a wrong tap, Luna counts along with ${kid} and she tries again. Every right answer wins a star, a prize and a number sticker, and answers in a row win bonus stars.`,
+    `Every word or number ${kid} gets right is a sticker for her book, and the book grows prettier as she collects them.`,
+    `First to <b>${S.settings.target} stars</b> is the champion! In Bunny Hop, first to the finish wins.`
   ];
   $("steps").innerHTML=steps.map(s=>`<li>${s}</li>`).join("");
 }
@@ -1505,8 +2055,15 @@ function bind(){
   $("winBookBtn").addEventListener("click",()=>{showHome();openBook();});
   $("bookDone").addEventListener("click",closeBook);
   $("bookOv").addEventListener("click",e=>{if(e.target===e.currentTarget)closeBook();});
-  $("tchoices").addEventListener("click",e=>{const b=e.target.closest(".pcard");if(b)onPick(b);});
-  $("thearBtn").addEventListener("click",()=>{if(S.phase==="answer"&&voiceOn()&&(S.mode==="robot"||S.tries>0)){playSounds(S.word);bounceLuna();}});
+  $("tchoices").addEventListener("click",e=>{const b=e.target.closest(".pcard");if(b)return onPick(b);const m=e.target.closest(".ncard,.sq");if(m)onMathPick(m);});
+  $("tprompt").addEventListener("click",e=>{if(e.target.closest("#rollBtn"))rollDice();});
+  $("thearBtn").addEventListener("click",()=>{
+    if(S.phase!=="answer"||!voiceOn())return;
+    if(isMath(S.mode)){if(S.q&&S.q.say){say(S.q.say,S.q.sayText,{gap:.15});bounceLuna();}return;}
+    if(S.mode==="robot"||S.tries>0){playSounds(S.word);bounceLuna();}
+  });
+  $("mathMaxSeg").addEventListener("click",e=>{const b=e.target.closest("[data-mm]");if(!b)return;S.settings.mathMax=Number(b.dataset.mm);saveSettings();document.querySelectorAll("#mathMaxSeg button").forEach(x=>x.setAttribute("aria-checked",String(x===b)));renderSteps();});
+  document.querySelectorAll(".subj [data-subj]").forEach(b=>b.addEventListener("click",()=>{setSubject(b.dataset.subj);sfx.pop(b.dataset.subj==="math"?2:0);}));
   $("tpauseBtn").addEventListener("click",openPause);
   /* Two players touching at once must not turn into an iPad pinch-zoom that swallows the taps. */
   ["gesturestart","gesturechange","gestureend"].forEach(t=>document.addEventListener(t,e=>{if(inGame())e.preventDefault();},{passive:false}));
@@ -1548,7 +2105,7 @@ function init(data){
   if(!HAS_AC&&!HAS_TTS)$("ttsNote").hidden=false;
   if(document.fullscreenEnabled)$("fsBtn").hidden=false;
   buildTitle();buildHomeDecor();
-  bind();renderSetup();renderHome();renderSync();
+  bind();renderSetup();setSubject(S.settings.subject);renderHome();renderSync();
   queueSync(1200);
 }
 init({});
