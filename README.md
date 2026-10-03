@@ -8,7 +8,11 @@ Reading games for a young reader and a grown-up, hosted by Luna the bunny.
 
 In the turn games the play area turns to face whoever's turn it is, so only one person touches the screen at a time. The young reader gets a second try; the grown-up has a countdown that auto-balances.
 
-Every word she gets right becomes a sticker in her sticker book, which grows prettier as it fills: plain → rainbow → ribbon → sparkly → jewels → royal → magic gold. Words she misses come back more often. Stickers are saved on the tablet itself.
+Every word she gets right becomes a sticker in her sticker book, which grows prettier as it fills: plain → rainbow → ribbon → sparkly → jewels → royal → magic gold. Words she misses come back more often.
+
+### Saving the sticker book
+
+Stickers are saved on each tablet and, once a family code is set up, online in a free Firebase Realtime Database (Spark plan, Singapore). On the first tablet: Settings → **Create a family code**. On the other tablet: type that code → **Connect**. Each tablet saves its own stickers under the code and the book adds every tablet's stickers together, so tablets never overwrite each other. The database rules only allow reading or writing a book by its exact 12-character code, and only sticker data in the expected shape. Settings also offers **Save a backup file** / **Restore from a file**; restoring never removes stickers.
 
 ## Play
 

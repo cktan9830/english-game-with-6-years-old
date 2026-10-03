@@ -508,6 +508,7 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
           <div class="sync-row" id="syncJoin">
             <label class="field" for="codeIn"><span class="label">Family code</span><input id="codeIn" type="text" maxlength="16" placeholder="ABCD-1234-EFGH" autocomplete="off" autocapitalize="characters" spellcheck="false"></label>
             <button class="btn done" id="codeBtn" type="button">Connect</button>
+            <button class="btn" id="newCodeBtn" type="button">Create a family code</button>
           </div>
           <div class="sync-row" id="syncLinked" hidden>
             <span class="code-chip">Family code <b id="codeShow"></b></span>
@@ -723,7 +724,7 @@ function loadBook(){
       if(o.mine)Object.assign(b,o);
       else{b.mine.words=o.words||{};b.mine.tricky=o.tricky||{};b.seenLevel=o.seenLevel||0;}}
   }catch(e){}
-  if(!/^[a-z0-9-]{6,40}$/i.test(b.device))b.device="d-"+Math.random().toString(36).slice(2,10)+Date.now().toString(36);
+  if(!/^d-[a-z0-9]{6,36}$/.test(b.device))b.device="d-"+Math.random().toString(36).slice(2,10).replace(/[^a-z0-9]/g,"")+Date.now().toString(36);
   return tallyBook(b);
 }
 function tallyBook(b){
@@ -745,12 +746,21 @@ function earnSticker(word,n){
 function markTricky(word){BOOK.mine.tricky[word]=2;tallyBook(BOOK);saveBook();queueSync();}
 function trickyPick(pool,avoid){const t=pool.filter(w=>BOOK.mine.tricky[w]&&w!==avoid);return t.length&&Math.random()<.35?pick(t):null;}
 
-/* ---------- saving the book online (family Google Sheet) and to a backup file ---------- */
-const SYNC_URL="";  /* the family Google Sheet's web app; only answers when the family code matches */
+/* ---------- saving the book online (family Firebase database) and to a backup file ----------
+   Each family's book lives at /books/<family code>/devices/<tablet>. The database rules only allow
+   reading or writing a book by its exact 12-character code, and only sticker data in the right shape. */
+const SYNC_URL="https://family-sticker-book-default-rtdb.asia-southeast1.firebasedatabase.app";
 const CODE_KEY="word-snap-family-code";
 const SYNC={busy:false,timer:0,ok:null,at:0,msg:""};
 function familyCode(){try{return localStorage.getItem(CODE_KEY)||"";}catch(e){return "";}}
 const tidyCode=c=>{const r=String(c||"").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,12);return (r.match(/.{1,4}/g)||[]).join("-");};
+const rawCode=c=>String(c||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+const bookUrl=c=>`${SYNC_URL}/books/${rawCode(c)}`;
+function newFamilyCode(){
+  const abc="ABCDEFGHJKMNPQRSTUVWXYZ23456789",a=new Uint32Array(12);
+  try{crypto.getRandomValues(a);}catch(e){for(let i=0;i<12;i++)a[i]=Math.floor(Math.random()*1e9);}
+  return tidyCode([...a].map(n=>abc[n%abc.length]).join(""));
+}
 function deviceName(){
   const u=navigator.userAgent;
   if(/iPad/.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1))return "iPad";
@@ -759,16 +769,17 @@ function deviceName(){
   return "Computer";
 }
 function queueSync(ms){if(!SYNC_URL||!familyCode())return;clearTimeout(SYNC.timer);SYNC.timer=setTimeout(syncNow,ms==null?4000:ms);}
+/* Save this tablet's stickers, then fetch every tablet's stickers for the family book. */
 async function syncNow(){
   const code=familyCode();
   if(!SYNC_URL||!code||SYNC.busy)return null;
   SYNC.busy=true;renderSync();
   try{
-    const res=await fetch(SYNC_URL,{method:"POST",body:JSON.stringify({action:"save",code,device:BOOK.device,name:deviceName(),words:BOOK.mine.words,tricky:BOOK.mine.tricky})});
-    const data=await res.json();
-    if(!data.ok){Object.assign(SYNC,{ok:false,at:Date.now(),msg:data.error==="wrong-code"?"wrong-code":"error"});return data;}
-    const others={};
-    (data.devices||[]).forEach(d=>{if(d.device&&d.device!==BOOK.device)others[d.device]={name:d.name||"Tablet",words:d.words||{},tricky:d.tricky||{},saved:d.saved||""};});
+    const put=await fetch(`${bookUrl(code)}/devices/${BOOK.device}.json`,{method:"PUT",body:JSON.stringify({name:deviceName(),saved:Date.now(),words:BOOK.mine.words,tricky:BOOK.mine.tricky})});
+    if(!put.ok)throw new Error("save "+put.status);
+    const data=await (await fetch(`${bookUrl(code)}.json`)).json();
+    const others={},devs=(data&&data.devices)||{};
+    Object.keys(devs).forEach(id=>{if(id!==BOOK.device){const d=devs[id]||{};others[id]={name:d.name||"Tablet",words:d.words||{},tricky:d.tricky||{},saved:d.saved||0};}});
     BOOK.others=others;tallyBook(BOOK);saveBook();
     Object.assign(SYNC,{ok:true,at:Date.now(),msg:""});
     renderHome();if(!$("bookOv").hidden)renderBook();
@@ -784,23 +795,31 @@ function renderSync(){
   $("syncJoin").hidden=on;$("syncLinked").hidden=!on;
   const st=$("syncStatus");
   if(!SYNC_URL)st.textContent="Saved on this tablet only. Use a backup file to keep a copy.";
-  else if(!on)st.textContent="Saved on this tablet only. Type your family code to keep the book safe online and share it with your other tablet.";
-  else if(SYNC.busy)st.textContent="Saving to the family Google Sheet…";
-  else if(SYNC.ok){const names=[...new Set(Object.values(BOOK.others).map(o=>o.name))];st.textContent=`Connected ✓ Saved to the family Google Sheet ${ago(SYNC.at)}.${names.length?` Also has stickers from: ${names.join(", ")}.`:""}`;}
-  else if(SYNC.msg==="wrong-code")st.textContent="That family code isn't right. Check it and try again.";
+  else if(!on)st.textContent="Saved on this tablet only. To keep it safe online and share it between tablets: on the first tablet tap “Create a family code”, then type that code here on the other tablet.";
+  else if(SYNC.busy)st.textContent="Saving online…";
+  else if(SYNC.ok){const names=[...new Set(Object.values(BOOK.others).map(o=>o.name))];st.textContent=`Connected ✓ Saved online ${ago(SYNC.at)}.${names.length?` Also has stickers from: ${names.join(", ")}.`:" Type the family code on your other tablet to share this book."}`;}
   else if(SYNC.msg)st.textContent="Connected, but couldn't reach the internet. It will save next time.";
-  else st.textContent="Connected to the family Google Sheet.";
+  else st.textContent="Connected. Saving online…";
   $("codeShow").textContent=tidyCode(code);
 }
+/* Joining checks that a book already exists for the code, so a typo can't start a separate empty book. */
 async function connectCode(){
   const code=tidyCode($("codeIn").value);
-  if(code.replace(/-/g,"").length!==12){SYNC.ok=false;SYNC.msg="wrong-code";renderSyncJoinError();return;}
-  try{localStorage.setItem(CODE_KEY,code);}catch(e){}
-  const data=await syncNow();
-  if(data&&data.ok===false&&data.error==="wrong-code"){try{localStorage.removeItem(CODE_KEY);}catch(e){}renderSyncJoinError();}
-  else{$("codeIn").value="";renderSync();}
+  if(rawCode(code).length!==12){joinMessage("A family code has 12 letters and numbers, like ABCD-1234-EFGH.");return;}
+  $("codeBtn").disabled=true;joinMessage("Looking for the sticker book…");
+  try{
+    const data=await (await fetch(`${bookUrl(code)}.json`)).json();
+    if(!data||!data.devices){joinMessage("No sticker book found for that code. Check each letter and number and try again.");return;}
+    try{localStorage.setItem(CODE_KEY,code);}catch(e){}
+    $("codeIn").value="";await syncNow();
+  }catch(e){joinMessage("Couldn't reach the internet. Check the Wi-Fi and try again.");}
+  finally{$("codeBtn").disabled=false;}
 }
-function renderSyncJoinError(){renderSync();$("syncStatus").textContent="That family code isn't right. It has 12 letters and numbers, like ABCD-1234-EFGH.";}
+async function createCode(){
+  try{localStorage.setItem(CODE_KEY,newFamilyCode());}catch(e){}
+  await syncNow();
+}
+function joinMessage(t){renderSync();$("syncStatus").textContent=t;}
 function disconnect(){try{localStorage.removeItem(CODE_KEY);}catch(e){}Object.assign(SYNC,{ok:null,msg:""});renderSync();}
 async function backupFile(){
   const data={app:"word-snap-sticker-book",version:2,saved:new Date().toISOString(),child:kidName(),words:BOOK.words,mine:BOOK.mine};
@@ -1478,6 +1497,7 @@ function bind(){
   $("codeIn").addEventListener("input",e=>{const v=tidyCode(e.target.value);if(v!==e.target.value)e.target.value=v;});
   $("codeIn").addEventListener("keydown",e=>{if(e.key==="Enter")connectCode();});
   $("codeBtn").addEventListener("click",connectCode);
+  $("newCodeBtn").addEventListener("click",createCode);
   $("syncBtn").addEventListener("click",()=>syncNow());
   $("unlinkBtn").addEventListener("click",disconnect);
   $("backupBtn").addEventListener("click",backupFile);
