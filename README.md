@@ -1,8 +1,8 @@
 # Word Snap Showdown
 
-Reading and maths games for a young reader and a grown-up, hosted by Luna the bunny. The home screen has a **Reading** tab and a **Maths** tab.
+Reading, maths and Bahasa Melayu games for a young reader and a grown-up, hosted by Luna the bunny. The home screen has **English**, **Maths** and **Bahasa** tabs.
 
-### Reading
+### English
 
 - **Word Snap**: Luna says a word and both players race to tap it on their own side. The grown-up's cards appear after an adjustable head start.
 - **Robot Talk** (take turns): Luna says a word sound by sound ("c… a… t") and the player taps the matching picture.
@@ -18,6 +18,17 @@ In the turn games the play area turns to face whoever's turn it is, so only one 
 - **Bunny Hop**: a race board. Roll the dice, count on, and tap the square you'll land on; carrot squares give 2 extra hops. She always hops; the grown-up only hops if he answers in time.
 
 After her first wrong tap, Luna counts along with her and she tries again. Every right answer pays out a star, a prize flying into her bar and a number sticker, and answers in a row win bonus stars. Settings → **Maths numbers** switches between numbers up to 10 and up to 20.
+
+### Bahasa (take turns, plus a practice test)
+
+This week's Bahasa Melayu spelling (ejaan) words, learnt by suku kata the way school teaches them. Edit the list in Settings → **Bahasa Melayu spelling words** (one word per line, optional "= meaning").
+
+- **Suku Kata**: hear the word, see its picture, build it from syllable tiles. Wrong tiles include the spellings children often write (kebon for kebun, beneh for benih).
+- **Eja!**: spell it letter by letter into boxes grouped by syllable.
+- **Cari Gambar**: read the Malay word, tap its picture; Luna says what it means in English.
+- **Ujian Ejaan**: Luna reads each word (then syllable by syllable), she writes it on paper, taps Check, and the grown-up marks ✓ or ✗. Missed words come back at the end.
+
+Luna says the recorded words; words added later are read by the tablet's own Malay voice (Settings can also switch every Malay word to that voice).
 
 ### Sticker book
 
@@ -63,7 +74,7 @@ Only clips whose text changed are re-recorded. New words added to the word lists
 |---|---|
 | `index.html` | The whole game |
 | `sw.js` | Keeps the game playable offline, including Luna's voice |
-| `audio/` | Luna's recorded lines (`p/`), reading words (`w/`), letter sounds (`s/`) and numbers (`n/`) |
+| `audio/` | Luna's recorded lines (`p/`), reading words (`w/`), letter sounds (`s/`), numbers (`n/`) and Bahasa Melayu words, syllables, cheers and meanings (`m/`) |
 | `tools/make_voice.py` | Records the voice clips |
 | `manifest.webmanifest` | App name, icon and full-screen setting |
 | `fonts/` | Andika (reading font) and Grandstander (title font) |

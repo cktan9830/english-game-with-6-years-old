@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <title>Word Snap Showdown</title>
-<meta name="description" content="Reading and maths games for a young reader and a grown-up, hosted by Luna the bunny.">
+<meta name="description" content="English, maths and Bahasa Melayu games for a young reader and a grown-up, hosted by Luna the bunny.">
 <meta name="theme-color" content="#1c1748">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -109,7 +109,7 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 .mini-book svg{display:block;width:100%;height:auto}
 /* reading / maths tabs */
 .subj{display:inline-flex;gap:6px;padding:5px;border-radius:999px;background:rgba(253,251,255,.12)}
-.subj button{appearance:none;border:0;border-radius:999px;padding:.38em 1.25em;font:900 clamp(1.05rem,2.4vw,1.4rem) var(--font-display);color:var(--snow);background:transparent}
+.subj button{appearance:none;border:0;border-radius:999px;padding:.38em 1em;font:900 clamp(1.05rem,2.4vw,1.4rem) var(--font-display);color:var(--snow);background:transparent}
 .subj button[aria-selected="true"]{background:var(--snow);color:var(--ink);box-shadow:0 4px 0 var(--sun-deep)}
 .games.four{grid-template-columns:repeat(4,minmax(0,1fr));width:min(100%,920px)}
 .game-btn.count{background:linear-gradient(180deg,#ffd6e6,#ff9cc6);box-shadow:0 7px 0 var(--berry-deep),0 14px 28px rgba(255,79,154,.22)}
@@ -358,6 +358,63 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 /* the board stays put facing her; on the grown-up's turn only the dice and question turn to face him */
 .turn.hopmode .tstage.p1{transform:none}
 .turn.hopmode .tstage.p1 .thead,.turn.hopmode .tstage.p1 .tprompt,.turn.hopmode .tstage.p1 .tcover{transform:rotate(180deg)}
+/* ---------- Bahasa Melayu games ---------- */
+.game-btn.sk{background:linear-gradient(180deg,#c6f7e9,#5fd9b8);box-shadow:0 7px 0 var(--mint-deep),0 14px 28px rgba(31,195,165,.22)}
+.game-btn.eja{background:linear-gradient(180deg,#ffd0e2,#ff86b6);box-shadow:0 7px 0 var(--berry-deep),0 14px 28px rgba(255,79,154,.22)}
+.game-btn.pic{background:linear-gradient(180deg,#fff0b8,#ffd25a);box-shadow:0 7px 0 var(--sun-deep),0 14px 28px rgba(255,201,60,.25)}
+.game-btn.test{background:linear-gradient(180deg,#dbe4ff,#98adff);box-shadow:0 7px 0 #4b62c7,0 14px 28px rgba(90,120,255,.25)}
+.game-btn:disabled{opacity:.5;animation:none}
+.turn.bm .tchoices{display:block;height:auto;min-height:0}
+.turn.bm.picmode .tchoices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));height:clamp(110px,26vh,230px)}
+.turn.solo #tbar1 .banner{visibility:hidden}
+.bmq{display:flex;align-items:center;justify-content:center;gap:clamp(12px,3vw,28px);margin-bottom:clamp(4px,1.2vh,12px)}
+.bmpic{display:inline-grid;place-items:center;font-size:clamp(3.2rem,min(11vw,13vh),6.2rem);line-height:1}
+.bmpic svg{width:1.15em;height:1.15em;display:block}
+.bmpic.small{font-size:clamp(2.4rem,min(8vw,9vh),4.4rem)}
+.pcard svg{width:1em;height:1em}
+.bm-hear{appearance:none;border:0;width:clamp(56px,8vw,76px);aspect-ratio:1;border-radius:50%;background:var(--sun);color:var(--ink);box-shadow:0 5px 0 var(--sun-deep);display:grid;place-items:center;padding:0}
+.bm-hear svg{width:56%;height:56%}
+.bm-hear:active{transform:translateY(3px);box-shadow:0 2px 0 var(--sun-deep)}
+.slots{display:flex;align-items:flex-end;justify-content:center;flex-wrap:wrap;gap:clamp(4px,1vw,10px);font:700 clamp(2rem,min(7vw,8.5vh),4.4rem)/1 var(--font-read)}
+.slots .grp{display:inline-flex;gap:clamp(3px,.6vw,6px)}
+.lslot{display:inline-grid;place-items:center;min-width:.82em;height:1.3em;padding:0 .08em;border-radius:12px;background:rgba(253,251,255,.14);border-bottom:4px dashed rgba(253,251,255,.55);color:var(--snow)}
+.lslot.sk{min-width:2.4em}
+.lslot.next{background:rgba(255,201,60,.28);border-bottom-color:var(--sun);animation:pulse 1.2s ease-in-out infinite}
+.lslot.fill{background:var(--snow);color:var(--ink);border-bottom:4px solid var(--team);animation:bigpop .35s cubic-bezier(.3,1.7,.5,1) both}
+.lslot.shown{background:#d8fff2;color:var(--ink);border-bottom:4px solid var(--mint)}
+.slots .dot{font-style:normal;color:var(--sun);font-size:.8em;align-self:center}
+.tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(8px,1.4vw,14px)}
+.tile{appearance:none;border:0;min-width:clamp(56px,8vw,86px);height:clamp(56px,min(9vw,11vh),88px);padding:0 .45em;border-radius:18px;background:var(--snow);color:var(--ink);font:700 clamp(1.8rem,min(5.4vw,6.4vh),3.2rem)/1 var(--font-read);box-shadow:0 6px 0 var(--team-deep),0 10px 18px rgba(0,0,0,.2);animation:cardIn .3s cubic-bezier(.3,1.4,.5,1) both}
+.tiles.sk .tile{min-width:clamp(96px,14vw,150px)}
+.tile:disabled{cursor:default;opacity:1}
+.tile:not(:disabled):active{transform:translateY(4px);box-shadow:0 2px 0 var(--team-deep)}
+.tile.used{opacity:.18;box-shadow:none;animation:none}
+.tile.nope{background:var(--nope);animation:shake .42s ease-in-out both}
+.tile.hint{background:#fff3c4;box-shadow:0 0 0 5px var(--sun),0 6px 0 var(--sun-deep);animation:pulse 1s ease-in-out infinite}
+.wcard.bmword{font-size:clamp(2.6rem,min(12vw,11vh),6.5rem)}
+.testcard{display:grid;justify-items:center;gap:clamp(6px,1.4vh,14px)}
+.tnum{font:900 clamp(2.4rem,8vh,4rem)/1 var(--font-display);color:var(--sun);text-shadow:0 3px 0 var(--sun-deep)}
+.testbtns{display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
+.btn.big.go{background:linear-gradient(180deg,#b8f5e6,var(--mint));box-shadow:0 6px 0 var(--mint-deep)}
+.btn.big.yes{background:linear-gradient(180deg,#b8f5e6,var(--mint));box-shadow:0 6px 0 var(--mint-deep)}
+.btn.big.no{background:linear-gradient(180deg,#ffd0e2,#ff86b6);box-shadow:0 6px 0 var(--berry-deep)}
+.judge-note{text-align:center;margin-top:10px}
+.reveal-word{display:flex;align-items:center;gap:.2em;font:700 clamp(2.6rem,min(11vw,11vh),6rem)/1 var(--font-read);color:var(--snow);background:rgba(253,251,255,.1);padding:.1em .4em .14em;border-radius:22px}
+.reveal-word .rs{transition:color .2s,transform .25s}
+.reveal-word .rs.lit{color:var(--sun);transform:translateY(-.08em) scale(1.08)}
+.reveal-word .dot{font-style:normal;color:var(--sun);font-size:.7em}
+#bmIn{width:100%;min-height:8em;font:700 1.15rem/1.4 var(--font-read);padding:.6em .8em;border-radius:14px;border:3px solid transparent;background:var(--snow);color:var(--ink);resize:vertical;-webkit-user-select:text;user-select:text}
+#bmIn:focus{border-color:var(--sun);outline:none}
+.bm-words{display:flex;flex-wrap:wrap;gap:8px}
+.bm-words button{appearance:none;border:0;border-radius:14px;background:var(--snow);color:var(--ink);font:700 1.1rem/1.1 var(--font-read);padding:.4em .7em;display:inline-flex;align-items:center;gap:.4em;box-shadow:0 3px 0 var(--snow-2)}
+.bm-words button .bmpic{font-size:1.4rem}
+.bm-words button small{font-size:.8rem;color:var(--ink-soft)}
+.bm-words button.on{background:var(--sun)}
+.stk .disc.bm{font-size:2.3rem;background:radial-gradient(circle at 35% 30%,#fff,#ffe9f2)}
+.stk .disc.bm svg{width:1.1em;height:1.1em}
+.sticker-pop svg{width:1em;height:1em;display:block}
+@media (max-width:420px){.subj button{padding:.36em .7em;font-size:1rem}}
+
 /* phones held sideways: slimmer bars, and the maths answer cards move beside the question */
 @media (max-height:560px){
   .turn{gap:6px}
@@ -388,9 +445,29 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
   .frame{grid-template-columns:repeat(5,clamp(22px,7.5vh,40px));grid-auto-rows:clamp(22px,7.5vh,40px);gap:4px;padding:6px;border-radius:14px}
   .frame i{border-radius:8px;border-width:2px;font-size:clamp(.9rem,4.6vh,1.5rem)}
   .objs{padding:6px 10px;gap:4px}
-  .turn.math:not(.hopmode) .tstage{grid-template-columns:minmax(0,1fr) minmax(0,36%);grid-template-rows:auto minmax(0,1fr)}
-  .turn.math:not(.hopmode) .thead{grid-column:1 / -1}
-  .turn.math:not(.hopmode) .tchoices{height:auto;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:8px}
+  .turn.math:not(.hopmode):not(.bm) .tstage{grid-template-columns:minmax(0,1fr) minmax(0,36%);grid-template-rows:auto minmax(0,1fr)}
+  .turn.math:not(.hopmode):not(.bm) .thead{grid-column:1 / -1}
+  .turn.math:not(.hopmode):not(.bm) .tchoices{height:auto;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:8px}
+}
+@media (max-height:560px){
+  .bmpic{font-size:2.3rem}
+  .bmpic.small{font-size:1.9rem}
+  .bmq{margin-bottom:2px}
+  .bm-hear{width:42px}
+  .slots{font-size:1.7rem}
+  .lslot{border-radius:8px;border-bottom-width:3px}
+  .tiles{gap:6px}
+  .tile{height:44px;min-width:46px;font-size:1.5rem;border-radius:12px;box-shadow:0 4px 0 var(--team-deep)}
+  .tiles.sk .tile{min-width:84px}
+  .turn.bm.picmode .tchoices{height:clamp(64px,22vh,110px)}
+  .turn.bm.picmode .pcard{font-size:2.6rem}
+  .wcard.bmword{font-size:2.4rem}
+  .testcard{grid-auto-flow:column;align-items:center;gap:14px}
+  .tnum{font-size:1.8rem}
+  .testbtns{gap:10px}
+  .testbtns .btn.big{font-size:1.05rem;padding:.45em 1.1em}
+  .reveal-word{font-size:2.2rem}
+  .judge-note{margin-top:4px;font-size:.8rem}
 }
 .hopq .mq{max-width:30ch}
 .hopq .mq b{color:var(--sun);font-size:1.25em}
@@ -547,8 +624,9 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
         <button type="button" class="luna-btn" id="lunaBtn" aria-label="Say hi to Luna"><div class="luna idle" id="homeLuna" data-luna></div></button>
       </div>
       <div class="subj" role="tablist" aria-label="Pick a subject">
-        <button type="button" role="tab" id="tabRead" data-subj="read" aria-controls="gamesRead" aria-selected="true">📖 Reading</button>
+        <button type="button" role="tab" id="tabRead" data-subj="read" aria-controls="gamesRead" aria-selected="true">📖 English</button>
         <button type="button" role="tab" id="tabMath" data-subj="math" aria-controls="gamesMath" aria-selected="false">🔢 Maths</button>
+        <button type="button" role="tab" id="tabBM" data-subj="bm" aria-controls="gamesBM" aria-selected="false">🌺 Bahasa</button>
       </div>
       <div class="games" id="gamesRead" role="tabpanel" aria-labelledby="tabRead">
         <button type="button" class="game-btn snap" data-game="snap" style="--d:0"><span class="gico" aria-hidden="true">⚡</span><b>Word Snap</b><small>Race to tap the word</small></button>
@@ -560,6 +638,12 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
         <button type="button" class="game-btn make10" data-game="make10" style="--d:1"><span class="gico" aria-hidden="true">🥕</span><b>Make Ten</b><small>Fill the basket</small></button>
         <button type="button" class="game-btn sum" data-game="sum" style="--d:2"><span class="gico" aria-hidden="true">➕</span><b>Sum Snap</b><small>Add and take away</small></button>
         <button type="button" class="game-btn hop" data-game="hop" style="--d:3"><span class="gico" aria-hidden="true">🎲</span><b>Bunny Hop</b><small>Roll and race</small></button>
+      </div>
+      <div class="games four" id="gamesBM" role="tabpanel" aria-labelledby="tabBM" hidden>
+        <button type="button" class="game-btn sk" data-game="sk" style="--d:0"><span class="gico" aria-hidden="true">🧩</span><b>Suku Kata</b><small>Build with syllables</small></button>
+        <button type="button" class="game-btn eja" data-game="eja" style="--d:1"><span class="gico" aria-hidden="true">✏️</span><b>Eja!</b><small>Spell it</small></button>
+        <button type="button" class="game-btn pic" data-game="pic" style="--d:2"><span class="gico" aria-hidden="true">🔍</span><b>Cari Gambar</b><small id="picSmall">What does it mean?</small></button>
+        <button type="button" class="game-btn test" data-game="test" style="--d:3"><span class="gico" aria-hidden="true">📝</span><b>Ujian Ejaan</b><small>Practice test</small></button>
       </div>
       <button type="button" class="book-btn" id="bookBtn"><span class="mini-book" id="miniBook" aria-hidden="true"></span><span><b id="bookBtnTitle">My Sticker Book</b><small id="bookBtnCount">0 stickers</small></span></button>
       <p class="hint">Tap Luna to say hi!</p>
@@ -616,6 +700,8 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
       <p class="tricky" id="tricky" hidden></p>
       <h3 class="more" id="numHead" hidden>Numbers I know</h3>
       <div class="stickers" id="numStickers" hidden></div>
+      <h3 class="more" id="bmHead" hidden>Kata Bahasa Melayu</h3>
+      <div class="stickers" id="bmStickers" hidden></div>
     </div>
   </div>
 </div>
@@ -691,6 +777,18 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
           <input class="vh" type="file" id="restoreIn" accept=".json,application/json">
         </div>
         <p class="note" id="backupStatus" aria-live="polite"></p>
+      </div>
+
+      <div class="panel">
+        <h2>Bahasa Melayu spelling words (ejaan)</h2>
+        <p class="note">This week's list, one word per line. Add "= meaning" for the English meaning, e.g. "pokok = tree". Words Luna hasn't recorded are read by the tablet's own Malay voice.</p>
+        <textarea id="bmIn" rows="6" spellcheck="false" autocomplete="off" autocapitalize="none"></textarea>
+        <div class="bm-words" id="bmWords" aria-label="Tap a word to hear it"></div>
+        <div class="opt">
+          <span class="label" id="bmVoiceLabel">Voice for the Malay words</span>
+          <div class="seg" id="bmVoiceSeg" role="radiogroup" aria-labelledby="bmVoiceLabel"></div>
+          <p class="note" id="bmVoiceNote"></p>
+        </div>
       </div>
 
       <div class="panel">
@@ -824,7 +922,43 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
   "math3": "You're a number wizard!",
   "mwin1": "Hooray! You are the Maths Champion! Your counting is like magic!",
   "mwin2": "You did it! You're a maths superstar!",
-  "mwin3": "Woohoo! Champion! You know so many numbers!"
+  "mwin3": "Woohoo! Champion! You know so many numbers!",
+  "bm_sk_intro": "Syllable time! Listen to the word, then build it with syllables!",
+  "bm_eja_intro": "Spelling time! Listen to the word, then spell it, letter by letter!",
+  "bm_pic_intro": "Picture time! Read the Malay word, then find its picture!",
+  "bm_test_intro": "Spelling test! Listen to each word, write it on your paper, then tap Check!",
+  "bm_build": "Build the word!",
+  "bm_spell": "Spell the word!",
+  "bm_find": "Which picture is it?",
+  "bm_syl": "Listen to the syllables!",
+  "bm_write": "Write it on your paper!",
+  "bm_check": "Let's check! Did you spell it right?",
+  "bm_again": "Let's practise the tricky ones again!",
+  "bm_alldone": "Wow! You finished the spelling test!",
+  "bm_win": "Hooray! You are a Bahasa Melayu superstar!",
+  "number": "Number",
+  "means": "It means"
+}
+</script>
+<script type="application/json" id="bm">
+{
+  "words": [
+    {"w": "benih", "ph": "bənˈih", "en": "seed", "pic": "🌱"},
+    {"w": "cangkul", "ph": "tʃˈaŋkul", "en": "hoe", "pic": "svg:cangkul"},
+    {"w": "kebun", "ph": "kəbˈun", "en": "garden", "pic": "svg:kebun"},
+    {"w": "matahari", "ph": "mˌatahˈaɾi", "en": "sun", "pic": "☀️"},
+    {"w": "tanah", "ph": "tˈanah.", "en": "soil", "pic": "svg:tanah"},
+    {"w": "kuat", "ph": "kˈuwat", "en": "strong", "pic": "💪"},
+    {"w": "keras", "ph": "kəɾˈas", "en": "hard", "pic": "🪨"},
+    {"w": "tajam", "ph": "tˈadʒam", "en": "sharp", "pic": "🔪"},
+    {"w": "lembut", "ph": "ləmbˈʊt", "en": "soft", "pic": "🧸"},
+    {"w": "cepat", "ph": "tʃəpˈat", "en": "fast", "pic": "🐆"}
+  ],
+  "syllables": {"be": "bˈɜ", "nih": "nˈih", "cang": "tʃˈaŋ", "kul": "kˈul", "ke": "kˈɜ", "bun": "bˈun", "ma": "mˈa", "ta": "tˈa",
+    "ha": "hˈa", "ri": "ɾˈi", "nah": "nˈah", "ku": "kˈu", "at": "ˈat", "ras": "ɾˈas", "jam": "dʒˈam", "lem": "lˈɜm", "but": "bˈʊt",
+    "ce": "tʃˈɜ", "pat": "pˈat"},
+  "cheers": {"betul": ["bətˈul", "Betul!"], "bagus": ["bˈaɡus", "Bagus!"], "pandai": ["pˈandai", "Pandai!"],
+    "hebat": ["hˈɛbat", "Hebat!"], "syabas": ["ʃˈabas", "Syabas!"]}
 }
 </script>
 <script>
@@ -860,6 +994,19 @@ const numKey=n=>"num"+numWord(n).replace(/ /g,"");
 const NUM_OF={};for(let i=0;i<=100;i++)NUM_OF[numKey(i)]=i;
 const isNumKey=k=>Object.prototype.hasOwnProperty.call(NUM_OF,k);
 const nk=n=>"n/"+n;
+/* Bahasa Melayu: this week's spelling words (data block above), their pictures and the sticker keys ("bm" + word). */
+const BM=JSON.parse(document.getElementById("bm").textContent);
+const SVGPIC={
+  cangkul:`<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M16 92L70 22" stroke="#8a5529" stroke-width="9" stroke-linecap="round"/><path d="M17 89L68 23" stroke="#c98a4f" stroke-width="3" stroke-linecap="round" opacity=".8"/><path d="M60 13L80 21L86 62L64 59Z" fill="#b3bec9" stroke="#66737f" stroke-width="2.5" stroke-linejoin="round"/><path d="M65 57L84 60" stroke="#eef3f7" stroke-width="3" stroke-linecap="round"/><circle cx="69" cy="20" r="6.5" fill="#56616c"/></svg>`,
+  tanah:`<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M5 76C13 52 33 41 50 41C68 41 87 53 95 76Z" fill="#8a5a2e"/><rect x="2" y="73" width="96" height="19" rx="6" fill="#6b4220"/><g fill="#55321a"><circle cx="30" cy="61" r="3"/><circle cx="52" cy="52" r="2.6"/><circle cx="70" cy="63" r="3.2"/><circle cx="44" cy="67" r="2.2"/><circle cx="20" cy="82" r="2.6"/><circle cx="62" cy="84" r="2.4"/><circle cx="84" cy="80" r="2.8"/></g><g fill="#c2a581"><ellipse cx="38" cy="55" rx="4.2" ry="2.6"/><ellipse cx="78" cy="71" rx="3.6" ry="2.2"/><ellipse cx="48" cy="81" rx="4.6" ry="2.6"/></g></svg>`,
+  kebun:`<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="0" y="74" width="100" height="20" rx="5" fill="#7a4b24"/><g fill="#36a852"><ellipse cx="22" cy="54" rx="11" ry="15"/><ellipse cx="50" cy="47" rx="13" ry="18"/><ellipse cx="78" cy="54" rx="11" ry="15"/></g><g fill="#ff5b4a"><circle cx="45" cy="42" r="4.6"/><circle cx="56" cy="52" r="4.2"/><circle cx="18" cy="49" r="3.8"/><circle cx="81" cy="47" r="3.8"/></g><g fill="#fffaf0" stroke="#cdbb9c" stroke-width="1"><path d="M4 70h92v6H4z"/><path d="M4 86h92v5H4z"/><path d="M8 94V66l5-6 5 6v28z"/><path d="M24 94V66l5-6 5 6v28z"/><path d="M40 94V66l5-6 5 6v28z"/><path d="M56 94V66l5-6 5 6v28z"/><path d="M72 94V66l5-6 5 6v28z"/><path d="M86 94V66l4-6 4 6v28z"/></g></svg>`
+};
+/* pictures for words that may come up in later weeks' lists */
+const BM_PICS={rumah:"🏠",kucing:"🐱",anjing:"🐶",ikan:"🐟",bunga:"🌸",pokok:"🌳",daun:"🍃",buku:"📖",bola:"⚽",air:"💧",api:"🔥",burung:"🐦",ayam:"🐔",itik:"🦆",kereta:"🚗",bas:"🚌",basikal:"🚲",kapal:"🚢",sekolah:"🏫",epal:"🍎",pisang:"🍌",nasi:"🍚",roti:"🍞",susu:"🥛",telur:"🥚",hujan:"🌧️",bulan:"🌙",bintang:"⭐",awan:"☁️",laut:"🌊",gajah:"🐘",kambing:"🐐",lembu:"🐄",arnab:"🐰",harimau:"🐯",monyet:"🐒",kasut:"👟",baju:"👕",topi:"🧢",payung:"☂️",pintu:"🚪",kerusi:"🪑",jam:"⏰",telefon:"📱",gunting:"✂️",pensel:"✏️",beg:"🎒",kek:"🎂",hadiah:"🎁",belon:"🎈",sayur:"🥬",lobak:"🥕",jagung:"🌽",tembikai:"🍉",anggur:"🍇",gigi:"🦷",mata:"👁️",tangan:"✋",kaki:"🦶",hati:"❤️",sejuk:"🥶",panas:"🥵",gembira:"😄",sedih:"😢",tidur:"😴",makan:"🍽️",minum:"🥤",lari:"🏃",kuat:"💪",cepat:"🐆",lambat:"🐢"};
+BM.words.forEach(d=>{BM_PICS[d.w]=d.pic;});
+const bmKeyWord=k=>/^bm[a-z]+$/.test(k)&&!isNumKey(k)?k.slice(2):null;
+function bmPicFace(pic){return !pic?"":pic.startsWith("svg:")?(SVGPIC[pic.slice(4)]||""):pic;}
+const bmFace=w=>bmPicFace(BM_PICS[w]);
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=(Math.random()*(i+1))|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
 const pick=a=>a[(Math.random()*a.length)|0];
 function diff(a,b){if(a.length!==b.length)return 99;let d=0;for(let i=0;i<a.length;i++)if(a[i]!==b[i])d++;return d;}
@@ -911,7 +1058,7 @@ const MATH_WIN=["mwin1","mwin2","mwin3"];
 
 /* ---------- settings ---------- */
 const KEY="word-snap-showdown-settings";
-const DEFAULTS={kid:"Elyse",dad:"Daddy",level:"easy",target:10,headStart:1.5,daddyTime:3,autoBalance:true,bonus:true,sound:true,voice:true,mathMax:10,subject:"read"};
+const DEFAULTS={kid:"Elyse",dad:"Daddy",level:"easy",target:10,headStart:1.5,daddyTime:3,autoBalance:true,bonus:true,sound:true,voice:true,mathMax:10,subject:"read",bmList:"",bmVoice:"luna"};
 function loadSettings(){
   let s=Object.assign({},DEFAULTS);
   try{const raw=localStorage.getItem(KEY);if(raw)s=Object.assign(s,JSON.parse(raw));}catch(e){}
@@ -1069,7 +1216,8 @@ function restoreFile(file){
 }
 function popSticker(word){
   const host=!$("turn").hidden?$("tbar0"):$("side0");if(!host)return;
-  const num=isNumKey(word),el=document.createElement("div");el.className="sticker-pop"+(num?" num":"");el.textContent=num?String(NUM_OF[word]):PICS[word]||EMOJI[word]||"⭐";
+  const num=isNumKey(word),bw=bmKeyWord(word),el=document.createElement("div");el.className="sticker-pop"+(num?" num":"");
+  if(bw)el.innerHTML=bmFace(bw)||"⭐";else el.textContent=num?String(NUM_OF[word]):PICS[word]||EMOJI[word]||"⭐";
   host.appendChild(el);setTimeout(()=>el.remove(),1600);
 }
 let bookN=0;
@@ -1125,18 +1273,23 @@ function renderBook(){
   $("bookNext").textContent=next?`${to-BOOK.total} more ${to-BOOK.total===1?"sticker":"stickers"} to make your book even prettier!`:"Your book is fully magic! Keep collecting stickers.";
   $("bookSteps").innerHTML=BOOK_LEVELS.map((b,i)=>`<span class="${i<=lvl?"got":""}${i===lvl?" now":""}" title="${b.name} · ${b.at} stickers">${bookSVG(i)}</span>`).join("");
   const all=Object.keys(BOOK.words),nums=all.filter(isNumKey).sort((a,b)=>NUM_OF[a]-NUM_OF[b]);
-  const words=all.filter(k=>!isNumKey(k)).sort((a,b)=>BOOK.words[b]-BOOK.words[a]||a.localeCompare(b));
+  const bmKeys=all.filter(k=>bmKeyWord(k)).sort((a,b)=>a.localeCompare(b));
+  const words=all.filter(k=>!isNumKey(k)&&!bmKeyWord(k)).sort((a,b)=>BOOK.words[b]-BOOK.words[a]||a.localeCompare(b));
   const many=(k,c)=>c>1?`<span class="n">×${c}</span>`:"";
   $("stickers").innerHTML=words.length?words.map((w,i)=>{
     const e=PICS[w]||EMOJI[w],c=BOOK.words[w];
     return `<div class="stk" style="--r:${((i*37)%15)-7}deg">${many(w,c)}<span class="disc${e?"":" txt"}">${e||esc(w)}</span><b>${esc(w)}</b></div>`;
-  }).join(""):`<p class="empty">${nums.length?"Play a reading game to earn word stickers!":"Play a game to earn your first sticker!"}</p>`;
+  }).join(""):`<p class="empty">${nums.length||bmKeys.length?"Play an English game to earn word stickers!":"Play a game to earn your first sticker!"}</p>`;
+  $("bmHead").hidden=$("bmStickers").hidden=!bmKeys.length;
+  $("bmStickers").innerHTML=bmKeys.map((k,i)=>{const w=bmKeyWord(k),face=bmFace(w);
+    return `<div class="stk" style="--r:${((i*37)%15)-7}deg">${many(k,BOOK.words[k])}<span class="disc bm${face?"":" txt"}">${face||esc(w)}</span><b>${esc(w)}</b></div>`;
+  }).join("");
   const NUM_COLS=["#3d86ff","#ff4f9a","#13b394","#9b6bff","#ff8a1c"];
   $("numHead").hidden=$("numStickers").hidden=!nums.length;
   $("numStickers").innerHTML=nums.map((k,i)=>{const n=NUM_OF[k];
     return `<div class="stk" style="--r:${((i*37)%15)-7}deg">${many(k,BOOK.words[k])}<span class="disc num" style="background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.65),${NUM_COLS[n%5]} 62%)">${n}</span><b>${esc(numWord(n))}</b></div>`;
   }).join("");
-  const tricky=Object.keys(BOOK.tricky);
+  const tricky=Object.keys(BOOK.tricky).map(k=>bmKeyWord(k)||k);
   $("tricky").hidden=!tricky.length;
   $("tricky").innerHTML=tricky.length?`Tricky words (they'll come up more often): <b>${tricky.map(esc).join(", ")}</b>`:"";
 }
@@ -1191,7 +1344,7 @@ function speak(text,opt){
   later(finish,1500+text.length*90/rate);
 }
 /* Main voice: Luna's recorded clips (audio/p/* for lines, audio/w/* for words), played back to back. */
-const VOICE_VERSION="ad707750";  /* set by tools/make_voice.py whenever the clips change */
+const VOICE_VERSION="dbfd60f8";  /* set by tools/make_voice.py whenever the clips change */
 const clipCache=new Map();
 let sayGen=0,sayNodes=[];
 function loadClip(key){
@@ -1368,7 +1521,7 @@ function greet(introKeys,introText,after,bubble){
   if(kk&&dk)say(["p/"+kk,"p/"+dk],hello,{gap:.25,onend:()=>later(runIntro,250)});
   else speak(hello,{onend:()=>later(runIntro,250)});
 }
-function startMode(mode){if(isMath(mode))startMathGame(mode);else if(mode==="robot"||mode==="match")startTurnGame(mode);else startGame();}
+function startMode(mode){if(isBM(mode))startBMGame(mode);else if(isMath(mode))startMathGame(mode);else if(mode==="robot"||mode==="match")startTurnGame(mode);else startGame();}
 function startGame(){
   audio();pickVoice();wakeLock();
   token++;clearTimers();hush();
@@ -1503,7 +1656,7 @@ function startTurnGame(mode){
   token++;clearTimers();hush();
   S.mode=mode;S.gameStickers=0;S.scores=[0,0];S.turn=0;S.word="";S.tries=0;S.timeoutFn=null;
   S.deck=shuffle(PIC_WORDS.slice());S.deckPos=0;S.target=S.settings.target;S.dTime=S.settings.daddyTime;
-  showOnly("turn");$("turn").classList.remove("math","hopmode");
+  showOnly("turn");$("turn").classList.remove("math","hopmode","bm","picmode","solo");
   renderNames();renderScore(0);renderScore(1);renderDTime();renderStreak();
   $("tprompt").innerHTML="";$("tchoices").innerHTML="";$("treveal").hidden=true;$("tcover").hidden=true;$("ttimer").hidden=true;
   setFacing(0);$("tturn").textContent=MODE_INFO[mode].name;$("thearBtn").disabled=true;
@@ -1554,8 +1707,8 @@ function openAnswers(){
   setBubble("Which picture is it?");
   if(S.turn===1)startDTimer();
 }
-function startDTimer(){
-  const g=guard(),ms=Math.round(S.dTime*1000),bar=$("ttimerBar");
+function startDTimer(extra){
+  const g=guard(),ms=Math.round((S.dTime+(extra||0))*1000),bar=$("ttimerBar");
   $("ttimer").hidden=false;bar.style.transition="none";bar.style.transform="scaleX(1)";void bar.offsetWidth;
   bar.style.transition=`transform ${ms}ms linear`;bar.style.transform="scaleX(0)";
   later(g(()=>{if(S.phase==="answer"&&S.turn===1){sfx.wrong();if(S.timeoutFn)S.timeoutFn();else missTurn(1,true);}}),ms);
@@ -1713,7 +1866,7 @@ function countAlong(els,after){
 }
 function renderStreak(){
   const el=$("tstreak");if(!el)return;
-  const n=S.mstreak||0,on=isMath(S.mode)&&n>=2;
+  const n=S.mstreak||0,on=(isMath(S.mode)||isBM(S.mode))&&n>=2;
   el.hidden=!on;if(on)el.textContent=`🔥 ${n} in a row`;
 }
 function tplus(text){const el=document.createElement("div");el.className="plus";el.innerHTML=`${starSvg("")}${esc(text)}`;$("tstage").appendChild(el);setTimeout(()=>el.remove(),1400);}
@@ -1747,7 +1900,7 @@ function startMathGame(mode){
   S.timeoutFn=()=>mathMiss(1,true);
   S.N=mathMax()===20?30:20;S.target=hop?S.N:S.settings.target;
   S.carrots=hop?pickCarrots(S.N):[];
-  showOnly("turn");$("turn").classList.add("math");$("turn").classList.toggle("hopmode",hop);
+  showOnly("turn");$("turn").classList.remove("bm","picmode","solo");$("turn").classList.add("math");$("turn").classList.toggle("hopmode",hop);
   renderNames();
   if(hop){$("tname0").textContent=`🐰 ${kidName()}`;$("tname1").textContent=`🐻 ${dadName()}`;}
   renderScore(0);renderScore(1);renderDTime();renderStreak();
@@ -1774,7 +1927,7 @@ function mathTurnStart(p){
   setFacing(p);$("tturn").textContent=text;
   const cover=$("tcover");cover.innerHTML=`<b>${esc(text)}</b>`;cover.hidden=false;
   setBubble(text);bounceLuna();
-  const go=g(()=>{cover.hidden=true;if(S.mode==="hop")hopRollPrompt();else mathQuestion();});
+  const go=g(()=>{cover.hidden=true;if(S.mode==="hop")hopRollPrompt();else if(isBM(S.mode))bmQuestion();else mathQuestion();});
   if(tk)say(["p/"+tk],text,{onend:()=>later(go,200)});else speak(text,{onend:()=>later(go,200)});
 }
 function mathQuestion(){
@@ -1792,12 +1945,12 @@ function mathQuestion(){
 function mathOpen(){
   S.phase="answer";
   const from=S.q&&S.q.from!=null?S.q.from:-1;
-  document.querySelectorAll("#tchoices .ncard,#tchoices .sq").forEach(b=>{b.disabled=b.classList.contains("nope")||(b.matches(".sq")&&Number(b.dataset.n)<=from);});
-  $("thearBtn").disabled=!(voiceOn()&&S.q&&S.q.say);
+  document.querySelectorAll("#tchoices .ncard,#tchoices .sq,#tchoices .pcard").forEach(b=>{b.disabled=b.classList.contains("nope")||(b.matches(".sq")&&Number(b.dataset.n)<=from);});
+  $("thearBtn").disabled=!(voiceOn()&&S.q&&(S.q.say||(S.q.kind==="pic"&&S.tries>0)));
   if(S.turn===1)startDTimer();
 }
 function lockChoices(showRight){
-  document.querySelectorAll("#tchoices .ncard,#tchoices .sq").forEach(b=>{b.disabled=true;if(showRight&&S.q&&Number(b.dataset.n)===S.q.ans)b.classList.add("right");});
+  document.querySelectorAll("#tchoices .ncard,#tchoices .sq,#tchoices .pcard,#tchoices .tile").forEach(b=>{b.disabled=true;if(showRight&&S.q&&b.dataset.n!=null&&Number(b.dataset.n)===S.q.ans)b.classList.add("right");});
 }
 function onMathPick(btn){
   if(S.phase!=="answer"||btn.disabled||!S.q)return;
@@ -1807,9 +1960,10 @@ function onMathPick(btn){
   if(p===0&&S.tries===0&&q.teach){
     /* her first miss: Luna counts it out with her, then she tries again */
     S.tries=1;S.phase="hint";S.mstreak=0;renderStreak();lockChoices();
-    const g=guard(),key=S.mode==="hop"?"counthops":"letscount";
+    const g=guard(),key=S.mode==="hop"?"counthops":"letscount",reopen=g(()=>{setBubble(S.mode==="hop"?"Tap the square where you land!":q.bubble);mathOpen();});
+    if(isBM(S.mode)){setBubble(`It says “${q.word.w}”.`);q.teach(reopen);return;}
     setBubble(LINES[key]);
-    say(["p/"+key],LINES[key],{onend:g(()=>q.teach(g(()=>{setBubble(S.mode==="hop"?"Tap the square where you land!":q.bubble);mathOpen();})))});
+    say(["p/"+key],LINES[key],{onend:g(()=>q.teach(reopen))});
     return;
   }
   mathMiss(p,false);
@@ -1824,7 +1978,7 @@ function mathRight(p,btn){
     else if(st===5){key="streak5";party=true;}
     else if(st===2)key="streak2";
     else key=pick(MATH_ROUND);
-    earnSticker(numKey(q.ans));
+    earnSticker(q.sticker||numKey(q.ans));
   }else{key=pick(GU_LINES);balanceD(true);}
   if(!hop){const before=S.scores[p];S.scores[p]=Math.min(S.target,before+gain);renderScore(p,before);tplus(gain>1?"+2":"+1");}
   burstAt(btn,p===0?44:20,p===0?1.15:.8);sfx.point();
@@ -1832,10 +1986,13 @@ function mathRight(p,btn){
   if(gain>1)later(()=>{sfx.sparkle();burstAt($("tbar0"),36,1.1);},500);
   if(party){rain(3000);later(()=>sfx.win(),300);}
   renderStreak();
-  const line=LINES[key];setBubble(line);bounceLuna();
-  if(hop)return hopAfterAnswer(p,true,["p/"+key],line);
+  let keys=["p/"+key],line=LINES[key];
+  if(isBM(S.mode)&&p===0&&!/^streak/.test(key)){const c=pick(BM_CHEERS);keys=["m/c_"+c];line=BM.cheers[c][1];}   /* "Bagus!", "Pandai!" */
+  setBubble(line);bounceLuna();
+  if(hop)return hopAfterAnswer(p,true,keys,line);
   if(q.show)q.show();
-  later(g(()=>say(["p/"+key].concat(q.answer),`${line} ${q.answerText}`,{gap:.3,onend:g(()=>later(g(()=>mathTurnStart(1-p)),900))})),400);
+  const next=g(()=>later(g(()=>mathTurnStart(1-p)),900));
+  later(g(()=>{if(q.speakAnswer)q.speakAnswer(keys,line,next);else say(keys.concat(q.answer),`${line} ${q.answerText}`,{gap:.3,onend:next});}),400);
 }
 function mathMiss(p,timeout){
   const g=guard(),q=S.q,hop=S.mode==="hop";
@@ -1845,7 +2002,8 @@ function mathMiss(p,timeout){
   setBubble(hop&&p===1?`${line} ${dadName()} stays put.`:line);
   if(hop)return hopAfterAnswer(p,false,["p/"+key],line);
   if(q.show)q.show();
-  later(g(()=>say(["p/"+key].concat(q.answer),`${line} ${q.answerText}`,{gap:.3,onend:g(()=>later(g(()=>mathTurnStart(1-p)),1100))})),600);
+  const next=g(()=>later(g(()=>mathTurnStart(1-p)),1100));
+  later(g(()=>{if(q.speakAnswer)q.speakAnswer(["p/"+key],line,next);else say(["p/"+key].concat(q.answer),`${line} ${q.answerText}`,{gap:.3,onend:next});}),600);
 }
 
 /* Bunny Hop: a race along a numbered track. Roll the dice, then tap the square you'll land on
@@ -1936,6 +2094,223 @@ function afterLand(p,bonusDone){
   later(g(()=>mathTurnStart(1-p)),800);
 }
 
+/* ---------- Bahasa Melayu games: Suku Kata, Eja!, Cari Gambar, Ujian Ejaan ----------
+   This week's ejaan (spelling) words, learnt the way school teaches them: by suku kata (syllable).
+   Suku Kata and Eja! build the word from syllable or letter tiles; the wrong tiles include the
+   spellings children really write (kebon for kebun, beneh for benih). Cari Gambar checks she knows
+   what the word means. Ujian Ejaan is a practice test on paper that the grown-up marks.
+   Luna says the recorded words (audio/m/); words added later use the tablet's own Malay voice. */
+const BM_INFO={sk:{name:"Suku Kata",intro:"bm_sk_intro"},eja:{name:"Eja!",intro:"bm_eja_intro"},pic:{name:"Cari Gambar",intro:"bm_pic_intro"},test:{name:"Ujian Ejaan",intro:"bm_test_intro"}};
+const isBM=m=>Object.prototype.hasOwnProperty.call(BM_INFO,m);
+const BM_CHEERS=Object.keys(BM.cheers);
+/* Malay syllables: V.CV, VC.CV, V.V; ng ny sy kh gh count as one letter-sound; a word-final ai/au/oi is one vowel. */
+function bmSyl(w){
+  const u=[];for(let i=0;i<w.length;){const two=w.slice(i,i+2);if(["ng","ny","sy","kh","gh"].includes(two)){u.push(two);i+=2;}else u.push(w[i++]);}
+  const isV=x=>"aeiou".includes(x),nuc=[];u.forEach((x,i)=>{if(isV(x))nuc.push(i);});
+  const n=u.length;if(n>=2&&isV(u[n-1])&&isV(u[n-2])&&["ai","au","oi"].includes(u[n-2]+u[n-1]))nuc.pop();
+  if(!nuc.length)return [w];
+  const out=[];let start=0;
+  nuc.forEach((v,k)=>{const end=k===nuc.length-1?n:v+1+Math.max(0,nuc[k+1]-v-2);out.push(u.slice(start,end).join(""));start=end;});
+  return out;
+}
+const BM_DEFAULT_TEXT=BM.words.map(d=>`${d.w} = ${d.en}`).join("\n");
+function bmEntry(w,en){const d=BM.words.find(x=>x.w===w);return {w,sk:bmSyl(w),en:en||(d?d.en:""),pic:BM_PICS[w]||"",rec:!!d};}
+function bmList(){
+  const raw=String(S.settings.bmList||"").trim(),out=[],seen=new Set();
+  if(raw)raw.split(/[\n,;]+/).forEach(line=>{const parts=line.split("="),w=(parts[0]||"").toLowerCase().replace(/[^a-z]/g,"");
+    if(w&&w.length<=13&&!seen.has(w)){seen.add(w);out.push(bmEntry(w,(parts[1]||"").trim()));}});
+  return out.length?out:BM.words.map(d=>bmEntry(d.w,d.en));
+}
+function bmPic(W,cls){const f=bmPicFace(W.pic);return f?`<span class="bmpic ${cls||""}" aria-hidden="true">${f}</span>`:"";}
+/* ---- voice: Luna's recordings, or the tablet's Malay voice ---- */
+let msVoice=null;
+function pickMsVoice(){if(!HAS_TTS)return;try{const vs=speechSynthesis.getVoices()||[];msVoice=vs.find(v=>/^ms/i.test(v.lang))||vs.find(v=>/^id/i.test(v.lang))||null;}catch(e){msVoice=null;}}
+function speakMs(text,opt){
+  opt=opt||{};let done=false;const fin=()=>{if(done)return;done=true;if(opt.onend)opt.onend();};
+  hush();
+  if(!HAS_TTS||!S.settings.voice){later(fin,500+text.length*70);return;}
+  try{const u=new SpeechSynthesisUtterance(text);if(msVoice){u.voice=msVoice;u.lang=msVoice.lang;}else u.lang="ms-MY";
+    u.rate=opt.rate||.8;u.pitch=1.15;u.onend=fin;u.onerror=fin;speechSynthesis.speak(u);}catch(e){later(fin,300);return;}
+  later(fin,1600+text.length*130/(opt.rate||.8));
+}
+const lunaBM=W=>W.rec&&!(S.settings.bmVoice==="device"&&msVoice);
+function sayBMWord(W,opt){if(lunaBM(W))say(["m/w_"+W.w],W.w,opt);else speakMs(W.w,opt);}
+function sayBMSyl(W,i,opt){const t=W.sk[i];if(lunaBM(W)&&BM.syllables[t])say(["m/s_"+t],t,opt);else speakMs(t,opt);}
+function sayBMSyls(W,opt){
+  if(lunaBM(W)&&W.sk.every(t=>BM.syllables[t]))say(W.sk.map(t=>"m/s_"+t),W.sk.join("… "),Object.assign({gap:.45},opt));
+  else speakMs(W.sk.join(", "),Object.assign({rate:.6},opt));
+}
+function sayMeaning(W,opt){
+  opt=opt||{};if(!W.en){if(opt.onend)later(opt.onend,10);return;}
+  if(W.rec&&W.en===(BM.words.find(d=>d.w===W.w)||{}).en)say(["p/means","m/e_"+W.w],`It means ${W.en}.`,Object.assign({gap:.15},opt));
+  else say(["p/means"],"It means",{onend:()=>speak(W.en,{onend:opt.onend})});
+}
+/* Luna's answer after a turn: the cheer, the word, what it means */
+function bmAnswer(W){return (keys,text,done)=>{const g=guard();say(keys,text,{onend:g(()=>later(g(()=>sayBMWord(W,{onend:g(()=>later(g(()=>sayMeaning(W,{onend:done})),150))})),150))});};}
+function drawBM(p,needPic){
+  const L=S.bmWords.filter(W=>!needPic||W.pic);
+  if(p===0){const tr=L.filter(W=>BOOK.mine.tricky["bm"+W.w]&&W.w!==S.word);if(tr.length&&Math.random()<.4)return pick(tr);}
+  let W=null;
+  for(let n=0;n<40&&!W;n++){
+    if(S.deckPos>=S.deck.length){S.deck=shuffle(S.bmWords.slice());S.deckPos=0;if(S.deck[0].w===S.word)S.deck.push(S.deck.shift());}
+    const c=S.deck[S.deckPos++];if(!needPic||c.pic)W=c;
+  }
+  return W||pick(L);
+}
+function startBMGame(mode){
+  audio();pickVoice();pickMsVoice();wakeLock();
+  token++;clearTimers();hush();
+  const test=mode==="test";
+  S.mode=mode;S.gameStickers=0;S.scores=[0,0];S.turn=0;S.word="";S.tries=0;S.q=null;S.mstreak=0;
+  S.bmWords=bmList();S.deck=shuffle(S.bmWords.slice());S.deckPos=0;
+  S.dTime=S.settings.daddyTime+(mode==="pic"?0:1);
+  S.timeoutFn=()=>mathMiss(1,true);
+  S.target=test?S.bmWords.length:S.settings.target;
+  showOnly("turn");const T=$("turn");T.classList.remove("hopmode");T.classList.add("math","bm");
+  T.classList.toggle("picmode",mode==="pic");T.classList.toggle("solo",test);
+  renderNames();renderScore(0);renderScore(1);renderDTime();renderStreak();
+  $("tprompt").innerHTML="";$("tchoices").innerHTML="";$("treveal").hidden=true;$("tcover").hidden=true;$("ttimer").hidden=true;
+  setFacing(0);$("tturn").textContent=BM_INFO[mode].name;$("thearBtn").disabled=true;
+  S.phase="intro";
+  if(voiceOn()){
+    const keys=["p/means","p/goodtry","p/number"].concat(S.bmWords.filter(W=>W.rec).flatMap(W=>["m/w_"+W.w,"m/e_"+W.w].concat(W.sk.map(t=>"m/s_"+t))),BM_CHEERS.map(c=>"m/c_"+c));
+    preloadClips([...new Set(keys)]);
+  }
+  const intro=BM_INFO[mode].intro,first="first"+S.target;
+  if(test)greet(["p/"+intro],LINES[intro],testStart,`${S.bmWords.length} words to spell`);
+  else greet(["p/"+intro,"p/"+first],`${LINES[intro]} ${LINES[first]||""}`,()=>mathTurnStart(0));
+}
+/* ---- Suku Kata and Eja!: build the word from tiles ---- */
+const SOUNDALIKE={i:"e",u:"o",e:"a",a:"e",o:"u"};
+function sylVariants(t){const m=t.match(/^(.*?)([aeiou])([^aeiou]+)$/);return m&&SOUNDALIKE[m[2]]?[m[1]+SOUNDALIKE[m[2]]+m[3]]:[];}
+function bmBuild(p,kind){
+  const W=drawBM(p);S.word=W.w;
+  const parts=kind==="sk"?W.sk.slice():[...W.w];
+  let extra=[];
+  if(kind==="sk"){
+    const alike=[...new Set(W.sk.flatMap(sylVariants))].filter(v=>!W.sk.includes(v));
+    const others=shuffle([...new Set(S.bmWords.filter(o=>o.w!==W.w).flatMap(o=>o.sk))].filter(v=>!W.sk.includes(v)&&!alike.includes(v)));
+    extra=shuffle(alike).slice(0,p===0?1:2).concat(others).slice(0,p===0?2:4);
+  }else{
+    const CONF={b:"d",d:"b",p:"b",m:"n",n:"m",u:"o",o:"u",i:"e",e:"a",a:"e",c:"k",k:"c",g:"j",j:"g",h:"k",l:"r",r:"l",t:"d",s:"z",y:"i"};
+    const cand=shuffle([...new Set(W.w)].map(ch=>CONF[ch]).filter(Boolean)).concat(shuffle("abcdeghijklmnoprstuwy".split("")));
+    for(const ch of cand){if(extra.length>=(p===0?3:7))break;if(!extra.includes(ch)&&!W.w.includes(ch))extra.push(ch);}
+  }
+  return {kind,word:W,parts,pos:0,misses:0,tiles:shuffle(parts.concat(extra)),sticker:"bm"+W.w,ans:-1,
+    speakAnswer:bmAnswer(W),bubble:LINES[kind==="sk"?"bm_build":"bm_spell"],
+    show(){document.querySelectorAll("#tprompt .lslot").forEach(sl=>{const i=Number(sl.dataset.i);if(!sl.classList.contains("fill")){sl.textContent=parts[i];sl.classList.add("shown");}sl.classList.remove("next");});}};
+}
+function bmSlotsHTML(q){
+  if(q.kind==="sk")return `<div class="slots">${q.parts.map((t,i)=>`<span class="lslot sk" data-i="${i}"></span>`).join("")}</div>`;
+  let i=0;return `<div class="slots">${q.word.sk.map(t=>`<span class="grp">${[...t].map(()=>`<span class="lslot" data-i="${i++}"></span>`).join("")}</span>`).join('<i class="dot">·</i>')}</div>`;
+}
+function bmQuestion(){
+  if(S.mode==="pic")return bmPicQuestion();
+  const g=guard(),p=S.turn,q=S.q=bmBuild(p,S.mode);
+  S.phase="ask";
+  $("tprompt").innerHTML=`<div class="bmq">${bmPic(q.word)}<button type="button" class="bm-hear" id="bmHear" aria-label="Hear the word again">${SPEAKER}</button></div>${bmSlotsHTML(q)}`;
+  $("tchoices").innerHTML=`<div class="tiles ${S.mode}">${q.tiles.map((t,i)=>`<button type="button" class="tile" data-t="${i}" disabled>${esc(t)}</button>`).join("")}</div>`;
+  setBubble(q.bubble);
+  if(p===1){sayBMWord(q.word);later(g(bmOpen),300);}
+  else later(g(()=>sayBMWord(q.word,{onend:g(bmOpen)})),250);
+}
+function bmOpen(){
+  S.phase="answer";const q=S.q;
+  document.querySelectorAll("#tchoices .tile").forEach(b=>{if(!b.classList.contains("used"))b.disabled=false;});
+  $("thearBtn").disabled=!voiceOn();markNextSlot();
+  if(S.turn===1)startDTimer(q.parts.length*.6);
+}
+function markNextSlot(){const q=S.q;document.querySelectorAll("#tprompt .lslot").forEach(sl=>sl.classList.toggle("next",Number(sl.dataset.i)===q.pos));}
+function sylAt(W,pos){let n=0;for(let i=0;i<W.sk.length;i++){n+=W.sk[i].length;if(pos<n)return i;}return W.sk.length-1;}
+function onBMTile(btn){
+  const q=S.q;if(S.phase!=="answer"||!q||btn.disabled||!q.parts)return;
+  const t=q.tiles[Number(btn.dataset.t)],need=q.parts[q.pos],p=S.turn;
+  if(t===need){
+    btn.disabled=true;btn.classList.remove("hint");btn.classList.add("used");
+    const sl=document.querySelector(`#tprompt .lslot[data-i="${q.pos}"]`);if(sl){sl.textContent=t;sl.classList.add("fill");}
+    q.pos++;sfx.tick(q.pos);
+    document.querySelectorAll("#tchoices .tile.hint").forEach(b=>b.classList.remove("hint"));
+    if(q.kind==="sk")sayBMSyl(q.word,q.pos-1);
+    else{const si=sylAt(q.word,q.pos-1);if(q.pos===q.word.sk.slice(0,si+1).join("").length)sayBMSyl(q.word,si);}
+    if(q.pos>=q.parts.length){S.phase="done";return later(()=>mathRight(p,document.querySelector("#tprompt .slots")),450);}
+    return markNextSlot();
+  }
+  btn.classList.remove("nope");void btn.offsetWidth;btn.classList.add("nope");sfx.wrong();
+  if(p===1)return mathMiss(1,false);
+  /* her mistakes: Luna says the syllable she's on; after two, the right tile glows */
+  q.misses++;S.mstreak=0;renderStreak();markTricky("bm"+q.word.w);
+  const si=q.kind==="sk"?q.pos:sylAt(q.word,q.pos);
+  setBubble(`Listen: “${q.word.sk[si]}”`);sayBMSyl(q.word,si);
+  if(q.misses>=2){const right=[...document.querySelectorAll("#tchoices .tile")].find(b=>!b.disabled&&q.tiles[Number(b.dataset.t)]===need);if(right)right.classList.add("hint");}
+}
+/* ---- Cari Gambar: read the word, find its picture ---- */
+function bmPicQuestion(){
+  const g=guard(),p=S.turn,W=drawBM(p,true);S.word=W.w;
+  const others=shuffle(S.bmWords.filter(o=>o.pic&&o.w!==W.w&&o.pic!==W.pic)).slice(0,3);
+  const choices=shuffle([W,...others]);
+  const q=S.q={kind:"pic",word:W,ans:S.bmWords.indexOf(W),sticker:"bm"+W.w,bubble:LINES.bm_find,speakAnswer:bmAnswer(W),
+    teach(after){sayBMWord(W,{onend:()=>later(()=>sayMeaning(W,{onend:after}),150)});}};
+  S.phase="ask";
+  $("tprompt").innerHTML=`<div class="wcard bmword">${esc(W.w)}</div>`;
+  $("tchoices").innerHTML=choices.map(o=>`<button type="button" class="pcard" data-n="${S.bmWords.indexOf(o)}" aria-label="${esc(o.en||o.w)}" disabled>${bmPicFace(o.pic)}</button>`).join("");
+  setBubble(q.bubble);
+  later(g(mathOpen),500);
+}
+/* ---- Ujian Ejaan: Luna reads, she writes on paper, the grown-up marks it ---- */
+function seqSay(steps,done){const g=guard();let i=0;const next=g(()=>{if(i>=steps.length){if(done)done();return;}const f=steps[i++];f(()=>later(next,350));});next();}
+function testStart(){S.testList=shuffle(S.bmWords.slice());S.testIdx=0;S.testRound=1;S.testMissed=[];S.testFirst=0;testWord();}
+function testWord(){
+  token++;clearTimers();hush();
+  const g=guard();
+  if(S.testIdx>=S.testList.length){
+    if(S.testMissed.length&&S.testRound<3){
+      S.testList=shuffle(S.testMissed);S.testMissed=[];S.testIdx=0;S.testRound++;
+      setBubble(LINES.bm_again);$("tprompt").innerHTML="";$("tchoices").innerHTML="";
+      return say(["p/bm_again"],LINES.bm_again,{onend:g(()=>later(g(testWord),400))});
+    }
+    return endGame(0);
+  }
+  const W=S.testList[S.testIdx],n=S.testIdx+1;S.word=W.w;S.phase="dictate";
+  S.q={kind:"test",word:W,sticker:"bm"+W.w};
+  setFacing(0);$("tturn").textContent=S.testRound>1?"Try again":`Word ${n} of ${S.testList.length}`;
+  $("tprompt").innerHTML=`<div class="testcard"><div class="tnum">${S.testRound>1?"↻":n}</div>${bmPic(W,"small")}<p class="mq">✏️ Write it on your paper</p></div>`;
+  $("tchoices").innerHTML=`<div class="testbtns"><button type="button" class="btn big" id="testHear">🔊 Hear it again</button><button type="button" class="btn big go" id="testCheck">Check ✓</button></div>`;
+  setBubble(LINES.bm_write);bounceLuna();
+  const steps=[];
+  if(S.testRound===1)steps.push(next=>say(["p/number",nk(n)],`Number ${n}`,{gap:.2,onend:next}));
+  steps.push(next=>sayBMWord(W,{onend:next}),next=>sayBMSyls(W,{onend:next}),next=>sayBMWord(W,{onend:next}));
+  seqSay(steps,()=>{if(S.phase==="dictate")S.phase="write";});
+}
+function testHear(){if(S.phase!=="write"&&S.phase!=="dictate")return;const W=S.q.word;bounceLuna();seqSay([next=>sayBMWord(W,{onend:next}),next=>sayBMSyls(W,{onend:next})]);}
+function testReveal(){
+  if(S.phase!=="write"&&S.phase!=="dictate")return;
+  S.phase="judge";hush();
+  const W=S.q.word,g=guard();
+  $("tprompt").innerHTML=`<div class="testcard">${bmPic(W,"small")}<div class="reveal-word">${W.sk.map((t,i)=>`<span class="rs" data-i="${i}">${esc(t)}</span>`).join('<i class="dot">·</i>')}</div>${W.en?`<p class="mq">“${esc(W.en)}”</p>`:""}</div>`;
+  $("tchoices").innerHTML=`<div class="testbtns"><button type="button" class="btn big yes" id="testYes">✓ Betul</button><button type="button" class="btn big no" id="testNo">✗ Salah</button></div><p class="note judge-note">${esc(dadName())}: is it spelled right on her paper?</p>`;
+  setBubble(LINES.bm_check);
+  const spans=[...document.querySelectorAll("#tprompt .rs")];
+  say(["p/bm_check"],LINES.bm_check,{onend:g(()=>sayBMSyls(W,{onclip:i=>spans.forEach((sp,j)=>sp.classList.toggle("lit",j===i)),onend:g(()=>{spans.forEach(sp=>sp.classList.remove("lit"));sayBMWord(W);})}))});
+}
+function testJudge(ok,btn){
+  if(S.phase!=="judge")return;
+  S.phase="done";hush();
+  const g=guard(),W=S.q.word,next=g(()=>later(g(()=>{S.testIdx++;testWord();}),800));
+  document.querySelectorAll("#testYes,#testNo").forEach(b=>{b.disabled=true;});
+  if(ok){
+    if(S.testRound===1)S.testFirst++;
+    const before=S.scores[0];S.scores[0]=Math.min(S.target,before+1);renderScore(0,before);tplus("+1");
+    burstAt(btn,44,1.15);sfx.point();prizePop(btn,0,2);earnSticker("bm"+W.w);
+    S.mstreak++;renderStreak();
+    const c=pick(BM_CHEERS);setBubble(BM.cheers[c][1]);bounceLuna();
+    say(["m/c_"+c],BM.cheers[c][1],{onend:next});
+  }else{
+    markTricky("bm"+W.w);S.testMissed.push(W);S.mstreak=0;renderStreak();
+    setBubble(`Good try! It's spelled ${W.sk.join(" · ")}.`);
+    seqSay([n2=>say(["p/goodtry"],LINES.goodtry,{onend:n2}),n2=>sayBMSyls(W,{onend:n2}),n2=>sayBMWord(W,{onend:n2})],next);
+  }
+}
+
 function endGame(p){
   token++;clearTimers();hush();S.phase="over";
   const kid=kidName(),dad=dadName(),n=S.scores[0],kidWon=p===0;
@@ -1943,8 +2318,13 @@ function endGame(p){
   $("winnerName").textContent=kidWon?kid:`${dad} wins this time`;
   const hop=S.mode==="hop",where=s=>s>=S.N?"the finish 🏁":`square ${s}`;
   $("finalScore").textContent=hop?`🐰 ${kid} reached ${where(S.scores[0])} · 🐻 ${dad} reached ${where(S.scores[1])}`:`${kid} ${S.scores[0]} · ${dad} ${S.scores[1]}`;
-  const key=kidWon?pick(isMath(S.mode)?MATH_WIN:WIN_KID):"lose",line=LINES[key];
+  const key=kidWon?(isBM(S.mode)?"bm_win":pick(isMath(S.mode)?MATH_WIN:WIN_KID)):"lose",line=LINES[key];
   $("winBubble").textContent=kidWon||hop?line:`${line} You got ${n} ${n===1?"star":"stars"}!`;
+  if(S.mode==="test"){
+    const total=S.bmWords.length;
+    $("champTitle").textContent=S.testFirst===total?"Perfect!":"Well done!";
+    $("finalScore").textContent=`${kid} spelled ${S.testFirst} of ${total} words right the first time`+(S.testFirst<total?", and practised the rest.":"!");
+  }
   queueSync(300);
   const got=S.gameStickers,lvl=bookLevel(BOOK.total),up=lvl>BOOK.seenLevel,ws=$("winStickers");
   ws.hidden=!got;$("winBookBtn").hidden=!got;
@@ -1963,7 +2343,7 @@ function openPause(){
 }
 function resume(){
   $("pauseOv").hidden=true;audio();
-  if(S.mode==="snap"){S.phase="race";nextRound();}else if(isMath(S.mode))mathTurnStart(S.turn);else turnStart(S.turn);
+  if(S.mode==="snap"){S.phase="race";nextRound();}else if(S.mode==="test")testWord();else if(isMath(S.mode)||isBM(S.mode))mathTurnStart(S.turn);else turnStart(S.turn);
 }
 function showHome(){
   token++;clearTimers();hush();S.phase="setup";
@@ -1972,11 +2352,17 @@ function showHome(){
 }
 /* Home shows either the reading games or the maths games; the last one picked is remembered. */
 function setSubject(s){
-  s=s==="math"?"math":"read";S.settings.subject=s;saveSettings();
-  $("tabRead").setAttribute("aria-selected",String(s==="read"));$("tabMath").setAttribute("aria-selected",String(s==="math"));
-  $("gamesRead").hidden=s!=="read";$("gamesMath").hidden=s!=="math";
+  s=s==="math"||s==="bm"?s:"read";S.settings.subject=s;saveSettings();
+  $("tabRead").setAttribute("aria-selected",String(s==="read"));$("tabMath").setAttribute("aria-selected",String(s==="math"));$("tabBM").setAttribute("aria-selected",String(s==="bm"));
+  $("gamesRead").hidden=s!=="read";$("gamesMath").hidden=s!=="math";$("gamesBM").hidden=s!=="bm";
+  renderBMHome();
   const named=(S.settings.kid||"").trim();
   $("hello").textContent=named?`Hi, ${named}!`:s==="math"?"Ready to count?":"Ready to read?";
+}
+/* Cari Gambar needs at least four words with pictures */
+function renderBMHome(){
+  const n=bmList().filter(W=>W.pic).length,b=document.querySelector('[data-game="pic"]');if(!b)return;
+  b.disabled=n<4;$("picSmall").textContent=n<4?"Needs 4 picture words":"What does it mean?";
 }
 function renderHome(){
   const named=(S.settings.kid||"").trim();
@@ -2015,6 +2401,14 @@ function buildHomeDecor(){
 }
 
 /* ---------- setup screen ---------- */
+/* Settings → Bahasa Melayu words: the list as the games will use it (syllables, picture), tap to hear. */
+function renderBMWords(){
+  pickMsVoice();
+  const L=bmList();
+  $("bmWords").innerHTML=L.map((W,i)=>`<button type="button" data-bw="${i}">${bmPic(W)}<span>${esc(W.sk.join("·"))}${W.en?` <small>${esc(W.en)}</small>`:""}${W.rec?"":` <small>(tablet voice)</small>`}</span></button>`).join("");
+  $("bmVoiceSeg").innerHTML=[["luna","Luna"],["device","Tablet's Malay voice"]].map(([v,t])=>`<button type="button" role="radio" data-bv="${v}" aria-checked="${(S.settings.bmVoice||"luna")===v}">${t}</button>`).join("");
+  $("bmVoiceNote").textContent=msVoice?`This tablet's Malay voice: ${msVoice.name}. Words Luna hasn't recorded always use it.`:"No Malay voice found on this tablet yet, so Luna reads the words. (On iPad: Settings → Accessibility → Spoken Content → Voices → Malay. On Android: install Malay in Google's text-to-speech.)";
+}
 /* Settings → Letter sounds: each letter's phonics sound, then a picture word that has it. */
 const ABC=[["a","cat"],["b","bed"],["c","cup"],["d","dog"],["e","pen"],["f","fox"],["g","get"],["h","hat"],["i","pig"],["j","jam"],["k","kid"],["l","leg"],["m","map"],["n","net"],["o","dog"],["p","pin"],["r","red"],["s","sun"],["t","ten"],["u","bus"],["v","van"],["w","web"],["x","box"],["y","yes"],["z","zip"]];
 function playLetter(b){
@@ -2029,6 +2423,8 @@ function renderSetup(){
   $("mathMaxSeg").innerHTML=[10,20].map(m=>`<button type="button" role="radio" data-mm="${m}" aria-checked="${mathMax()===m}">Up to ${m}</button>`).join("");
   $("hsIn").value=S.settings.headStart;$("hsOut").textContent=fmtSec(S.settings.headStart);
   $("dtIn").value=S.settings.daddyTime;$("dtOut").textContent=fmtSec(S.settings.daddyTime);
+  $("bmIn").value=String(S.settings.bmList||"").trim()?S.settings.bmList:BM_DEFAULT_TEXT;
+  renderBMWords();
   $("abc").innerHTML=ABC.map(([l,w])=>`<button type="button" data-l="${l}" aria-label="${l}, as in ${w}">${l}<small>${w}</small></button>`).join("");
   document.querySelectorAll(".toggle").forEach(t=>t.setAttribute("aria-checked",String(!!S.settings[t.dataset.key])));
   if(!HAS_AC&&!HAS_TTS){$("tg-voice").disabled=true;$("testBtn").hidden=true;}
@@ -2049,6 +2445,8 @@ function renderSteps(){
     `<b>Bunny Hop</b>: roll the dice, count on, and tap the square you'll land on. Carrot squares give 2 extra hops. ${kid} always hops; ${dad} only hops if he answers in time.`,
     `After a wrong tap, Luna counts along with ${kid} and she tries again. Every right answer wins a star, a prize and a number sticker, and answers in a row win bonus stars.`,
     `Every word or number ${kid} gets right is a sticker for her book, and the book grows prettier as she collects them.`,
+    `<b>Bahasa</b> (this week's ejaan words, take turns): <b>Suku Kata</b> builds the word from syllables, <b>Eja!</b> spells it letter by letter, <b>Cari Gambar</b> finds what it means. The wrong tiles include the spellings children often write (kebon for kebun). ${kid} gets hints; ${dad} gets more tiles and a timer.`,
+    `<b>Ujian Ejaan</b>: a practice spelling test. Luna reads each word; ${kid} writes it on paper, taps Check, and ${dad} marks it ✓ or ✗. Missed words come back at the end.`,
     `First to <b>${S.settings.target} stars</b> is the champion! In Bunny Hop, first to the finish wins.`
   ];
   $("steps").innerHTML=steps.map(s=>`<li>${s}</li>`).join("");
@@ -2074,10 +2472,21 @@ function bind(){
   $("winBookBtn").addEventListener("click",()=>{showHome();openBook();});
   $("bookDone").addEventListener("click",closeBook);
   $("bookOv").addEventListener("click",e=>{if(e.target===e.currentTarget)closeBook();});
-  $("tchoices").addEventListener("click",e=>{const b=e.target.closest(".pcard");if(b)return onPick(b);const m=e.target.closest(".ncard,.sq");if(m)onMathPick(m);});
-  $("tprompt").addEventListener("click",e=>{if(e.target.closest("#rollBtn"))rollDice();});
+  $("tchoices").addEventListener("click",e=>{
+    const t=e.target.closest(".tile");if(t)return onBMTile(t);
+    const b=e.target.closest(".pcard");if(b)return isBM(S.mode)?onMathPick(b):onPick(b);
+    const m=e.target.closest(".ncard,.sq");if(m)return onMathPick(m);
+    if(e.target.closest("#testHear"))return testHear();
+    if(e.target.closest("#testCheck"))return testReveal();
+    const y=e.target.closest("#testYes,#testNo");if(y)return testJudge(y.id==="testYes",y);
+  });
+  $("tprompt").addEventListener("click",e=>{
+    if(e.target.closest("#rollBtn"))return rollDice();
+    if(e.target.closest("#bmHear")&&S.q&&S.q.word&&(S.phase==="answer"||S.phase==="ask")){bounceLuna();sayBMWord(S.q.word);}
+  });
   $("thearBtn").addEventListener("click",()=>{
     if(S.phase!=="answer"||!voiceOn())return;
+    if(isBM(S.mode)){if(S.q&&S.q.word&&(S.q.kind!=="pic"||S.tries>0)){sayBMWord(S.q.word);bounceLuna();}return;}
     if(isMath(S.mode)){if(S.q&&S.q.say){say(S.q.say,S.q.sayText,{gap:.15});bounceLuna();}return;}
     if(S.mode==="robot"||S.tries>0){playSounds(S.word);bounceLuna();}
   });
@@ -2087,6 +2496,11 @@ function bind(){
   /* Two players touching at once must not turn into an iPad pinch-zoom that swallows the taps. */
   ["gesturestart","gesturechange","gestureend"].forEach(t=>document.addEventListener(t,e=>{if(inGame())e.preventDefault();},{passive:false}));
   $("abc").addEventListener("click",e=>{const b=e.target.closest("[data-l]");if(b)playLetter(b);});
+  $("bmIn").addEventListener("input",e=>{const v=e.target.value;S.settings.bmList=v.trim()===BM_DEFAULT_TEXT.trim()?"":v;saveSettings();renderBMWords();renderBMHome();});
+  $("bmWords").addEventListener("click",e=>{const b=e.target.closest("[data-bw]");if(!b)return;audio();const W=bmList()[Number(b.dataset.bw)];if(!W)return;
+    document.querySelectorAll("#bmWords button").forEach(x=>x.classList.toggle("on",x===b));
+    seqSay([n=>sayBMWord(W,{onend:n}),n=>sayBMSyls(W,{onend:n}),n=>sayMeaning(W,{onend:n})],()=>b.classList.remove("on"));});
+  $("bmVoiceSeg").addEventListener("click",e=>{const b=e.target.closest("[data-bv]");if(!b)return;S.settings.bmVoice=b.dataset.bv;saveSettings();renderBMWords();});
   $("testBtn").addEventListener("click",()=>{audio();pickVoice();sfx.sparkle();if(voiceOn())say(["p/hello"],LINES.hello);});
   $("fsBtn").addEventListener("click",()=>{try{if(document.fullscreenElement)document.exitFullscreen();else{const r=document.documentElement.requestFullscreen();if(r&&r.catch)r.catch(()=>{});}}catch(e){}});
   $("hearBtn").addEventListener("click",()=>{if(S.phase==="race"&&voiceOn()){say(["w/"+S.word],S.word,{rate:.75});bounceLuna();}});
@@ -2121,7 +2535,7 @@ function init(data){
   ["bs1","bs2","bs3"].forEach(id=>{$(id).innerHTML=starSvg("");});
   buildSnow();
   FX.c=$("fx");FX.ctx=FX.c.getContext("2d");fxResize();addEventListener("resize",fxResize);
-  if(HAS_TTS){pickVoice();try{speechSynthesis.addEventListener("voiceschanged",pickVoice);}catch(e){speechSynthesis.onvoiceschanged=pickVoice;}}
+  if(HAS_TTS){pickVoice();try{speechSynthesis.addEventListener("voiceschanged",()=>{pickVoice();pickMsVoice();});}catch(e){speechSynthesis.onvoiceschanged=pickVoice;}}
   if(!HAS_AC&&!HAS_TTS)$("ttsNote").hidden=false;
   if(document.fullscreenEnabled)$("fsBtn").hidden=false;
   buildTitle();buildHomeDecor();

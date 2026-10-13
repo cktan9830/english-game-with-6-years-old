@@ -9,6 +9,8 @@ lists, then gives the voice a cute, child-like lift at normal speed and saves sm
     audio/w/<word>.mp3       each reading word, spoken slowly and clearly
     audio/s/<letter>.mp3     each letter's phonics sound for Robot Talk ("c... a... t")
     audio/n/<number>.mp3     every number from 0 to 100 for the maths games
+    audio/m/...              Bahasa Melayu spelling words (w_), their syllables (s_), cheers (c_)
+                             and English meanings (e_)
     audio/list.json          every clip, used by sw.js to work offline
 
 Reading words, numbers and letter sounds use British English, the way phonics is
@@ -55,6 +57,10 @@ TEACH_TAG = f"{VOICE}|{TEACH_LANG}|clean-onset-6"
 TRY_SPEEDS = (1.1, 1.0, 1.2, 0.9, 1.3, 0.8, 1.05, 0.95, 1.15, 0.85)
 # Names the voice would mispronounce, respelled the way they should sound.
 SAY_AS = {"Elyse": "Eleese"}   # "eh-LEES" (the voice reads "Elyse" as "EH-lize")
+# Bahasa Melayu words, syllables and cheers: Luna's voice speaking hand-written Malay phonemes
+# (pepet "e" as ə, tapped r, final h breathed), a little slower so every syllable is clear.
+BM_SPEED = 0.85
+BM_TAG = f"{VOICE}|bm-phonemes-1"
 
 
 ONES = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen".split()
@@ -83,7 +89,8 @@ def read_game():
     sight = re.search(r'const SIGHT="([^"]+)"\.split', html).group(1).split()
     families = json.loads(re.search(r"const FAMILIES=(\[\[.*?\]\]);", html).group(1))
     words = sorted(set(cvc) | set(sight) | {w for fam in families for w in fam})
-    return lines, words
+    bm = json.loads(re.search(r'<script type="application/json" id="bm">(.*?)</script>', html, re.S).group(1))
+    return lines, words, bm
 
 
 def ensure_model(model_dir):
@@ -279,6 +286,40 @@ def record_teaching_word(kokoro, text, out_path):
     x = strengthen_first_hiss(kokoro, text, np.asarray(x, np.float64), sr)
     x = x / max(1e-6, float(np.abs(x).max())) * 0.89
     save_mp3(x, sr, out_path, lift_filters(sr, WORD_LIFT, tempo=WORD_SPEED / speed))
+
+
+# ---------- Bahasa Melayu ----------
+def bm_problem(F, phonemes, speed):
+    """Like onset_problem, plus Malay word endings: a final h must be a soft breath (not an "s"
+    that would turn "tanah" into "tanas"), and a final s must be clearly hissed."""
+    ph = phonemes.replace("ˈ", "").replace("ˌ", "").strip(" .")
+    bad = onset_problem(F, ph, speed)
+    last = max((i for i, f in enumerate(F) if f["voiced"]), default=len(F) - 1)
+    tail = [f["c"] for f in F[last + 1:] if f["c"] != "_"]
+    scale = speed / BM_SPEED
+    if ph.endswith("h"):
+        bad += max(0, 6 - int(tail.count("h") * scale)) + 2 * tail.count("s")
+    elif ph.endswith("s"):
+        bad += max(0, 10 - int(tail.count("s") * scale))
+    return bad
+
+
+def record_bm(kokoro, phonemes, out_path):
+    import numpy as np
+    best = None
+    for speed in TRY_SPEEDS:
+        x, sr = kokoro.create(phonemes + ".", voice=VOICE, speed=speed, lang=TEACH_LANG, is_phonemes=True)
+        bad = bm_problem(frames(x, sr), phonemes, speed)
+        if best is None or bad < best[0]:
+            best = (bad, x, sr, speed)
+        if bad == 0:
+            break
+    bad, x, sr, speed = best
+    if bad:
+        print(f"  note: Malay '{phonemes}' best take still has problem score {bad}")
+    x = np.asarray(x, np.float64)
+    x = x / max(1e-6, float(np.abs(x).max())) * 0.89
+    save_mp3(x, sr, out_path, lift_filters(sr, WORD_LIFT, tempo=BM_SPEED / speed))
 
 
 # ---------- letter sounds for Robot Talk ----------
@@ -479,11 +520,17 @@ def main():
     ap.add_argument("--force", action="store_true", help="re-record every clip")
     args = ap.parse_args()
 
-    lines, words = read_game()
+    lines, words, bm = read_game()
     # (key, text, signature extras, how to record)
     jobs = [("p/" + k, spoken(t), f"{SETTINGS_TAG}|{LINE_SPEED}|{LINE_LIFT}", "line") for k, t in lines.items()]
     jobs += [("w/" + w, w + ".", f"{TEACH_TAG}|{WORD_SPEED}|{WORD_LIFT}", "teach") for w in words]
     jobs += [("n/" + str(n), number_word(n) + ".", f"{TEACH_TAG}|{WORD_SPEED}|{WORD_LIFT}", "teach") for n in range(101)]
+    # Bahasa Melayu: m/w_<word>, m/s_<syllable>, m/c_<cheer> in Malay; m/e_<word> is its English meaning
+    bm_tag = f"{BM_TAG}|{BM_SPEED}|{WORD_LIFT}"
+    jobs += [("m/w_" + d["w"], d["ph"], bm_tag, "bm") for d in bm["words"]]
+    jobs += [("m/s_" + syl, ph, bm_tag, "bm") for syl, ph in bm["syllables"].items()]
+    jobs += [("m/c_" + c, ph, bm_tag, "bm") for c, (ph, _) in bm["cheers"].items()]
+    jobs += [("m/e_" + d["w"], d["en"] + ".", f"{TEACH_TAG}|{WORD_SPEED}|{WORD_LIFT}", "teach") for d in bm["words"] if d.get("en")]
 
     list_path = os.path.join(ROOT, "audio", "list.json")
     old = {}
@@ -500,6 +547,8 @@ def main():
         if args.force or old.get(key) != sig or not os.path.exists(out):
             if how == "line":
                 record(kokoro, text, LINE_SPEED, LINE_LIFT, out)
+            elif how == "bm":
+                record_bm(kokoro, text, out)
             else:
                 record_teaching_word(kokoro, text, out)
             made += 1
@@ -515,7 +564,7 @@ def main():
         clips[key] = sig
 
     wanted = {os.path.join(ROOT, "audio", k + ".mp3") for k in clips}
-    for sub in ("p", "w", "s", "n"):
+    for sub in ("p", "w", "s", "n", "m"):
         folder = os.path.join(ROOT, "audio", sub)
         for name in os.listdir(folder) if os.path.isdir(folder) else []:
             path = os.path.join(folder, name)
