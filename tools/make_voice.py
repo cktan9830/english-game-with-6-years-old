@@ -1018,6 +1018,8 @@ def main():
     jobs += [("m/e_" + d["w"], d["en"] + ".", f"{TEACH_TAG}|{WORD_SPEED}|{WORD_LIFT}", "teach") for d in bm["words"] if d.get("en")]
     # the Malay sound chart: m/b_<sound> is the sound itself (cut below), m/x_<sound> its example word
     jobs += [("m/x_" + d["id"], d["ph"], bm_tag, "bm") for d in bm["sounds"]]
+    # Gabung!: a picture word for each consonant + vowel syllable (m/g_<syllable>, "bu" -> buku)
+    jobs += [("m/g_" + syl, d["ph"], bm_tag, "bm") for syl, d in bm.get("gabung", {}).items()]
     missing = [d["id"] for d in bm["sounds"] if d["id"] not in BM_SOUNDS]
     if missing:
         raise SystemExit(f"No Malay sound recipe for: {', '.join(missing)}")

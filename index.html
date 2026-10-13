@@ -395,6 +395,55 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 .lslot{display:inline-grid;place-items:center;min-width:.82em;height:1.3em;padding:0 .08em;border-radius:12px;background:rgba(253,251,255,.14);border-bottom:4px dashed rgba(253,251,255,.55);color:var(--snow)}
 .lslot.sk{min-width:2.4em}
 .lslot.two{min-width:1.4em}
+/* Gabung!: the consonant is the engine, the vowel the carriage */
+.gab-stage{display:grid;grid-template-columns:auto auto;align-items:center;justify-content:center;column-gap:clamp(14px,3vw,30px);row-gap:clamp(2px,.8vh,8px)}
+.gab-word{grid-column:1/-1;justify-self:center;display:flex;align-items:center;gap:.3em;min-height:1.5em;font:800 clamp(1.5rem,min(4.2vw,5vh),2.5rem)/1 var(--font-read);color:var(--snow);opacity:0}
+.gab-word.show{opacity:1;animation:cardIn .4s cubic-bezier(.3,1.5,.5,1) both}
+.gab-word .pic{font-size:1.5em;line-height:1}
+.gab-word b{color:var(--sun)}
+.train{position:relative;display:flex;align-items:flex-end;font:700 clamp(2.6rem,min(8.4vw,10.5vh),5rem)/1 var(--font-read);padding:.42em .12em .3em;animation:trainIn .8s cubic-bezier(.25,1.2,.45,1) both}
+.train::after{content:"";position:absolute;left:-.3em;right:-.3em;bottom:.04em;height:.07em;border-radius:.04em;background:repeating-linear-gradient(90deg,rgba(253,251,255,.6) 0 .26em,transparent .26em .38em)}
+.loco,.wagon{position:relative;display:grid;place-items:center;border:0;padding:0;margin:0;font:inherit;color:var(--ink);transition:transform .2s}
+.loco{appearance:none;width:1.7em;height:1.32em;border-radius:.4em .24em .16em .16em;background:linear-gradient(180deg,#ff9a86,#e8434f);box-shadow:inset 0 -.09em 0 rgba(0,0,0,.18),0 .07em 0 #a8233a}
+.loco::before{content:"";position:absolute;left:.16em;top:-.36em;width:.28em;height:.38em;border-radius:.07em .07em .02em .02em;background:#3b2b4f}
+.loco::after{content:"";position:absolute;right:.06em;top:-.26em;width:.6em;height:.28em;border-radius:.14em .14em 0 0;background:#c9323f}
+.wagon{width:1.42em;height:1.12em;border-radius:.2em;background:linear-gradient(180deg,#8ae6ff,#2fa8e0);box-shadow:inset 0 -.09em 0 rgba(0,0,0,.15),0 .07em 0 #1f6fa3}
+.hitch{width:.2em;height:.08em;margin:0 .02em .24em;border-radius:.04em;background:#3b2b4f;flex:none}
+.train .lt{display:grid;place-items:center;min-width:1.08em;height:1.08em;padding:0 .08em;border-radius:.24em;background:#fffaf2;font-size:.74em;line-height:1;transition:transform .2s,background .2s}
+.train .wh,.gcar .wh{position:absolute;bottom:-.17em;width:.34em;height:.34em;border-radius:50%;background:radial-gradient(circle,#fffaf2 0 20%,#3b2b4f 23%);left:.16em}
+.train .wh+.wh,.gcar .wh+.wh{left:auto;right:.16em}
+.train:not(.joined) .wagon{background:rgba(253,251,255,.12);box-shadow:inset 0 0 0 .05em rgba(253,251,255,.55)}
+.train:not(.joined) .wagon .lt{background:transparent;color:var(--snow)}
+.train.by-card .loco .lt{background:rgba(255,250,242,.55)}
+.train.joined .wagon{animation:couple .55s cubic-bezier(.3,1.6,.5,1) both}
+.loco.on .lt,.wagon.on .lt{background:var(--sun);transform:scale(1.18)}
+.train.go{animation:chug .45s ease-in-out 2}
+.train .puff{position:absolute;left:.36em;top:-.05em;width:.3em;height:.3em;border-radius:50%;background:rgba(253,251,255,.8);opacity:0;pointer-events:none}
+.train.go .puff{animation:puff .9s ease-out both}
+.gab-cars,.gab-cards{display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(12px,2vw,22px)}
+.gcar{appearance:none;border:0;position:relative;display:grid;place-items:center;width:clamp(84px,12vw,124px);height:clamp(66px,min(9.5vw,12vh),98px);margin-bottom:12px;border-radius:16px;background:linear-gradient(180deg,#8ae6ff,#2fa8e0);box-shadow:0 6px 0 #1f6fa3,0 10px 18px rgba(0,0,0,.2);font:700 clamp(2rem,min(5.6vw,6.8vh),3.3rem)/1 var(--font-read);color:var(--ink);animation:cardIn .3s cubic-bezier(.3,1.4,.5,1) both}
+.gcar b{display:grid;place-items:center;width:1.2em;height:1.12em;border-radius:.24em;background:#fffaf2}
+.gcar .wh{font-size:clamp(2rem,min(5.6vw,6.8vh),3.3rem);bottom:-.24em}
+.gcard{appearance:none;border:0;min-width:clamp(108px,15vw,170px);height:clamp(70px,min(10.5vw,13vh),112px);padding:0 .35em;border-radius:20px;background:var(--snow);color:var(--ink);font:700 clamp(2.2rem,min(6.2vw,7.6vh),3.8rem)/1 var(--font-read);box-shadow:0 6px 0 var(--team-deep),0 10px 18px rgba(0,0,0,.2);animation:cardIn .3s cubic-bezier(.3,1.4,.5,1) both}
+.gcar:disabled,.gcard:disabled{cursor:default;opacity:1}
+.gcar:not(:disabled):active,.gcard:not(:disabled):active{transform:translateY(4px)}
+.gcar.nope,.gcard.nope{filter:grayscale(.7);opacity:.45;animation:shake .42s ease-in-out both}
+.gcar.hint,.gcard.hint{box-shadow:0 0 0 5px var(--sun),0 6px 0 var(--sun-deep);animation:pulse 1s ease-in-out infinite}
+.gcar.used,.gcard.used{opacity:.2;animation:none;box-shadow:none}
+.games.five{grid-template-columns:repeat(5,minmax(0,1fr));width:min(100%,1080px)}
+.game-btn.gab{background:linear-gradient(180deg,#ffe0c2,#ff9f6b);box-shadow:0 7px 0 #c45a1c,0 14px 28px rgba(255,140,80,.25)}
+@media (max-width:1000px){.games.five{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:600px){.games.five{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-height:560px){
+  .games.five{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .gab-stage{grid-template-columns:auto auto auto}
+  .gab-word{grid-column:auto;font-size:clamp(1.1rem,5vh,1.6rem)}
+  .train{font-size:clamp(1.5rem,9.5vh,2.6rem);padding-top:.4em}
+  .gab-stage .bm-hear{width:44px}
+  .gcar{height:50px;width:68px;font-size:1.7rem;margin-bottom:8px}
+  .gcard{height:52px;min-width:84px;font-size:1.9rem}
+}
+
 .lslot.next{background:rgba(255,201,60,.28);border-bottom-color:var(--sun);animation:pulse 1.2s ease-in-out infinite}
 .lslot.fill{background:var(--snow);color:var(--ink);border-bottom:4px solid var(--team);animation:bigpop .35s cubic-bezier(.3,1.7,.5,1) both}
 .lslot.shown{background:#d8fff2;color:var(--ink);border-bottom:4px solid var(--mint)}
@@ -594,9 +643,13 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 @keyframes evolve{0%{transform:scale(.55) rotate(-14deg);filter:brightness(2.2)}55%{transform:scale(1.14) rotate(5deg);filter:brightness(1.3)}100%{transform:none;filter:none}}
 @keyframes hopjump{0%{transform:translateY(0)}45%{transform:translateY(-55%) scale(1.15)}100%{transform:translateY(0)}}
 @keyframes goldGlow{0%,100%{filter:drop-shadow(0 0 6px rgba(255,201,60,.5))}50%{filter:drop-shadow(0 0 18px rgba(255,220,120,.95))}}
+@keyframes trainIn{from{transform:translateX(70vw)}to{transform:none}}
+@keyframes couple{0%{transform:translateX(.7em)}70%{transform:translateX(-.06em)}100%{transform:none}}
+@keyframes chug{0%,100%{transform:none}50%{transform:translateY(-.05em) rotate(-1deg)}}
+@keyframes puff{0%{opacity:.9;transform:translate(0,0) scale(.6)}100%{opacity:0;transform:translate(-.4em,-1.1em) scale(2.2)}}
 @media (prefers-reduced-motion:reduce){
   .flake,.drift{display:none}
-  .title .l,.luna.idle svg,.orbit,.orbit svg,.game-btn,.game-btn::after,.sheet,.pcard,.ncard,.tcover b,.sticker-pop,.book-cover.evolve svg,.bk-gold,.streak,.roll,.die.rolling,.tok.jump,.frame i.new{animation:none!important}
+  .title .l,.luna.idle svg,.orbit,.orbit svg,.game-btn,.game-btn::after,.sheet,.pcard,.ncard,.tcover b,.sticker-pop,.book-cover.evolve svg,.bk-gold,.streak,.roll,.die.rolling,.tok.jump,.frame i.new,.train,.train .wagon,.gcar,.gcard{animation:none!important}
   .prize{display:none}
   .tstage{transition:none}
   .luna-eyes,.luna.bounce svg,.luna.wave svg,.listen svg,.slot.pop,.side.glow,.cards:not(.veiled) .card,.card.yes,.card.nope{animation:none!important}
@@ -655,11 +708,12 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
         <button type="button" class="game-btn sum" data-game="sum" style="--d:2"><span class="gico" aria-hidden="true">➕</span><b>Sum Snap</b><small>Add and take away</small></button>
         <button type="button" class="game-btn hop" data-game="hop" style="--d:3"><span class="gico" aria-hidden="true">🎲</span><b>Bunny Hop</b><small>Roll and race</small></button>
       </div>
-      <div class="games four" id="gamesBM" role="tabpanel" aria-labelledby="tabBM" hidden>
-        <button type="button" class="game-btn sk" data-game="sk" style="--d:0"><span class="gico" aria-hidden="true">🧩</span><b>Suku Kata</b><small>Build with syllables</small></button>
-        <button type="button" class="game-btn eja" data-game="eja" style="--d:1"><span class="gico" aria-hidden="true">✏️</span><b>Eja!</b><small>Spell it</small></button>
-        <button type="button" class="game-btn pic" data-game="pic" style="--d:2"><span class="gico" aria-hidden="true">🔍</span><b>Cari Gambar</b><small id="picSmall">What does it mean?</small></button>
-        <button type="button" class="game-btn test" data-game="test" style="--d:3"><span class="gico" aria-hidden="true">📝</span><b>Ujian Ejaan</b><small>Practice test</small></button>
+      <div class="games four five" id="gamesBM" role="tabpanel" aria-labelledby="tabBM" hidden>
+        <button type="button" class="game-btn gab" data-game="gab" style="--d:0"><span class="gico" aria-hidden="true">🚂</span><b>Gabung!</b><small>b + a = ba</small></button>
+        <button type="button" class="game-btn sk" data-game="sk" style="--d:1"><span class="gico" aria-hidden="true">🧩</span><b>Suku Kata</b><small>Build with syllables</small></button>
+        <button type="button" class="game-btn eja" data-game="eja" style="--d:2"><span class="gico" aria-hidden="true">✏️</span><b>Eja!</b><small>Spell it</small></button>
+        <button type="button" class="game-btn pic" data-game="pic" style="--d:3"><span class="gico" aria-hidden="true">🔍</span><b>Cari Gambar</b><small id="picSmall">What does it mean?</small></button>
+        <button type="button" class="game-btn test" data-game="test" style="--d:4"><span class="gico" aria-hidden="true">📝</span><b>Ujian Ejaan</b><small>Practice test</small></button>
       </div>
       <div class="pills">
         <button type="button" class="book-btn bunyi-btn" id="bunyiBtn" hidden><span class="bunyi-ico" aria-hidden="true">a&thinsp;b</span><span><b>Bunyi Huruf</b><small>Malay letter sounds</small></span></button>
@@ -956,6 +1010,11 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
   "mwin1": "Hooray! You are the Maths Champion! Your counting is like magic!",
   "mwin2": "You did it! You're a maths superstar!",
   "mwin3": "Woohoo! Champion! You know so many numbers!",
+  "bm_gab_intro": "Train time! Listen to the sound, then join the train to make it!",
+  "gab_car": "Which carriage makes the sound?",
+  "gab_card": "Which train says the sound?",
+  "gab_says": "That one says",
+  "gab_want": "We want",
   "bm_sk_intro": "Syllable time! Listen to the word, then build it with syllables!",
   "bm_eja_intro": "Spelling time! Listen to the word, then spell it. Every letter says its Malay sound!",
   "bm_pic_intro": "Picture time! Read the Malay word, then find its picture!",
@@ -987,11 +1046,15 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
     {"w": "lembut", "ph": "ləmbˈut", "en": "soft", "pic": "🧸"},
     {"w": "cepat", "ph": "tʃəppˈat", "en": "fast", "pic": "🐆"}
   ],
-  "syllables": {"be": "bˈɨ", "nih": "nˈih", "cang": "cˈaŋ", "kul": "kˈul", "ke": "kˈɨ", "bun": "bˈun", "ma": "mˈa", "ta": "tˈa",
-    "ha": "hˈa", "ri": "ɾˈi", "nah": "nˈah", "ku": "kˈu", "at": "ˈat", "ras": "ɾˈas", "jam": "dʒˈam", "lem": "lˈɨm", "but": "bˈut",
-    "ce": "tʃˈɨ", "pat": "pˈat"},
-  "cheers": {"betul": ["bətˈul", "Betul!"], "bagus": ["baɡˈus", "Bagus!"], "pandai": ["pˈandai", "Pandai!"],
-    "hebat": ["hebˈat", "Hebat!"], "syabas": ["ʃabˈas", "Syabas!"]},
+  "syllables": {"be": "bˈɨ", "nih": "nˈih", "cang": "cˈaŋ", "kul": "kˈul", "ke": "kˈɨ", "bun": "bˈun", "ma": "mˈa", "ta": "tˈa", "ha": "hˈa", "ri": "ɾˈi",
+    "nah": "nˈah", "ku": "kˈu", "at": "ˈat", "ras": "ɾˈas", "jam": "dʒˈam", "lem": "lˈɨm", "but": "bˈut", "ce": "tʃˈɨ", "pat": "pˈat", "ba": "bˈa",
+    "bi": "bˈi", "bu": "bˈu", "bo": "bˈo", "ca": "tʃˈa", "ci": "tʃˈi", "cu": "tʃˈu", "co": "tʃˈo", "da": "dˈa", "di": "dˈi", "du": "dˈu",
+    "de": "dˈɨ", "do": "dˈo", "ga": "ɡˈa", "gi": "ɡˈi", "gu": "ɡˈu", "ge": "ɡˈɨ", "go": "ɡˈo", "hi": "hˈi", "hu": "hˈu", "he": "hˈɨ",
+    "ho": "hˈo", "ka": "kˈa", "ki": "kˈi", "ko": "kˈo", "la": "lˈa", "li": "lˈi", "lu": "lˈu", "le": "lˈɨ", "lo": "lˈo", "mi": "mˈi",
+    "mu": "mˈu", "me": "mˈɨ", "mo": "mˈo", "na": "nˈa", "ni": "nˈi", "nu": "nˈu", "ne": "nˈɨ", "no": "nˈo", "pa": "pˈa", "pi": "pˈi",
+    "pu": "pˈu", "pe": "pˈɨ", "po": "pˈo", "ra": "ɾˈa", "ru": "ɾˈu", "re": "ɾˈɨ", "ro": "ɾˈo", "sa": "sˈa", "si": "sˈi", "su": "sˈu",
+    "se": "sˈɨ", "so": "sˈo", "ti": "tˈi", "tu": "tˈu", "te": "tˈɨ", "to": "tˈo"},
+  "cheers": {"betul": ["bətˈul", "Betul!"], "bagus": ["baɡˈus", "Bagus!"], "pandai": ["pˈandai", "Pandai!"], "hebat": ["hebˈat", "Hebat!"], "syabas": ["ʃabˈas", "Syabas!"]},
   "sounds": [
     {"id": "a", "t": "a", "g": "v", "ex": "ayam", "ph": "ajˈam", "pic": "🐔"},
     {"id": "e", "t": "e", "g": "v", "ex": "enam", "ph": "ənˈam", "pic": "6️⃣"},
@@ -1024,7 +1087,69 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
     {"id": "ai", "t": "ai", "g": "d", "ex": "pantai", "ph": "pantˈai", "pic": "🏖️"},
     {"id": "au", "t": "au", "g": "d", "ex": "pulau", "ph": "pulˈau", "pic": "🏝️"},
     {"id": "oi", "t": "oi", "g": "d", "ex": "koboi", "ph": "kobˈoi", "pic": "🤠"}
-  ]
+  ],
+  "gabung": {
+    "ba": {"w": "baju", "ph": "bˈadʒu", "pic": "👕"},
+    "bi": {"w": "biru", "ph": "bˈiɾu", "pic": "🔵"},
+    "bu": {"w": "buku", "ph": "bˈuku", "pic": "📖"},
+    "be": {"w": "beruang", "ph": "bəɾuwˈaŋ", "pic": "🐻"},
+    "bo": {"w": "bola", "ph": "bˈola", "pic": "⚽"},
+    "ca": {"w": "cawan", "ph": "tʃawˈan", "pic": "☕"},
+    "ci": {"w": "cicak", "ph": "tʃitʃˈaʔ", "pic": "🦎"},
+    "ce": {"w": "cepat", "ph": "tʃəppˈat", "pic": "🐆"},
+    "da": {"w": "daun", "ph": "dˈaun", "pic": "🍃"},
+    "di": {"w": "dinosaur", "ph": "dinosˈaur", "pic": "🦕"},
+    "du": {"w": "duit", "ph": "dˈuwit", "pic": "💵"},
+    "de": {"w": "dengar", "ph": "dəŋˈaɾ", "pic": "👂"},
+    "do": {"w": "donat", "ph": "donˈat", "pic": "🍩"},
+    "ga": {"w": "gajah", "ph": "ɡadʒˈah", "pic": "🐘"},
+    "gi": {"w": "gigi", "ph": "ɡˈiɡi", "pic": "🦷"},
+    "gu": {"w": "gunung", "ph": "ɡunˈuŋ", "pic": "⛰️"},
+    "ge": {"w": "gelas", "ph": "ɡəlˈas", "pic": "🥃"},
+    "go": {"w": "gorila", "ph": "ɡoɾˈila", "pic": "🦍"},
+    "ha": {"w": "hati", "ph": "hˈati", "pic": "❤️"},
+    "hi": {"w": "hidung", "ph": "hidˈuŋ", "pic": "👃"},
+    "hu": {"w": "hujan", "ph": "hudʒˈan", "pic": "🌧️"},
+    "he": {"w": "helang", "ph": "həlˈaŋ", "pic": "🦅"},
+    "ho": {"w": "hoki", "ph": "hˈoki", "pic": "🏑"},
+    "ka": {"w": "kaki", "ph": "kˈaki", "pic": "🦶"},
+    "ki": {"w": "kilat", "ph": "kilˈat", "pic": "⚡"},
+    "ku": {"w": "kucing", "ph": "kutʃˈiŋ", "pic": "🐱"},
+    "ke": {"w": "kereta", "ph": "kəɾˈeta", "pic": "🚗"},
+    "ko": {"w": "kotak", "ph": "kotˈaʔ", "pic": "📦"},
+    "la": {"w": "lada", "ph": "lˈada", "pic": "🌶️"},
+    "li": {"w": "lidah", "ph": "lidˈah", "pic": "👅"},
+    "lu": {"w": "lubang", "ph": "lubˈaŋ", "pic": "🕳️"},
+    "le": {"w": "lebah", "ph": "ləbˈah", "pic": "🐝"},
+    "lo": {"w": "lori", "ph": "lˈoɾi", "pic": "🚚"},
+    "ma": {"w": "mata", "ph": "mˈata", "pic": "👁️"},
+    "mi": {"w": "mi", "ph": "mˈi", "pic": "🍜"},
+    "mu": {"w": "muka", "ph": "mˈuka", "pic": "😊"},
+    "me": {"w": "menara", "ph": "mənˈaɾa", "pic": "🗼"},
+    "mo": {"w": "monyet", "ph": "moɲˈet", "pic": "🐒"},
+    "na": {"w": "nasi", "ph": "nˈasi", "pic": "🍚"},
+    "nu": {"w": "nuri", "ph": "nˈuɾi", "pic": "🦜"},
+    "ne": {"w": "nelayan", "ph": "nəlajˈan", "pic": "🎣"},
+    "no": {"w": "nota", "ph": "nˈota", "pic": "📝"},
+    "pa": {"w": "payung", "ph": "pajˈuŋ", "pic": "☂️"},
+    "pi": {"w": "pisang", "ph": "pisˈaŋ", "pic": "🍌"},
+    "pu": {"w": "pulau", "ph": "pulˈau", "pic": "🏝️"},
+    "pe": {"w": "pelangi", "ph": "pəlˈaŋi", "pic": "🌈"},
+    "po": {"w": "pokok", "ph": "pokˈoʔ", "pic": "🌳"},
+    "ra": {"w": "raja", "ph": "ɾˈadʒa", "pic": "👑"},
+    "ru": {"w": "rumah", "ph": "ɾumˈah", "pic": "🏠"},
+    "ro": {"w": "roti", "ph": "ɾˈoti", "pic": "🍞"},
+    "sa": {"w": "sayur", "ph": "sajˈuɾ", "pic": "🥬"},
+    "si": {"w": "siput", "ph": "sipˈut", "pic": "🐌"},
+    "su": {"w": "susu", "ph": "sˈusu", "pic": "🥛"},
+    "se": {"w": "sekolah", "ph": "səkolˈah", "pic": "🏫"},
+    "so": {"w": "sotong", "ph": "sotˈoŋ", "pic": "🦑"},
+    "ta": {"w": "tangan", "ph": "taŋˈan", "pic": "✋"},
+    "ti": {"w": "tikus", "ph": "tikˈus", "pic": "🐭"},
+    "tu": {"w": "tupai", "ph": "tupˈai", "pic": "🐿️"},
+    "te": {"w": "telur", "ph": "təlˈuɾ", "pic": "🥚"},
+    "to": {"w": "topi", "ph": "tˈopi", "pic": "🧢"}
+  }
 }
 </script>
 <script>
@@ -1410,7 +1535,7 @@ function speak(text,opt){
   later(finish,1500+text.length*90/rate);
 }
 /* Main voice: Luna's recorded clips (audio/p/* for lines, audio/w/* for words), played back to back. */
-const VOICE_VERSION="145c2c3b";  /* set by tools/make_voice.py whenever the clips change */
+const VOICE_VERSION="bedb9964";  /* set by tools/make_voice.py whenever the clips change */
 const clipCache=new Map();
 let sayGen=0,sayNodes=[];
 function loadClip(key){
@@ -2016,7 +2141,7 @@ function mathOpen(){
   if(S.turn===1)startDTimer();
 }
 function lockChoices(showRight){
-  document.querySelectorAll("#tchoices .ncard,#tchoices .sq,#tchoices .pcard,#tchoices .tile").forEach(b=>{b.disabled=true;if(showRight&&S.q&&b.dataset.n!=null&&Number(b.dataset.n)===S.q.ans)b.classList.add("right");});
+  document.querySelectorAll("#tchoices .ncard,#tchoices .sq,#tchoices .pcard,#tchoices .tile,#tchoices .gcar,#tchoices .gcard").forEach(b=>{b.disabled=true;if(showRight&&S.q&&b.dataset.n!=null&&Number(b.dataset.n)===S.q.ans)b.classList.add("right");});
 }
 function onMathPick(btn){
   if(S.phase!=="answer"||btn.disabled||!S.q)return;
@@ -2166,7 +2291,7 @@ function afterLand(p,bonusDone){
    spellings children really write (kebon for kebun, beneh for benih). Cari Gambar checks she knows
    what the word means. Ujian Ejaan is a practice test on paper that the grown-up marks.
    Luna says the recorded words (audio/m/); words added later use the tablet's own Malay voice. */
-const BM_INFO={sk:{name:"Suku Kata",intro:"bm_sk_intro"},eja:{name:"Eja!",intro:"bm_eja_intro"},pic:{name:"Cari Gambar",intro:"bm_pic_intro"},test:{name:"Ujian Ejaan",intro:"bm_test_intro"}};
+const BM_INFO={gab:{name:"Gabung!",intro:"bm_gab_intro"},sk:{name:"Suku Kata",intro:"bm_sk_intro"},eja:{name:"Eja!",intro:"bm_eja_intro"},pic:{name:"Cari Gambar",intro:"bm_pic_intro"},test:{name:"Ujian Ejaan",intro:"bm_test_intro"}};
 const isBM=m=>Object.prototype.hasOwnProperty.call(BM_INFO,m);
 const BM_CHEERS=Object.keys(BM.cheers);
 /* Malay syllables: V.CV, VC.CV, V.V; ng ny sy kh gh count as one letter-sound; a word-final ai/au/oi is one vowel. */
@@ -2265,8 +2390,9 @@ function startBMGame(mode){
   const test=mode==="test";
   S.mode=mode;S.gameStickers=0;S.scores=[0,0];S.turn=0;S.word="";S.tries=0;S.q=null;S.mstreak=0;
   S.bmWords=bmList();S.deck=shuffle(S.bmWords.slice());S.deckPos=0;
-  S.dTime=S.settings.daddyTime+(mode==="pic"?0:1);
+  S.dTime=S.settings.daddyTime+(mode==="pic"||mode==="gab"?0:1);
   S.timeoutFn=()=>mathMiss(1,true);
+  if(mode==="gab")gabStart();
   S.target=test?S.bmWords.length:S.settings.target;
   showOnly("turn");const T=$("turn");T.classList.remove("hopmode");T.classList.add("math","bm");
   T.classList.toggle("picmode",mode==="pic");T.classList.toggle("solo",test);
@@ -2276,7 +2402,7 @@ function startBMGame(mode){
   S.phase="intro";
   if(voiceOn()){
     const keys=["p/means","p/goodtry","p/number"].concat(S.bmWords.filter(W=>W.rec).flatMap(W=>["m/w_"+W.w,"m/e_"+W.w].concat(W.sk.map(t=>"m/s_"+t))),BM_CHEERS.map(c=>"m/c_"+c),
-      mode==="eja"?S.bmWords.flatMap(W=>W.units.map(bmSoundKey)).filter(Boolean):[]);
+      mode==="eja"?S.bmWords.flatMap(W=>W.units.map(bmSoundKey)).filter(Boolean):[],mode==="gab"?gabClips():[]);
     preloadClips([...new Set(keys)]);
   }
   const intro=BM_INFO[mode].intro,first="first"+S.target;
@@ -2310,6 +2436,7 @@ function bmSlotsHTML(q){
 }
 function bmQuestion(){
   if(S.mode==="pic")return bmPicQuestion();
+  if(S.mode==="gab")return gabQuestion();
   const g=guard(),p=S.turn,q=S.q=bmBuild(p,S.mode);
   S.phase="ask";
   $("tprompt").innerHTML=`<div class="bmq">${bmPic(q.word)}<button type="button" class="bm-hear" id="bmHear" aria-label="Hear the word again">${SPEAKER}</button></div>${bmSlotsHTML(q)}`;
@@ -2365,6 +2492,118 @@ function bmPicQuestion(){
   setBubble(q.bubble);
   later(g(mathOpen),500);
 }
+/* ---- Gabung!: join a letter and a vowel into one sound (b + u = bu) ----
+   For a child who knows her letters but can't yet blend two of them. A train: the consonant is the engine,
+   the vowel the carriage. Easy rounds: Luna says "bu", the engine shows b, she picks the carriage (u).
+   After two clean answers in a row: Luna says "bu" and she finds the written "bu" among look-alikes
+   (bo, du), which means reading each one. Every answer is blended out loud with the letters lighting
+   up ("b… u… bu"), then a picture word that starts with it (buku 📖) becomes her sticker. A wrong pick
+   is blended too, next to the right one: "That one says b… o… bo. We want b… u… bu." */
+const GAB=BM.gabung,GAB_V="aiueo".split("");
+const GAB_CONS=[...new Set(Object.keys(GAB).map(x=>x[0]))];
+const GAB_LIKE={a:"e",e:"a",i:"e",u:"o",o:"u"};          /* vowels children mix up */
+const GAB_CLIKE={b:"d",d:"b",p:"b",m:"n",n:"m",k:"g",g:"k",t:"d",c:"s",s:"c",l:"r",r:"l",h:"k"};
+Object.values(GAB).forEach(d=>{if(!BM_PICS[d.w])BM_PICS[d.w]=d.pic;});
+const GAB_OF={};Object.entries(GAB).forEach(([x,d])=>{GAB_OF["bm"+d.w]=x;});
+const gabBlend=x=>["m/b_"+x[0],"m/b_"+x[1],"m/s_"+x];
+function gabStart(){
+  /* three letter families a game: ones she found tricky first, the rest new each time */
+  const tricky=[...new Set(Object.keys(BOOK.mine.tricky).map(k=>GAB_OF[k]).filter(Boolean).map(x=>x[0]))];
+  const fams=shuffle(tricky).slice(0,2);
+  shuffle(GAB_CONS.slice()).forEach(c=>{if(fams.length<3&&!fams.includes(c))fams.push(c);});
+  S.gab={fams,lvl:1,run:0,last:"",kidLast:"",deck:[]};
+}
+function gabClips(){
+  const xs=Object.keys(GAB).filter(x=>S.gab.fams.includes(x[0]));
+  return ["p/gab_car","p/gab_card","p/gab_says","p/gab_want"].concat(xs.flatMap(x=>gabBlend(x).concat("m/g_"+x)),
+    S.gab.fams.flatMap(c=>GAB_V.map(v=>"m/s_"+c+v)),GAB_V.map(v=>"m/b_"+v));
+}
+function gabDraw(p){
+  /* through the families' sounds in a shuffled order; now and then one she found tricky, but never twice running */
+  const G=S.gab,avoid=[G.last,p===0?G.kidLast:""];
+  const tr=p===0?Object.keys(GAB).filter(x=>G.fams.includes(x[0])&&BOOK.mine.tricky["bm"+GAB[x].w]&&!avoid.includes(x)):[];
+  let x=tr.length&&Math.random()<.3?pick(tr):null;
+  for(let n=0;!x&&n<40;n++){
+    if(!G.deck.length)G.deck=shuffle(Object.keys(GAB).filter(y=>G.fams.includes(y[0])));
+    const y=G.deck.shift();if(!avoid.includes(y))x=y;
+  }
+  x=x||pick(Object.keys(GAB).filter(y=>G.fams.includes(y[0])));
+  G.last=x;if(p===0)G.kidLast=x;return x;
+}
+function gabQuestion(){
+  const g=guard(),p=S.turn,G=S.gab,x=gabDraw(p),c=x[0],v=x[1];
+  const gk=p===1?"card":G.lvl>=2&&Math.random()<.75?"card":"car";
+  let opts;
+  if(gk==="car"){
+    const rest=shuffle(GAB_V.filter(o=>o!==v&&o!==GAB_LIKE[v]));
+    opts=p===1?shuffle(GAB_V.slice()):shuffle([v,GAB_LIKE[v],rest[0]]);
+  }else{
+    const near=c+GAB_LIKE[v],other=(GAB_CLIKE[c]||pick(G.fams.filter(f=>f!==c)))+v;
+    const set=[x,near,other];
+    if(p===1)set.push(c+pick(GAB_V.filter(o=>!set.includes(c+o))));
+    opts=shuffle([...new Set(set)].filter(o=>BM.syllables[o]));
+  }
+  const q=S.q={kind:"gab",gk,syl:x,c,v,ex:GAB[x],misses:0,sticker:"bm"+GAB[x].w,ans:-1,
+    bubble:LINES[gk==="car"?"gab_car":"gab_card"],speakAnswer:gabAnswer(x),show(){gabFill();}};
+  S.phase="ask";
+  $("tprompt").innerHTML=`<div class="gab-stage"><button type="button" class="bm-hear" id="gabHear" aria-label="Hear the sound again">${SPEAKER}</button>
+    <div class="train by-${gk}" id="train" data-syl="${x}"><button type="button" class="loco" id="gabEngine" aria-label="${gk==="car"?esc(c):"engine"}"><b class="lt">${gk==="car"?esc(c):"?"}</b><i class="wh"></i><i class="wh"></i></button><span class="hitch"></span><span class="wagon"><b class="lt">?</b><i class="wh"></i><i class="wh"></i></span><span class="puff" aria-hidden="true"></span></div>
+    <div class="gab-word" id="gabWord" aria-live="polite"></div></div>`;
+  $("tchoices").innerHTML=gk==="car"
+    ?`<div class="gab-cars">${opts.map(o=>`<button type="button" class="gcar" data-v="${o}" disabled><b>${o}</b><i class="wh"></i><i class="wh"></i></button>`).join("")}</div>`
+    :`<div class="gab-cards">${opts.map(o=>`<button type="button" class="gcard" data-s="${o}" disabled>${o}</button>`).join("")}</div>`;
+  setBubble(q.bubble);
+  if(p===1){say(["m/s_"+x],x);later(g(gabOpen),300);}
+  else later(g(()=>say(["m/s_"+x],x,{onend:g(gabOpen)})),300);
+}
+function gabOpen(){
+  S.phase="answer";
+  document.querySelectorAll("#tchoices .gcar,#tchoices .gcard").forEach(b=>{b.disabled=b.classList.contains("nope");});
+  $("thearBtn").disabled=!voiceOn();
+  if(S.turn===1)startDTimer();
+}
+function onGabPick(btn){
+  const q=S.q;if(S.phase!=="answer"||!q||q.kind!=="gab"||btn.disabled)return;
+  const p=S.turn,picked=btn.dataset.s||q.c+btn.dataset.v;
+  if(picked===q.syl){
+    S.phase="done";btn.classList.add("yes");
+    if(p===0){S.gab.run=q.misses?0:S.gab.run+1;if(S.gab.run>=2)S.gab.lvl=2;}
+    return mathRight(p,btn);
+  }
+  btn.classList.add("nope");btn.disabled=true;sfx.wrong();
+  if(p===1)return mathMiss(1,false);
+  /* her mistake: blend what she picked, then what we want; after two, the right one glows */
+  q.misses++;S.mstreak=0;S.gab.lvl=1;S.gab.run=0;renderStreak();markTricky(q.sticker);
+  S.phase="hint";lockChoices();
+  const g=guard(),x=q.syl;
+  setBubble(`That one says “${picked}”. We want “${x}”!`);
+  say(["p/gab_says"].concat(gabBlend(picked),["p/gab_want"],gabBlend(x)),`That one says ${picked}. We want ${x}.`,{gap:.3,onend:g(()=>{
+    setBubble(q.bubble);gabOpen();
+    if(q.misses>=2){const r=[...document.querySelectorAll("#tchoices .gcar,#tchoices .gcard")].find(b=>(b.dataset.s||q.c+b.dataset.v)===x);if(r)r.classList.add("hint");}
+  })});
+}
+/* the train couples up: the letters go on the engine and the carriage */
+function gabFill(){
+  const q=S.q,t=$("train");if(!t||!q)return;
+  t.querySelector(".loco .lt").textContent=q.c;t.querySelector(".wagon .lt").textContent=q.v;
+  t.classList.remove("by-car","by-card");t.classList.add("joined");
+  document.querySelectorAll("#tchoices .gcar,#tchoices .gcard").forEach(b=>{if((b.dataset.s||q.c+b.dataset.v)===q.syl)b.classList.add("used");});
+}
+/* light the engine (0), the carriage (1), both (2) or neither (-1) as each sound is said */
+function gabLight(i){
+  const t=$("train");if(!t)return;
+  t.querySelector(".loco").classList.toggle("on",i===0||i===2);t.querySelector(".wagon").classList.toggle("on",i===1||i===2);
+  t.classList.toggle("go",i===2);
+}
+/* after an answer: the cheer, "b… u… bu" with the letters lighting up, then the picture word (buku 📖) */
+function gabAnswer(x){return (keys,text,done)=>{
+  const g=guard(),d=GAB[x];
+  say(keys,text,{onend:g(()=>later(g(()=>say(gabBlend(x),`${x[0]}… ${x[1]}… ${x}`,{gap:.4,onclip:gabLight,onend:g(()=>{
+    const w=$("gabWord");if(w){w.innerHTML=`<span class="pic" aria-hidden="true">${d.pic}</span><span class="w"><b>${esc(x)}</b>${esc(d.w.slice(x.length))}</span>`;w.classList.add("show");}
+    later(g(()=>say(["m/g_"+x],d.w,{onend:()=>{gabLight(-1);done();}})),200);
+  })})),150))});
+};}
+
 /* ---- Ujian Ejaan: Luna reads, she writes on paper, the grown-up marks it ---- */
 function seqSay(steps,done){const g=guard();let i=0;const next=g(()=>{if(i>=steps.length){if(done)done();return;}const f=steps[i++];f(()=>later(next,350));});next();}
 function testStart(){S.testList=shuffle(S.bmWords.slice());S.testIdx=0;S.testRound=1;S.testMissed=[];S.testFirst=0;testWord();}
@@ -2573,6 +2812,7 @@ function renderSteps(){
     `<b>Bunny Hop</b>: roll the dice, count on, and tap the square you'll land on. Carrot squares give 2 extra hops. ${kid} always hops; ${dad} only hops if he answers in time.`,
     `After a wrong tap, Luna counts along with ${kid} and she tries again. Every right answer wins a star, a prize and a number sticker, and answers in a row win bonus stars.`,
     `Every word or number ${kid} gets right is a sticker for her book, and the book grows prettier as she collects them.`,
+    `<b>Gabung!</b> (Bahasa, take turns): Luna says a sound like “bu”; join the train to make it, b + u. Later rounds: find the written “bu” among look-alikes. Every answer is blended out loud, “b… u… bu”, then a picture word (buku). ${dad} gets more choices and a timer.`,
     `<b>Bahasa</b> (this week's ejaan words, take turns): <b>Suku Kata</b> builds the word from syllables, <b>Eja!</b> spells it letter by letter, <b>Cari Gambar</b> finds what it means. The wrong tiles include the spellings children often write (kebon for kebun). ${kid} gets hints; ${dad} gets more tiles and a timer.`,
     `<b>Ujian Ejaan</b>: a practice spelling test. Luna reads each word; ${kid} writes it on paper, taps Check, and ${dad} marks it ✓ or ✗. Missed words come back at the end.`,
     `First to <b>${S.settings.target} stars</b> is the champion! In Bunny Hop, first to the finish wins.`
@@ -2602,6 +2842,7 @@ function bind(){
   $("bookOv").addEventListener("click",e=>{if(e.target===e.currentTarget)closeBook();});
   $("tchoices").addEventListener("click",e=>{
     const t=e.target.closest(".tile");if(t)return onBMTile(t);
+    const gb=e.target.closest(".gcar,.gcard");if(gb)return onGabPick(gb);
     const b=e.target.closest(".pcard");if(b)return isBM(S.mode)?onMathPick(b):onPick(b);
     const m=e.target.closest(".ncard,.sq");if(m)return onMathPick(m);
     if(e.target.closest("#testHear"))return testHear();
@@ -2611,10 +2852,12 @@ function bind(){
   $("tprompt").addEventListener("click",e=>{
     if(e.target.closest("#rollBtn"))return rollDice();
     if(e.target.closest("#bmHear")&&S.q&&S.q.word&&(S.phase==="answer"||S.phase==="ask")){bounceLuna();sayBMWord(S.q.word);}
+    if(e.target.closest("#gabHear")&&S.q&&S.q.kind==="gab"&&S.phase==="answer"){bounceLuna();say(["m/s_"+S.q.syl],S.q.syl);}
+    if(e.target.closest("#gabEngine")&&S.q&&S.q.kind==="gab"&&S.q.gk==="car"&&S.phase==="answer"){gabLight(0);say(["m/b_"+S.q.c],S.q.c,{onend:()=>gabLight(-1)});}
   });
   $("thearBtn").addEventListener("click",()=>{
     if(S.phase!=="answer"||!voiceOn())return;
-    if(isBM(S.mode)){if(S.q&&S.q.word&&(S.q.kind!=="pic"||S.tries>0)){sayBMWord(S.q.word);bounceLuna();}return;}
+    if(isBM(S.mode)){if(S.q&&S.q.kind==="gab"){say(["m/s_"+S.q.syl],S.q.syl);bounceLuna();return;}if(S.q&&S.q.word&&(S.q.kind!=="pic"||S.tries>0)){sayBMWord(S.q.word);bounceLuna();}return;}
     if(isMath(S.mode)){if(S.q&&S.q.say){say(S.q.say,S.q.sayText,{gap:.15});bounceLuna();}return;}
     if(S.mode==="robot"||S.tries>0){playSounds(S.word);bounceLuna();}
   });
