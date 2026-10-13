@@ -197,6 +197,11 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 .toggle[aria-checked="true"]{background:var(--mint)}
 .toggle[aria-checked="true"]::after{transform:translateX(24px)}
 .toggle:disabled{opacity:.4;cursor:not-allowed}
+.abc{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:8px}
+.abc button{appearance:none;border:0;border-radius:16px;background:var(--snow);color:var(--ink);font:700 1.7rem/1 var(--font-read);padding:.3em 0 .32em;display:grid;justify-items:center;gap:3px;box-shadow:0 4px 0 var(--snow-2)}
+.abc small{font:700 .78rem/1 var(--font-read);color:var(--ink-soft)}
+.abc button.on{background:var(--sun);box-shadow:0 4px 0 var(--sun-deep)}
+.abc button:active{transform:translateY(2px)}
 .steps{margin:0;padding-left:1.4em;display:grid;gap:6px;color:var(--snow-2);font-size:1.02rem;max-width:62ch}
 .steps b{color:var(--snow)}
 .actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
@@ -686,6 +691,12 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
           <input class="vh" type="file" id="restoreIn" accept=".json,application/json">
         </div>
         <p class="note" id="backupStatus" aria-live="polite"></p>
+      </div>
+
+      <div class="panel">
+        <h2>Letter sounds</h2>
+        <p class="note">Tap a letter to hear the phonics sound Luna uses, then a word with it. British English, as taught in school: "o" as in "on", "a" as in "ant".</p>
+        <div class="abc" id="abc"></div>
       </div>
 
       <div class="panel">
@@ -1180,7 +1191,7 @@ function speak(text,opt){
   later(finish,1500+text.length*90/rate);
 }
 /* Main voice: Luna's recorded clips (audio/p/* for lines, audio/w/* for words), played back to back. */
-const VOICE_VERSION="d1d198da";  /* set by tools/make_voice.py whenever the clips change */
+const VOICE_VERSION="ad707750";  /* set by tools/make_voice.py whenever the clips change */
 const clipCache=new Map();
 let sayGen=0,sayNodes=[];
 function loadClip(key){
@@ -2004,6 +2015,13 @@ function buildHomeDecor(){
 }
 
 /* ---------- setup screen ---------- */
+/* Settings → Letter sounds: each letter's phonics sound, then a picture word that has it. */
+const ABC=[["a","cat"],["b","bed"],["c","cup"],["d","dog"],["e","pen"],["f","fox"],["g","get"],["h","hat"],["i","pig"],["j","jam"],["k","kid"],["l","leg"],["m","map"],["n","net"],["o","dog"],["p","pin"],["r","red"],["s","sun"],["t","ten"],["u","bus"],["v","van"],["w","web"],["x","box"],["y","yes"],["z","zip"]];
+function playLetter(b){
+  audio();const l=b.dataset.l,w=(ABC.find(a=>a[0]===l)||[])[1];if(!w)return;
+  document.querySelectorAll("#abc button").forEach(x=>x.classList.toggle("on",x===b));
+  say(soundKeys(l).concat("w/"+w),`${l}… ${w}`,{gap:.55,onend:()=>b.classList.remove("on")});
+}
 function renderSetup(){
   $("kidIn").value=S.settings.kid;$("dadIn").value=S.settings.dad;
   $("levels").innerHTML=LEVELS.map(l=>`<button type="button" class="level" role="radio" id="lv-${l.id}" data-level="${l.id}" aria-checked="${S.settings.level===l.id}"><b>${l.name}</b><span>${l.hint}</span><small>${l.about}</small></button>`).join("");
@@ -2011,6 +2029,7 @@ function renderSetup(){
   $("mathMaxSeg").innerHTML=[10,20].map(m=>`<button type="button" role="radio" data-mm="${m}" aria-checked="${mathMax()===m}">Up to ${m}</button>`).join("");
   $("hsIn").value=S.settings.headStart;$("hsOut").textContent=fmtSec(S.settings.headStart);
   $("dtIn").value=S.settings.daddyTime;$("dtOut").textContent=fmtSec(S.settings.daddyTime);
+  $("abc").innerHTML=ABC.map(([l,w])=>`<button type="button" data-l="${l}" aria-label="${l}, as in ${w}">${l}<small>${w}</small></button>`).join("");
   document.querySelectorAll(".toggle").forEach(t=>t.setAttribute("aria-checked",String(!!S.settings[t.dataset.key])));
   if(!HAS_AC&&!HAS_TTS){$("tg-voice").disabled=true;$("testBtn").hidden=true;}
   renderSteps();
@@ -2067,6 +2086,7 @@ function bind(){
   $("tpauseBtn").addEventListener("click",openPause);
   /* Two players touching at once must not turn into an iPad pinch-zoom that swallows the taps. */
   ["gesturestart","gesturechange","gestureend"].forEach(t=>document.addEventListener(t,e=>{if(inGame())e.preventDefault();},{passive:false}));
+  $("abc").addEventListener("click",e=>{const b=e.target.closest("[data-l]");if(b)playLetter(b);});
   $("testBtn").addEventListener("click",()=>{audio();pickVoice();sfx.sparkle();if(voiceOn())say(["p/hello"],LINES.hello);});
   $("fsBtn").addEventListener("click",()=>{try{if(document.fullscreenElement)document.exitFullscreen();else{const r=document.documentElement.requestFullscreen();if(r&&r.catch)r.catch(()=>{});}}catch(e){}});
   $("hearBtn").addEventListener("click",()=>{if(S.phase==="race"&&voiceOn()){say(["w/"+S.word],S.word,{rate:.75});bounceLuna();}});

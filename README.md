@@ -46,10 +46,12 @@ GitHub Pages serves this repository's `main` branch. Every push to `main` update
 
 Luna's cheers, every reading word and every number from 0 to 100 are pre-recorded clips in `audio/`, made with the open Kokoro text-to-speech model (voice `af_heart`, pitched up for a cute, child-like sound at normal speed). If a clip can't play, the game falls back to the device's own voice.
 
+Reading words, numbers and the letter sounds are in British English, the way phonics is taught in Malaysian schools ("o" as in "on", "a" as in "ant"). Each letter sound is cut out of a real word at the exact frames where that sound is, so consonants are pure (no "buh" or "kah") and every vowel is the right short vowel; the script checks each one (voicing, vowel shape, length) and also re-takes any word that would start with a stray "uh". Settings → **Letter sounds** plays every sound with a word that has it.
+
 To change a line, edit the `<script id="lines">` block in `index.html`, then re-record from the repository root:
 
 ```
-pip install kokoro-onnx soundfile
+pip install kokoro-onnx soundfile praat-parselmouth scipy
 python3 tools/make_voice.py
 ```
 
