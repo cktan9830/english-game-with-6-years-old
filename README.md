@@ -24,11 +24,15 @@ After her first wrong tap, Luna counts along with her and she tries again. Every
 This week's Bahasa Melayu spelling (ejaan) words, learnt by suku kata the way school teaches them. Edit the list in Settings → **Bahasa Melayu spelling words** (one word per line, optional "= meaning").
 
 - **Suku Kata**: hear the word, see its picture, build it from syllable tiles. Wrong tiles include the spellings children often write (kebon for kebun, beneh for benih).
-- **Eja!**: spell it letter by letter into boxes grouped by syllable.
+- **Eja!**: spell it letter by letter into boxes grouped by syllable. Every letter she taps says its Malay sound, and each finished syllable is blended ("k… e… ke"). ng, ny, sy and kh are one tile each, because they are one sound. A wrong tap sounds out the syllable she's on; after two, Luna says the sound she needs and the right tile glows.
 - **Cari Gambar**: read the Malay word, tap its picture; Luna says what it means in English.
 - **Ujian Ejaan**: Luna reads each word (then syllable by syllable), she writes it on paper, taps Check, and the grown-up marks ✓ or ✗. Missed words come back at the end.
 
-Luna says the recorded words; words added later are read by the tablet's own Malay voice (Settings can also switch every Malay word to that voice).
+- **Bunyi Huruf** (button under the games): the Malay letter-sound chart. Tap a letter to hear its sound, then a word with it (a… ayam, ny… nyamuk). It's also in Settings.
+
+Bahasa Melayu has its own phonics, so it never uses the English letter sounds: a is always "a" as in *ayam*; e is the soft pepet of *emak* (or the é of *merah*, the taling); i, o and u are pure; c is "ch"; g is always hard; r is rolled; a final h is breathed; p, t and k have no puff of air; ng, ny, sy and kh are single sounds; ai, au and oi glide. When typing a new word with a taling e, write é (e.g. "mérah = red").
+
+The recorded words use a separate Malay voice; words added later are read by the tablet's own Malay voice (Settings can also switch every Malay word to that voice).
 
 ### Sticker book
 
@@ -57,6 +61,8 @@ GitHub Pages serves this repository's `main` branch. Every push to `main` update
 
 Luna's cheers, every reading word and every number from 0 to 100 are pre-recorded clips in `audio/`, made with the open Kokoro text-to-speech model (voice `af_heart`, pitched up for a cute, child-like sound at normal speed). If a clip can't play, the game falls back to the device's own voice.
 
+The Bahasa Melayu words, syllables, cheers and letter sounds use a different voice: Kokoro has no Malay voice, and its Hindi voice (`hf_alpha`) is the closest to Malay: p, t and k without English's puff of air, pure vowels and a true pepet. It speaks hand-written Malay phonemes. That voice tends to hum before a word and to let a tiny echo vowel out after a final p, t or k; the script cuts both off, breathes a clear final h onto words like *tanah* and *benih* (the voice drops it, or says "ah" as "eh"), and keeps the cleanest of several takes. The Malay letter sounds are cut from Malay syllables the same way as the English ones; for each vowel the take whose formants sit closest to the Malay vowel is kept. Malay r is rolled, which no voice does, so the r sound is a held pepet broken by quick tongue taps.
+
 Reading words, numbers and the letter sounds are in British English, the way phonics is taught in Malaysian schools ("o" as in "on", "a" as in "ant"). Each letter sound is cut out of a real word at the exact frames where that sound is, so consonants are pure (no "buh" or "kah") and every vowel is the right short vowel; the script checks each one (voicing, vowel shape, length) and also re-takes any word that would start with a stray "uh". Settings → **Letter sounds** plays every sound with a word that has it.
 
 To change a line, edit the `<script id="lines">` block in `index.html`, then re-record from the repository root:
@@ -74,7 +80,7 @@ Only clips whose text changed are re-recorded. New words added to the word lists
 |---|---|
 | `index.html` | The whole game |
 | `sw.js` | Keeps the game playable offline, including Luna's voice |
-| `audio/` | Luna's recorded lines (`p/`), reading words (`w/`), letter sounds (`s/`), numbers (`n/`) and Bahasa Melayu words, syllables, cheers and meanings (`m/`) |
+| `audio/` | Luna's recorded lines (`p/`), reading words (`w/`), letter sounds (`s/`), numbers (`n/`) and Bahasa Melayu words, syllables, cheers, meanings, letter sounds and their example words (`m/`) |
 | `tools/make_voice.py` | Records the voice clips |
 | `manifest.webmanifest` | App name, icon and full-screen setting |
 | `fonts/` | Andika (reading font) and Grandstander (title font) |

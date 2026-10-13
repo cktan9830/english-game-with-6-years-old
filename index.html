@@ -107,6 +107,20 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 .book-btn small{font-family:var(--font-read);font-weight:700;color:var(--frost);font-size:.95rem}
 .book-btn:active{transform:scale(.97)}
 .mini-book svg{display:block;width:100%;height:auto}
+.pills{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.bunyi-ico{display:grid;place-items:center;width:clamp(40px,6vw,54px);aspect-ratio:1;flex:none;border-radius:50%;background:linear-gradient(180deg,#ffe28a,var(--sun));box-shadow:0 3px 0 var(--sun-deep);color:var(--ink);font:900 clamp(1rem,2.4vw,1.3rem)/1 var(--font-read)}
+.bunyi-sheet{max-width:900px}
+.bunyi-say{margin:0;min-height:1.4em;text-align:center;font:800 clamp(1.1rem,3vw,1.5rem)/1.3 var(--font-read);color:var(--sun)}
+.bunyi-chart h3{margin:14px 0 8px;font-family:var(--font-display);font-weight:900;font-size:1.15rem;color:inherit}
+.bunyi-chart h3:first-child{margin-top:2px}
+.bunyi-chart h3 small{font-family:var(--font-read);font-weight:700;font-size:.85rem;opacity:.75}
+.bunyi-chart .abc{grid-template-columns:repeat(auto-fill,minmax(78px,1fr))}
+.bunyi-chart .abc button small{font-size:.8rem;white-space:nowrap}
+.bunyi-chart .abc .v{background:#ffe3ef;box-shadow:0 4px 0 #f3a7c6}
+.bunyi-chart .abc .j{background:#ddf3ff;box-shadow:0 4px 0 #94cdee}
+.bunyi-chart .abc .d{background:#e8e0ff;box-shadow:0 4px 0 #b9a6f2}
+.bunyi-chart .abc button.on{background:var(--sun);box-shadow:0 4px 0 var(--sun-deep)}
+.bunyi-chart .pic{font-size:1.6rem;line-height:1}
 /* reading / maths tabs */
 .subj{display:inline-flex;gap:6px;padding:5px;border-radius:999px;background:rgba(253,251,255,.12)}
 .subj button{appearance:none;border:0;border-radius:999px;padding:.38em 1em;font:900 clamp(1.05rem,2.4vw,1.4rem) var(--font-display);color:var(--snow);background:transparent}
@@ -140,6 +154,7 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
   .book-btn{padding:4px 14px 4px 6px}
   .book-btn .mini-book{width:30px}
   .book-btn small{display:none}
+  .bunyi-ico{width:30px;font-size:.85rem}
 }
 .gear{position:absolute;right:0;bottom:4px;width:48px;height:48px;border-radius:50%;border:0;padding:0;display:grid;place-items:center;background:rgba(253,251,255,.14);color:var(--snow);opacity:.8}
 .gear svg{width:26px;height:26px}
@@ -379,6 +394,7 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 .slots .grp{display:inline-flex;gap:clamp(3px,.6vw,6px)}
 .lslot{display:inline-grid;place-items:center;min-width:.82em;height:1.3em;padding:0 .08em;border-radius:12px;background:rgba(253,251,255,.14);border-bottom:4px dashed rgba(253,251,255,.55);color:var(--snow)}
 .lslot.sk{min-width:2.4em}
+.lslot.two{min-width:1.4em}
 .lslot.next{background:rgba(255,201,60,.28);border-bottom-color:var(--sun);animation:pulse 1.2s ease-in-out infinite}
 .lslot.fill{background:var(--snow);color:var(--ink);border-bottom:4px solid var(--team);animation:bigpop .35s cubic-bezier(.3,1.7,.5,1) both}
 .lslot.shown{background:#d8fff2;color:var(--ink);border-bottom:4px solid var(--mint)}
@@ -645,7 +661,10 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
         <button type="button" class="game-btn pic" data-game="pic" style="--d:2"><span class="gico" aria-hidden="true">🔍</span><b>Cari Gambar</b><small id="picSmall">What does it mean?</small></button>
         <button type="button" class="game-btn test" data-game="test" style="--d:3"><span class="gico" aria-hidden="true">📝</span><b>Ujian Ejaan</b><small>Practice test</small></button>
       </div>
-      <button type="button" class="book-btn" id="bookBtn"><span class="mini-book" id="miniBook" aria-hidden="true"></span><span><b id="bookBtnTitle">My Sticker Book</b><small id="bookBtnCount">0 stickers</small></span></button>
+      <div class="pills">
+        <button type="button" class="book-btn bunyi-btn" id="bunyiBtn" hidden><span class="bunyi-ico" aria-hidden="true">a&thinsp;b</span><span><b>Bunyi Huruf</b><small>Malay letter sounds</small></span></button>
+        <button type="button" class="book-btn" id="bookBtn"><span class="mini-book" id="miniBook" aria-hidden="true"></span><span><b id="bookBtnTitle">My Sticker Book</b><small id="bookBtnCount">0 stickers</small></span></button>
+      </div>
       <p class="hint">Tap Luna to say hi!</p>
     </div>
     <button type="button" class="gear" id="gearBtn" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.55 3.52"/><circle cx="12" cy="12" r="6.2" fill="none" stroke="currentColor" stroke-width="3.6"/></svg></button>
@@ -680,6 +699,14 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
     <div class="tbar bottom" id="tbar0"></div>
   </section>
 </main>
+
+<div id="bunyiOv" class="overlay sheet-ov" hidden>
+  <div class="sheet bunyi-sheet" role="dialog" aria-modal="true" aria-labelledby="bunyiTitle">
+    <div class="sheet-head"><h2 id="bunyiTitle">Bunyi Huruf</h2><button type="button" class="btn done" id="bunyiDone">Close</button></div>
+    <p class="bunyi-say" id="bunyiSay" aria-live="polite">Tap a letter to hear its sound in Bahasa Melayu.</p>
+    <div class="bunyi-chart" id="bunyiChart"></div>
+  </div>
+</div>
 
 <div id="bookOv" class="overlay sheet-ov" hidden>
   <div class="sheet book-sheet" role="dialog" aria-modal="true" aria-labelledby="bookTitle">
@@ -781,7 +808,7 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
 
       <div class="panel">
         <h2>Bahasa Melayu spelling words (ejaan)</h2>
-        <p class="note">This week's list, one word per line. Add "= meaning" for the English meaning, e.g. "pokok = tree". Words Luna hasn't recorded are read by the tablet's own Malay voice.</p>
+        <p class="note">This week's list, one word per line. Add "= meaning" for the English meaning, e.g. "pokok = tree". Type é for an e said as in <i>merah</i> (e.g. "mérah = red"); a plain e is the soft e of <i>emak</i>. Words that weren't recorded are read by the tablet's own Malay voice.</p>
         <textarea id="bmIn" rows="6" spellcheck="false" autocomplete="off" autocapitalize="none"></textarea>
         <div class="bm-words" id="bmWords" aria-label="Tap a word to hear it"></div>
         <div class="opt">
@@ -792,7 +819,13 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
       </div>
 
       <div class="panel">
-        <h2>Letter sounds</h2>
+        <h2>Bunyi huruf (Malay letter sounds)</h2>
+        <p class="note">Bahasa Melayu is read with its own sounds, not English ones, and Eja! uses these: a is always "a" as in <i>ayam</i>; e is usually the soft pepet of <i>emak</i> and sometimes the é of <i>merah</i> (taling); i, o and u are pure; c is "ch"; g is always hard; r is rolled; a final h is breathed; p, t and k have no puff of air; ng, ny, sy and kh are one sound each. Tap a sound to hear it, then a word with it.</p>
+        <div class="bunyi-chart" id="bunyiSet"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Letter sounds (English)</h2>
         <p class="note">Tap a letter to hear the phonics sound Luna uses, then a word with it. British English, as taught in school: "o" as in "on", "a" as in "ant".</p>
         <div class="abc" id="abc"></div>
       </div>
@@ -924,7 +957,7 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
   "mwin2": "You did it! You're a maths superstar!",
   "mwin3": "Woohoo! Champion! You know so many numbers!",
   "bm_sk_intro": "Syllable time! Listen to the word, then build it with syllables!",
-  "bm_eja_intro": "Spelling time! Listen to the word, then spell it, letter by letter!",
+  "bm_eja_intro": "Spelling time! Listen to the word, then spell it. Every letter says its Malay sound!",
   "bm_pic_intro": "Picture time! Read the Malay word, then find its picture!",
   "bm_test_intro": "Spelling test! Listen to each word, write it on your paper, then tap Check!",
   "bm_build": "Build the word!",
@@ -944,21 +977,54 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
 {
   "words": [
     {"w": "benih", "ph": "bənˈih", "en": "seed", "pic": "🌱"},
-    {"w": "cangkul", "ph": "tʃˈaŋkul", "en": "hoe", "pic": "svg:cangkul"},
+    {"w": "cangkul", "ph": "cˈaŋkkul", "en": "hoe", "pic": "svg:cangkul"},
     {"w": "kebun", "ph": "kəbˈun", "en": "garden", "pic": "svg:kebun"},
     {"w": "matahari", "ph": "mˌatahˈaɾi", "en": "sun", "pic": "☀️"},
-    {"w": "tanah", "ph": "tˈanah.", "en": "soil", "pic": "svg:tanah"},
-    {"w": "kuat", "ph": "kˈuwat", "en": "strong", "pic": "💪"},
+    {"w": "tanah", "ph": "tanˈah", "en": "soil", "pic": "svg:tanah"},
+    {"w": "kuat", "ph": "kuwˈat", "en": "strong", "pic": "💪"},
     {"w": "keras", "ph": "kəɾˈas", "en": "hard", "pic": "🪨"},
-    {"w": "tajam", "ph": "tˈadʒam", "en": "sharp", "pic": "🔪"},
-    {"w": "lembut", "ph": "ləmbˈʊt", "en": "soft", "pic": "🧸"},
-    {"w": "cepat", "ph": "tʃəpˈat", "en": "fast", "pic": "🐆"}
+    {"w": "tajam", "ph": "tadʒˈam", "en": "sharp", "pic": "🔪"},
+    {"w": "lembut", "ph": "ləmbˈut", "en": "soft", "pic": "🧸"},
+    {"w": "cepat", "ph": "tʃəppˈat", "en": "fast", "pic": "🐆"}
   ],
-  "syllables": {"be": "bˈɜ", "nih": "nˈih", "cang": "tʃˈaŋ", "kul": "kˈul", "ke": "kˈɜ", "bun": "bˈun", "ma": "mˈa", "ta": "tˈa",
-    "ha": "hˈa", "ri": "ɾˈi", "nah": "nˈah", "ku": "kˈu", "at": "ˈat", "ras": "ɾˈas", "jam": "dʒˈam", "lem": "lˈɜm", "but": "bˈʊt",
-    "ce": "tʃˈɜ", "pat": "pˈat"},
-  "cheers": {"betul": ["bətˈul", "Betul!"], "bagus": ["bˈaɡus", "Bagus!"], "pandai": ["pˈandai", "Pandai!"],
-    "hebat": ["hˈɛbat", "Hebat!"], "syabas": ["ʃˈabas", "Syabas!"]}
+  "syllables": {"be": "bˈɨ", "nih": "nˈih", "cang": "cˈaŋ", "kul": "kˈul", "ke": "kˈɨ", "bun": "bˈun", "ma": "mˈa", "ta": "tˈa",
+    "ha": "hˈa", "ri": "ɾˈi", "nah": "nˈah", "ku": "kˈu", "at": "ˈat", "ras": "ɾˈas", "jam": "dʒˈam", "lem": "lˈɨm", "but": "bˈut",
+    "ce": "tʃˈɨ", "pat": "pˈat"},
+  "cheers": {"betul": ["bətˈul", "Betul!"], "bagus": ["baɡˈus", "Bagus!"], "pandai": ["pˈandai", "Pandai!"],
+    "hebat": ["hebˈat", "Hebat!"], "syabas": ["ʃabˈas", "Syabas!"]},
+  "sounds": [
+    {"id": "a", "t": "a", "g": "v", "ex": "ayam", "ph": "ajˈam", "pic": "🐔"},
+    {"id": "e", "t": "e", "g": "v", "ex": "enam", "ph": "ənˈam", "pic": "6️⃣"},
+    {"id": "ee", "t": "é", "g": "v", "ex": "merah", "ph": "meɾˈah", "pic": "🔴"},
+    {"id": "i", "t": "i", "g": "v", "ex": "ikan", "ph": "ikˈan", "pic": "🐟"},
+    {"id": "o", "t": "o", "g": "v", "ex": "oren", "ph": "oɾˈen", "pic": "🍊"},
+    {"id": "u", "t": "u", "g": "v", "ex": "ular", "ph": "ulˈaɾ", "pic": "🐍"},
+    {"id": "b", "t": "b", "g": "k", "ex": "bola", "ph": "bˈola", "pic": "⚽"},
+    {"id": "c", "t": "c", "g": "k", "ex": "cicak", "ph": "tʃitʃˈaʔ", "pic": "🦎"},
+    {"id": "d", "t": "d", "g": "k", "ex": "dadu", "ph": "dˈadu", "pic": "🎲"},
+    {"id": "f", "t": "f", "g": "k", "ex": "filem", "ph": "filˈəm", "pic": "🎬"},
+    {"id": "g", "t": "g", "g": "k", "ex": "gajah", "ph": "ɡadʒˈah", "pic": "🐘"},
+    {"id": "h", "t": "h", "g": "k", "ex": "hujan", "ph": "hudʒˈan", "pic": "🌧️"},
+    {"id": "j", "t": "j", "g": "k", "ex": "jam", "ph": "dʒˈam", "pic": "⏰"},
+    {"id": "k", "t": "k", "g": "k", "ex": "kucing", "ph": "kutʃˈiŋ", "pic": "🐱"},
+    {"id": "l", "t": "l", "g": "k", "ex": "lampu", "ph": "lˈampu", "pic": "💡"},
+    {"id": "m", "t": "m", "g": "k", "ex": "mata", "ph": "mˈata", "pic": "👁️"},
+    {"id": "n", "t": "n", "g": "k", "ex": "nasi", "ph": "nˈasi", "pic": "🍚"},
+    {"id": "p", "t": "p", "g": "k", "ex": "pisang", "ph": "pisˈaŋ", "pic": "🍌"},
+    {"id": "r", "t": "r", "g": "k", "ex": "rumah", "ph": "ɾumˈah", "pic": "🏠"},
+    {"id": "s", "t": "s", "g": "k", "ex": "susu", "ph": "sˈusu", "pic": "🥛"},
+    {"id": "t", "t": "t", "g": "k", "ex": "topi", "ph": "tˈopi", "pic": "🧢"},
+    {"id": "w", "t": "w", "g": "k", "ex": "wau", "ph": "wˈau", "pic": "🪁"},
+    {"id": "y", "t": "y", "g": "k", "ex": "yoyo", "ph": "jˈojo", "pic": "🪀"},
+    {"id": "z", "t": "z", "g": "k", "ex": "zirafah", "ph": "ziɾafˈah", "pic": "🦒"},
+    {"id": "ng", "t": "ng", "g": "j", "ex": "bunga", "ph": "bˈuŋa", "pic": "🌸"},
+    {"id": "ny", "t": "ny", "g": "j", "ex": "nyamuk", "ph": "ɲamˈuʔ", "pic": "🦟"},
+    {"id": "sy", "t": "sy", "g": "j", "ex": "syiling", "ph": "ʃilˈiŋ", "pic": "🪙"},
+    {"id": "kh", "t": "kh", "g": "j", "ex": "khemah", "ph": "xemˈah", "pic": "⛺"},
+    {"id": "ai", "t": "ai", "g": "d", "ex": "pantai", "ph": "pantˈai", "pic": "🏖️"},
+    {"id": "au", "t": "au", "g": "d", "ex": "pulau", "ph": "pulˈau", "pic": "🏝️"},
+    {"id": "oi", "t": "oi", "g": "d", "ex": "koboi", "ph": "kobˈoi", "pic": "🤠"}
+  ]
 }
 </script>
 <script>
@@ -1344,7 +1410,7 @@ function speak(text,opt){
   later(finish,1500+text.length*90/rate);
 }
 /* Main voice: Luna's recorded clips (audio/p/* for lines, audio/w/* for words), played back to back. */
-const VOICE_VERSION="dbfd60f8";  /* set by tools/make_voice.py whenever the clips change */
+const VOICE_VERSION="145c2c3b";  /* set by tools/make_voice.py whenever the clips change */
 const clipCache=new Map();
 let sayGen=0,sayNodes=[];
 function loadClip(key){
@@ -1506,7 +1572,7 @@ async function wakeLock(){try{if("wakeLock" in navigator&&!lock){lock=await navi
 
 function showOnly(id){
   for(const s of ["home","game","turn"])$(s).hidden=s!==id;
-  for(const o of ["settingsOv","win","pauseOv","bookOv"])$(o).hidden=true;
+  for(const o of ["settingsOv","win","pauseOv","bookOv","bunyiOv"])$(o).hidden=true;
 }
 const inGame=()=>!$("game").hidden||!$("turn").hidden;
 /* "Hello Elyse! Hello Daddy!", then the game's intro, then play. */
@@ -2114,11 +2180,31 @@ function bmSyl(w){
   return out;
 }
 const BM_DEFAULT_TEXT=BM.words.map(d=>`${d.w} = ${d.en}`).join("\n");
-function bmEntry(w,en){const d=BM.words.find(x=>x.w===w);return {w,sk:bmSyl(w),en:en||(d?d.en:""),pic:BM_PICS[w]||"",rec:!!d};}
+/* Malay letter sounds (audio/m/b_<id>.mp3, example words m/x_<id>.mp3). A word is spelled in "units": single
+   letters, or ng ny sy kh gh that make one sound. e is the pepet of "emak"; a word typed with é (mérah) uses the
+   taling e of "merah" there. q and gh (in borrowed words) sound like k and g; v and x have no Malay sound. */
+const BM_SOUND=Object.fromEntries(BM.sounds.map(d=>[d.id,d]));
+const BM_BORROWED={q:"k",gh:"g"};
+function bmUnits(raw){
+  const out=[];
+  for(let i=0;i<raw.length;){
+    const two=raw.slice(i,i+2),one=raw[i];
+    if(["ng","ny","sy","kh","gh"].includes(two)){out.push({t:two,s:BM_SOUND[two]?two:BM_BORROWED[two]||""});i+=2;continue;}
+    i++;out.push(one==="é"?{t:"e",s:"ee"}:{t:one,s:BM_SOUND[one]?one:BM_BORROWED[one]||""});
+  }
+  return out;
+}
+function bmEntry(raw,en){
+  raw=raw.normalize("NFC");const w=raw.replace(/é/g,"e"),d=BM.words.find(x=>x.w===w);
+  const W={w,sk:bmSyl(w),units:bmUnits(raw),en:en||(d?d.en:""),pic:BM_PICS[w]||"",rec:!!d};
+  /* which syllable each unit belongs to */
+  let si=0,n=0;W.us=W.units.map(u=>{const at=si;n+=u.t.length;if(n>=W.sk.slice(0,si+1).join("").length)si++;return at;});
+  return W;
+}
 function bmList(){
   const raw=String(S.settings.bmList||"").trim(),out=[],seen=new Set();
-  if(raw)raw.split(/[\n,;]+/).forEach(line=>{const parts=line.split("="),w=(parts[0]||"").toLowerCase().replace(/[^a-z]/g,"");
-    if(w&&w.length<=13&&!seen.has(w)){seen.add(w);out.push(bmEntry(w,(parts[1]||"").trim()));}});
+  if(raw)raw.split(/[\n,;]+/).forEach(line=>{const parts=line.split("="),raw=(parts[0]||"").normalize("NFC").toLowerCase().replace(/[^a-zé]/g,""),w=raw.replace(/é/g,"e");
+    if(w&&w.length<=13&&!seen.has(w)){seen.add(w);out.push(bmEntry(raw,(parts[1]||"").trim()));}});
   return out.length?out:BM.words.map(d=>bmEntry(d.w,d.en));
 }
 function bmPic(W,cls){const f=bmPicFace(W.pic);return f?`<span class="bmpic ${cls||""}" aria-hidden="true">${f}</span>`:"";}
@@ -2139,6 +2225,22 @@ function sayBMSyl(W,i,opt){const t=W.sk[i];if(lunaBM(W)&&BM.syllables[t])say(["m
 function sayBMSyls(W,opt){
   if(lunaBM(W)&&W.sk.every(t=>BM.syllables[t]))say(W.sk.map(t=>"m/s_"+t),W.sk.join("… "),Object.assign({gap:.45},opt));
   else speakMs(W.sk.join(", "),Object.assign({rate:.6},opt));
+}
+const bmSoundKey=u=>u&&u.s?"m/b_"+u.s:null;
+/* one letter's Malay sound, then (optionally) its syllable blended */
+function sayBMLetter(W,i,withSyl,opt){
+  const k=bmSoundKey(W.units[i]),si=W.us[i];
+  if(!withSyl){if(k)say([k],W.units[i].t,opt);else if(opt&&opt.onend)later(opt.onend,10);return;}
+  if(lunaBM(W)&&BM.syllables[W.sk[si]])say((k?[k]:[]).concat("m/s_"+W.sk[si]),`${W.units[i].t}… ${W.sk[si]}`,Object.assign({gap:.3},opt));
+  else if(k)say([k],W.units[i].t,{onend:()=>later(()=>sayBMSyl(W,si,opt),200)});
+  else sayBMSyl(W,si,opt);
+}
+/* sound out a syllable letter by letter, then blend it: "k… e… ke" */
+function soundOut(W,si,opt){
+  const keys=W.units.map((u,i)=>W.us[i]===si?bmSoundKey(u):null).filter(Boolean);
+  const text=W.units.filter((u,i)=>W.us[i]===si).map(u=>u.t).join(" · ");
+  if(lunaBM(W)&&BM.syllables[W.sk[si]])say(keys.concat("m/s_"+W.sk[si]),`${text}… ${W.sk[si]}`,Object.assign({gap:.38},opt));
+  else say(keys,text,{gap:.38,onend:()=>later(()=>sayBMSyl(W,si,opt),250)});
 }
 function sayMeaning(W,opt){
   opt=opt||{};if(!W.en){if(opt.onend)later(opt.onend,10);return;}
@@ -2173,7 +2275,8 @@ function startBMGame(mode){
   setFacing(0);$("tturn").textContent=BM_INFO[mode].name;$("thearBtn").disabled=true;
   S.phase="intro";
   if(voiceOn()){
-    const keys=["p/means","p/goodtry","p/number"].concat(S.bmWords.filter(W=>W.rec).flatMap(W=>["m/w_"+W.w,"m/e_"+W.w].concat(W.sk.map(t=>"m/s_"+t))),BM_CHEERS.map(c=>"m/c_"+c));
+    const keys=["p/means","p/goodtry","p/number"].concat(S.bmWords.filter(W=>W.rec).flatMap(W=>["m/w_"+W.w,"m/e_"+W.w].concat(W.sk.map(t=>"m/s_"+t))),BM_CHEERS.map(c=>"m/c_"+c),
+      mode==="eja"?S.bmWords.flatMap(W=>W.units.map(bmSoundKey)).filter(Boolean):[]);
     preloadClips([...new Set(keys)]);
   }
   const intro=BM_INFO[mode].intro,first="first"+S.target;
@@ -2185,7 +2288,7 @@ const SOUNDALIKE={i:"e",u:"o",e:"a",a:"e",o:"u"};
 function sylVariants(t){const m=t.match(/^(.*?)([aeiou])([^aeiou]+)$/);return m&&SOUNDALIKE[m[2]]?[m[1]+SOUNDALIKE[m[2]]+m[3]]:[];}
 function bmBuild(p,kind){
   const W=drawBM(p);S.word=W.w;
-  const parts=kind==="sk"?W.sk.slice():[...W.w];
+  const parts=kind==="sk"?W.sk.slice():W.units.map(u=>u.t);
   let extra=[];
   if(kind==="sk"){
     const alike=[...new Set(W.sk.flatMap(sylVariants))].filter(v=>!W.sk.includes(v));
@@ -2194,7 +2297,7 @@ function bmBuild(p,kind){
   }else{
     const CONF={b:"d",d:"b",p:"b",m:"n",n:"m",u:"o",o:"u",i:"e",e:"a",a:"e",c:"k",k:"c",g:"j",j:"g",h:"k",l:"r",r:"l",t:"d",s:"z",y:"i"};
     const cand=shuffle([...new Set(W.w)].map(ch=>CONF[ch]).filter(Boolean)).concat(shuffle("abcdeghijklmnoprstuwy".split("")));
-    for(const ch of cand){if(extra.length>=(p===0?3:7))break;if(!extra.includes(ch)&&!W.w.includes(ch))extra.push(ch);}
+    for(const ch of cand){if(extra.length>=(p===0?3:7))break;if(!extra.includes(ch)&&!W.w.includes(ch)&&!parts.includes(ch))extra.push(ch);}
   }
   return {kind,word:W,parts,pos:0,misses:0,tiles:shuffle(parts.concat(extra)),sticker:"bm"+W.w,ans:-1,
     speakAnswer:bmAnswer(W),bubble:LINES[kind==="sk"?"bm_build":"bm_spell"],
@@ -2202,7 +2305,8 @@ function bmBuild(p,kind){
 }
 function bmSlotsHTML(q){
   if(q.kind==="sk")return `<div class="slots">${q.parts.map((t,i)=>`<span class="lslot sk" data-i="${i}"></span>`).join("")}</div>`;
-  let i=0;return `<div class="slots">${q.word.sk.map(t=>`<span class="grp">${[...t].map(()=>`<span class="lslot" data-i="${i++}"></span>`).join("")}</span>`).join('<i class="dot">·</i>')}</div>`;
+  const W=q.word;
+  return `<div class="slots">${W.sk.map((t,si)=>`<span class="grp">${W.units.map((u,i)=>W.us[i]===si?`<span class="lslot${u.t.length>1?" two":""}" data-i="${i}"></span>`:"").join("")}</span>`).join('<i class="dot">·</i>')}</div>`;
 }
 function bmQuestion(){
   if(S.mode==="pic")return bmPicQuestion();
@@ -2221,7 +2325,6 @@ function bmOpen(){
   if(S.turn===1)startDTimer(q.parts.length*.6);
 }
 function markNextSlot(){const q=S.q;document.querySelectorAll("#tprompt .lslot").forEach(sl=>sl.classList.toggle("next",Number(sl.dataset.i)===q.pos));}
-function sylAt(W,pos){let n=0;for(let i=0;i<W.sk.length;i++){n+=W.sk[i].length;if(pos<n)return i;}return W.sk.length-1;}
 function onBMTile(btn){
   const q=S.q;if(S.phase!=="answer"||!q||btn.disabled||!q.parts)return;
   const t=q.tiles[Number(btn.dataset.t)],need=q.parts[q.pos],p=S.turn;
@@ -2230,17 +2333,23 @@ function onBMTile(btn){
     const sl=document.querySelector(`#tprompt .lslot[data-i="${q.pos}"]`);if(sl){sl.textContent=t;sl.classList.add("fill");}
     q.pos++;sfx.tick(q.pos);
     document.querySelectorAll("#tchoices .tile.hint").forEach(b=>b.classList.remove("hint"));
-    if(q.kind==="sk")sayBMSyl(q.word,q.pos-1);
-    else{const si=sylAt(q.word,q.pos-1);if(q.pos===q.word.sk.slice(0,si+1).join("").length)sayBMSyl(q.word,si);}
-    if(q.pos>=q.parts.length){S.phase="done";return later(()=>mathRight(p,document.querySelector("#tprompt .slots")),450);}
+    /* Suku Kata says the syllable; Eja! says each letter's Malay sound, and blends the syllable when it's complete */
+    const last=q.pos>=q.parts.length,i=q.pos-1,g=guard();
+    let ended=false;const fin=()=>{if(ended)return;ended=true;if(last)later(g(()=>mathRight(p,document.querySelector("#tprompt .slots"))),150);};
+    if(q.kind==="sk")sayBMSyl(q.word,i,{onend:fin});
+    else sayBMLetter(q.word,i,last||q.word.us[q.pos]!==q.word.us[i],{onend:fin});
+    if(last){S.phase="done";$("ttimer").hidden=true;later(fin,2600);return;}
     return markNextSlot();
   }
   btn.classList.remove("nope");void btn.offsetWidth;btn.classList.add("nope");sfx.wrong();
   if(p===1)return mathMiss(1,false);
-  /* her mistakes: Luna says the syllable she's on; after two, the right tile glows */
+  /* her mistakes: Luna sounds out the syllable she's on in Malay letter sounds ("k… e… ke"); after two misses
+     she says just the sound that's needed and the right tile glows */
   q.misses++;S.mstreak=0;renderStreak();markTricky("bm"+q.word.w);
-  const si=q.kind==="sk"?q.pos:sylAt(q.word,q.pos);
-  setBubble(`Listen: “${q.word.sk[si]}”`);sayBMSyl(q.word,si);
+  const W=q.word,si=q.kind==="sk"?q.pos:W.us[q.pos];
+  if(q.kind==="sk"){setBubble(`Listen: “${W.sk[si]}”`);if(q.misses>=2)soundOut(W,si);else sayBMSyl(W,si);}
+  else if(q.misses<2){setBubble(`Listen: ${W.units.filter((u,i)=>W.us[i]===si).map(u=>u.t).join(" · ")}… “${W.sk[si]}”`);soundOut(W,si);}
+  else{setBubble(`Listen: “${need}”… “${W.sk[si]}”`);sayBMLetter(W,q.pos,true);}
   if(q.misses>=2){const right=[...document.querySelectorAll("#tchoices .tile")].find(b=>!b.disabled&&q.tiles[Number(b.dataset.t)]===need);if(right)right.classList.add("hint");}
 }
 /* ---- Cari Gambar: read the word, find its picture ---- */
@@ -2354,7 +2463,7 @@ function showHome(){
 function setSubject(s){
   s=s==="math"||s==="bm"?s:"read";S.settings.subject=s;saveSettings();
   $("tabRead").setAttribute("aria-selected",String(s==="read"));$("tabMath").setAttribute("aria-selected",String(s==="math"));$("tabBM").setAttribute("aria-selected",String(s==="bm"));
-  $("gamesRead").hidden=s!=="read";$("gamesMath").hidden=s!=="math";$("gamesBM").hidden=s!=="bm";
+  $("gamesRead").hidden=s!=="read";$("gamesMath").hidden=s!=="math";$("gamesBM").hidden=s!=="bm";$("bunyiBtn").hidden=s!=="bm";
   renderBMHome();
   const named=(S.settings.kid||"").trim();
   $("hello").textContent=named?`Hi, ${named}!`:s==="math"?"Ready to count?":"Ready to read?";
@@ -2406,9 +2515,28 @@ function renderBMWords(){
   pickMsVoice();
   const L=bmList();
   $("bmWords").innerHTML=L.map((W,i)=>`<button type="button" data-bw="${i}">${bmPic(W)}<span>${esc(W.sk.join("·"))}${W.en?` <small>${esc(W.en)}</small>`:""}${W.rec?"":` <small>(tablet voice)</small>`}</span></button>`).join("");
-  $("bmVoiceSeg").innerHTML=[["luna","Luna"],["device","Tablet's Malay voice"]].map(([v,t])=>`<button type="button" role="radio" data-bv="${v}" aria-checked="${(S.settings.bmVoice||"luna")===v}">${t}</button>`).join("");
-  $("bmVoiceNote").textContent=msVoice?`This tablet's Malay voice: ${msVoice.name}. Words Luna hasn't recorded always use it.`:"No Malay voice found on this tablet yet, so Luna reads the words. (On iPad: Settings → Accessibility → Spoken Content → Voices → Malay. On Android: install Malay in Google's text-to-speech.)";
+  $("bmVoiceSeg").innerHTML=[["luna","Recorded"],["device","Tablet's Malay voice"]].map(([v,t])=>`<button type="button" role="radio" data-bv="${v}" aria-checked="${(S.settings.bmVoice||"luna")===v}">${t}</button>`).join("");
+  $("bmVoiceNote").textContent=msVoice?`This tablet's Malay voice: ${msVoice.name}. Words that weren't recorded always use it.`:"No Malay voice found on this tablet yet, so the recorded voice reads the words. (On iPad: Settings → Accessibility → Spoken Content → Voices → Malay. On Android: install Malay in Google's text-to-speech.)";
 }
+/* Bunyi Huruf: the Malay letter sounds, each followed by a word that has it (home, Bahasa tab, and Settings) */
+const BUNYI_GROUPS=[["v","Vokal","vowels"],["k","Konsonan","consonants"],["j","Huruf bergabung","two letters, one sound"],["d","Diftong","gliding vowels"]];
+function renderBunyi(box){
+  box.innerHTML=BUNYI_GROUPS.map(([g,ms,en])=>`<h3>${ms} <small>${en}</small></h3><div class="abc">${BM.sounds.filter(d=>d.g===g).map(d=>
+    `<button type="button" class="${g}" data-bs="${d.id}" aria-label="${esc(d.t)}, as in ${esc(d.ex)}"><span>${esc(d.t)}</span><span class="pic" aria-hidden="true">${d.pic}</span><small>${esc(d.ex)}</small></button>`).join("")}</div>`).join("");
+}
+function playBunyi(b){
+  audio();const d=BM_SOUND[b.dataset.bs];if(!d)return;
+  document.querySelectorAll(".bunyi-chart button").forEach(x=>x.classList.toggle("on",x===b));
+  const line=$("bunyiSay");if(line&&!$("bunyiOv").hidden)line.textContent=`${d.t}… ${d.ex}`;
+  say(["m/b_"+d.id,"m/x_"+d.id],`${d.t}… ${d.ex}`,{gap:.5,onend:()=>b.classList.remove("on")});
+}
+function openBunyi(){
+  audio();const ov=$("bunyiOv");ov.hidden=false;ov.scrollTop=0;
+  $("bunyiSay").textContent="Tap a letter to hear its sound in Bahasa Melayu.";
+  preloadClips(BM.sounds.flatMap(d=>["m/b_"+d.id,"m/x_"+d.id]));
+  try{$("bunyiDone").focus({preventScroll:true});}catch(e){}
+}
+function closeBunyi(){if($("bunyiOv").hidden)return;$("bunyiOv").hidden=true;hush();}
 /* Settings → Letter sounds: each letter's phonics sound, then a picture word that has it. */
 const ABC=[["a","cat"],["b","bed"],["c","cup"],["d","dog"],["e","pen"],["f","fox"],["g","get"],["h","hat"],["i","pig"],["j","jam"],["k","kid"],["l","leg"],["m","map"],["n","net"],["o","dog"],["p","pin"],["r","red"],["s","sun"],["t","ten"],["u","bus"],["v","van"],["w","web"],["x","box"],["y","yes"],["z","zip"]];
 function playLetter(b){
@@ -2496,6 +2624,11 @@ function bind(){
   /* Two players touching at once must not turn into an iPad pinch-zoom that swallows the taps. */
   ["gesturestart","gesturechange","gestureend"].forEach(t=>document.addEventListener(t,e=>{if(inGame())e.preventDefault();},{passive:false}));
   $("abc").addEventListener("click",e=>{const b=e.target.closest("[data-l]");if(b)playLetter(b);});
+  renderBunyi($("bunyiChart"));renderBunyi($("bunyiSet"));
+  for(const id of ["bunyiChart","bunyiSet"])$(id).addEventListener("click",e=>{const b=e.target.closest("[data-bs]");if(b)playBunyi(b);});
+  $("bunyiBtn").addEventListener("click",openBunyi);
+  $("bunyiDone").addEventListener("click",closeBunyi);
+  $("bunyiOv").addEventListener("click",e=>{if(e.target===e.currentTarget)closeBunyi();});
   $("bmIn").addEventListener("input",e=>{const v=e.target.value;S.settings.bmList=v.trim()===BM_DEFAULT_TEXT.trim()?"":v;saveSettings();renderBMWords();renderBMHome();});
   $("bmWords").addEventListener("click",e=>{const b=e.target.closest("[data-bw]");if(!b)return;audio();const W=bmList()[Number(b.dataset.bw)];if(!W)return;
     document.querySelectorAll("#bmWords button").forEach(x=>x.classList.toggle("on",x===b));
@@ -2513,7 +2646,7 @@ function bind(){
   $("gearBtn").addEventListener("click",openSettings);
   $("doneBtn").addEventListener("click",closeSettings);
   $("settingsOv").addEventListener("click",e=>{if(e.target===e.currentTarget)closeSettings();});
-  document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeSettings();closeBook();}});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeSettings();closeBook();closeBunyi();}});
   $("lunaBtn").addEventListener("click",hiLuna);
   $("judge1").addEventListener("click",e=>{const b=e.target.closest("[data-ok]");if(b)judge(b.dataset.ok==="1");});
   document.addEventListener("visibilitychange",()=>{if(document.hidden){if(inGame())openPause();syncNow();}else{if(inGame())wakeLock();queueSync(800);}});
