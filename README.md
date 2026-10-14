@@ -33,7 +33,7 @@ This week's Bahasa Melayu spelling (ejaan) words, learnt by suku kata the way sc
 
 Bahasa Melayu has its own phonics, so it never uses the English letter sounds: a is always "a" as in *ayam*; e is the soft pepet of *emak* (or the é of *merah*, the taling); i, o and u are pure; c is "ch"; g is always hard; r is rolled; a final h is breathed; p, t and k have no puff of air; ng, ny, sy and kh are single sounds; ai, au and oi glide. When typing a new word with a taling e, write é (e.g. "mérah = red").
 
-The recorded words use a separate Malay voice; words added later are read by the tablet's own Malay voice (Settings can also switch every Malay word to that voice).
+The recorded words use a native Malaysian Malay voice (see below); words added later are read by the tablet's own Malay voice (Settings can also switch every Malay word to that voice).
 
 ### Sticker book
 
@@ -62,18 +62,27 @@ GitHub Pages serves this repository's `main` branch. Every push to `main` update
 
 Luna's cheers, every reading word and every number from 0 to 100 are pre-recorded clips in `audio/`, made with the open Kokoro text-to-speech model (voice `af_heart`, pitched up for a cute, child-like sound at normal speed). If a clip can't play, the game falls back to the device's own voice.
 
-The Bahasa Melayu words, syllables, cheers and letter sounds use a different voice: Kokoro has no Malay voice, and its Hindi voice (`hf_alpha`) is the closest to Malay: p, t and k without English's puff of air, pure vowels and a true pepet. It speaks hand-written Malay phonemes. That voice tends to hum before a word and to let a tiny echo vowel out after a final p, t or k; the script cuts both off, breathes a clear final h onto words like *tanah* and *benih* (the voice drops it, or says "ah" as "eh"), and keeps the cleanest of several takes. The Malay letter sounds are cut from Malay syllables the same way as the English ones; for each vowel the take whose formants sit closest to the Malay vowel is kept. Malay r is rolled, which no voice does, so the r sound is a held pepet broken by quick tongue taps.
+The Bahasa Melayu words, syllables, cheers and letter sounds use a native Malaysian voice instead: Mesolitica's [VITS-yasmin](https://huggingface.co/mesolitica/VITS-yasmin), a text-to-speech model trained on Malaysian Malay speech (the voice code in `tools/malay_vits/` is MIT-licensed, from [malaya-speech](https://github.com/mesolitica/malaya-speech)). It reads ordinary Malay spelling, so it says pepet and taling e, rolled r and pure vowels the way a Malaysian does. Its model page doesn't state a licence for the voice itself, so the model isn't included here, only the clips made with it for this family game. Meta's MMS Malay voice was also tried and was understood less well. `tools/malay_voice.py` makes every Malay clip and checks it before it's kept:
+
+- **Every vowel is measured.** Each word is cut into its syllables and the vowel of each is measured (formants, at the loudest part of the syllable) against the dictionary pronunciation, so a pepet is a pepet (*lebah*, not *lébah*) and an a is an a (*enam*, not *anam*). The voice decides pepet or taling from the whole text it's given, so each word is said a few ways (different endings and speeds), and of the takes with every vowel right, the one whose vowels are clearest is kept (*pokok* with two full o's, not the second drifting towards u). *helang* came out as *hélang* every time, so Gabung's h + e has no picture word (its syllable "he" is breathed onto a pepet from another word); *gigi* always started with a hiss ("jigi"), so gi's picture is now *gincu*; *mi* is now *misai*; and the cheer *Hebat!* (said too close to *hibat*) is now *Bijak!* When a word is still off on its own, it's lifted out of a short phrase (*seekor kucing*, *ada duit*), where the voice says it more carefully.
+- **Consonants are checked too:** b, d, g and j must be voiced (*gajah*, not *kajah*), p, t and k must not have an English puff of air, and a weak h is made clear (the voice says *hotel* almost as *otel* and *benih* as *beni*), with breath in the colour of its vowel, which is what h is.
+- **Syllables** (for Suku Kata, Eja! and Gabung!) are cut from real words where the voice says them right: on its own, "be" is read as the English letter name "bee". The syllable's vowel is checked before and after it's held a little longer.
+- **Letter sounds** follow the Malay phonics module of Mohamad Rozi Kasim, *Pembangunan Model Kesedaran Bunyi Fonem Bahasa Melayu* (Jurnal Pendidikan Bahasa Melayu 15(2), 2025): the six vowels a, e (pepet), é (taling), i, o, u; consonants with a short "eh" ([beh], [ceh], [deh] … [ngeh], [nyeh], [syeh], [kheh]); s, f, m, n, l and ng held ("sss", "mmm"); and the diphthongs ai, au, oi.
+
+One word still measures a little off and was kept: the u of *kuat* glides towards the a after it (ku-wat), which is how it's said. Settings → **Check every Malay recording** plays every Malay clip so a grown-up can listen before she does: tap ✗ on any that sounds wrong, then **Copy the list** and send it to be re-made.
 
 Reading words, numbers and the letter sounds are in British English, the way phonics is taught in Malaysian schools ("o" as in "on", "a" as in "ant"). Each letter sound is cut out of a real word at the exact frames where that sound is, so consonants are pure (no "buh" or "kah") and every vowel is the right short vowel; the script checks each one (voicing, vowel shape, length) and also re-takes any word that would start with a stray "uh". Settings → **Letter sounds** plays every sound with a word that has it.
 
 To change a line, edit the `<script id="lines">` block in `index.html`, then re-record from the repository root:
 
 ```
-pip install kokoro-onnx soundfile praat-parselmouth scipy
+pip install kokoro-onnx soundfile praat-parselmouth scipy torch
 python3 tools/make_voice.py
 ```
 
-Only clips whose text changed are re-recorded. New words added to the word lists are recorded the same way.
+The Malay voice isn't downloaded by the script: get `model.pth` and `config.json` from [huggingface.co/mesolitica/VITS-yasmin](https://huggingface.co/mesolitica/VITS-yasmin) into one folder and pass it with `--bm-model-dir` (default `~/.cache/malay-tts/VITS-yasmin`).
+
+Only clips whose text changed are re-recorded (and every Malay clip when the Malay voice code changes). New words added to the word lists are recorded the same way.
 
 ## Files
 
@@ -83,6 +92,7 @@ Only clips whose text changed are re-recorded. New words added to the word lists
 | `sw.js` | Keeps the game playable offline, including Luna's voice |
 | `audio/` | Luna's recorded lines (`p/`), reading words (`w/`), letter sounds (`s/`), numbers (`n/`) and Bahasa Melayu words, syllables, cheers, meanings, letter sounds and their example words (`m/`) |
 | `tools/make_voice.py` | Records the voice clips |
+| `tools/malay_voice.py` | Makes and checks the Bahasa Melayu clips with the native Malay voice (`tools/malay_vits/`: its MIT-licensed model code) |
 | `manifest.webmanifest` | App name, icon and full-screen setting |
 | `fonts/` | Andika (reading font) and Grandstander (title font) |
 | `icons/` | Home-screen icons |

@@ -121,6 +121,23 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 .bunyi-chart .abc .d{background:#e8e0ff;box-shadow:0 4px 0 #b9a6f2}
 .bunyi-chart .abc button.on{background:var(--sun);box-shadow:0 4px 0 var(--sun-deep)}
 .bunyi-chart .pic{font-size:1.6rem;line-height:1}
+/* Settings → check every Malay recording */
+.semak-sheet{max-width:960px}
+.semak-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.semak-bar .count{flex:1 1 220px;font:800 1rem/1.3 var(--font-read);color:var(--sun)}
+.semak-text{width:100%;min-height:7em;border-radius:14px;border:0;padding:.7em;font:600 .95rem/1.4 var(--font-read)}
+.semak-list h3{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:16px 0 8px;font-family:var(--font-display);font-weight:900;font-size:1.15rem;color:var(--snow)}
+.semak-list h3 small{font-family:var(--font-read);font-weight:700;font-size:.85rem;opacity:.75}
+.semak-list h3 .btn{padding:.35em .9em;font-size:.9rem}
+.semak-group{display:flex;flex-wrap:wrap;gap:8px}
+.sk{display:inline-flex;align-items:stretch;border-radius:14px;background:var(--snow);box-shadow:0 3px 0 var(--snow-2);overflow:hidden}
+.sk button{appearance:none;border:0;background:none;color:var(--ink);font:700 1.08rem/1.1 var(--font-read);padding:.45em .55em .45em .65em}
+.sk .sk-x{color:var(--ink-soft);border-left:1px solid var(--snow-2);padding:.45em .6em;font-size:.95rem}
+.sk.heard .sk-play::after{content:"\2713";margin-left:.35em;font-size:.8em;color:#2f9e5b}
+.sk.on{background:var(--sun);box-shadow:0 3px 0 var(--sun-deep)}
+.sk.bad{background:#ffd5d8;box-shadow:0 3px 0 #ea9aa2}
+.sk.bad .sk-x{color:#c2182b;font-weight:900}
+.sk.missing{opacity:.55;outline:2px dashed #ea9aa2}
 /* reading / maths tabs */
 .subj{display:inline-flex;gap:6px;padding:5px;border-radius:999px;background:rgba(253,251,255,.12)}
 .subj button{appearance:none;border:0;border-radius:999px;padding:.38em 1em;font:900 clamp(1.05rem,2.4vw,1.4rem) var(--font-display);color:var(--snow);background:transparent}
@@ -876,6 +893,7 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
         <h2>Bunyi huruf (Malay letter sounds)</h2>
         <p class="note">Bahasa Melayu is read with its own sounds, not English ones, and Eja! uses these: a is always "a" as in <i>ayam</i>; e is usually the soft pepet of <i>emak</i> and sometimes the é of <i>merah</i> (taling); i, o and u are pure; c is "ch"; g is always hard; r is rolled; a final h is breathed; p, t and k have no puff of air; ng, ny, sy and kh are one sound each. Tap a sound to hear it, then a word with it.</p>
         <div class="bunyi-chart" id="bunyiSet"></div>
+        <div class="actions"><button class="btn" id="semakBtn" type="button">Check every Malay recording</button></div>
       </div>
 
       <div class="panel">
@@ -895,6 +913,16 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
       </div>
       <p class="note" id="ttsNote" hidden>This browser can't speak words out loud, so Luna's voice is off. Each round, the word appears on your side for you to say, then her cards appear.</p>
     </div>
+</div>
+
+<div id="semakOv" class="overlay sheet-ov" hidden>
+  <div class="sheet semak-sheet" role="dialog" aria-modal="true" aria-labelledby="semakTitle">
+    <div class="sheet-head"><h2 id="semakTitle">Check the Malay sounds</h2><button type="button" class="btn done" id="semakDone">Close</button></div>
+    <p class="note">Every Malay recording in the game, for a grown-up to check before she hears it. Tap one to hear it (a tick shows you've heard it), or play a whole group. If a sound is not right, tap its ✗ to mark it. Then copy the list and send it, and those recordings will be re-made. A mark stays until that recording changes.</p>
+    <div class="semak-bar"><span class="count" id="semakCount" aria-live="polite"></span><button type="button" class="btn" id="semakCopy">Copy the list</button><button type="button" class="btn" id="semakClear">Clear marks</button></div>
+    <textarea class="semak-text" id="semakText" readonly hidden aria-label="Recordings marked wrong"></textarea>
+    <div class="semak-list" id="semakList"></div>
+  </div>
 </div>
 
 <div id="win" class="overlay" hidden>
@@ -1054,7 +1082,7 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
     "mu": "mˈu", "me": "mˈɨ", "mo": "mˈo", "na": "nˈa", "ni": "nˈi", "nu": "nˈu", "ne": "nˈɨ", "no": "nˈo", "pa": "pˈa", "pi": "pˈi",
     "pu": "pˈu", "pe": "pˈɨ", "po": "pˈo", "ra": "ɾˈa", "ru": "ɾˈu", "re": "ɾˈɨ", "ro": "ɾˈo", "sa": "sˈa", "si": "sˈi", "su": "sˈu",
     "se": "sˈɨ", "so": "sˈo", "ti": "tˈi", "tu": "tˈu", "te": "tˈɨ", "to": "tˈo"},
-  "cheers": {"betul": ["bətˈul", "Betul!"], "bagus": ["baɡˈus", "Bagus!"], "pandai": ["pˈandai", "Pandai!"], "hebat": ["hebˈat", "Hebat!"], "syabas": ["ʃabˈas", "Syabas!"]},
+  "cheers": {"betul": ["bətˈul", "Betul!"], "bagus": ["baɡˈus", "Bagus!"], "pandai": ["pˈandai", "Pandai!"], "bijak": ["bidʒˈak", "Bijak!"], "syabas": ["ʃabˈas", "Syabas!"]},
   "sounds": [
     {"id": "a", "t": "a", "g": "v", "ex": "ayam", "ph": "ajˈam", "pic": "🐔"},
     {"id": "e", "t": "e", "g": "v", "ex": "enam", "ph": "ənˈam", "pic": "6️⃣"},
@@ -1103,14 +1131,13 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
     "de": {"w": "dengar", "ph": "dəŋˈaɾ", "pic": "👂"},
     "do": {"w": "donat", "ph": "donˈat", "pic": "🍩"},
     "ga": {"w": "gajah", "ph": "ɡadʒˈah", "pic": "🐘"},
-    "gi": {"w": "gigi", "ph": "ɡˈiɡi", "pic": "🦷"},
+    "gi": {"w": "gincu", "ph": "ɡˈintʃu", "pic": "💄"},
     "gu": {"w": "gunung", "ph": "ɡunˈuŋ", "pic": "⛰️"},
     "ge": {"w": "gelas", "ph": "ɡəlˈas", "pic": "🥃"},
     "go": {"w": "gorila", "ph": "ɡoɾˈila", "pic": "🦍"},
     "ha": {"w": "hati", "ph": "hˈati", "pic": "❤️"},
     "hi": {"w": "hidung", "ph": "hidˈuŋ", "pic": "👃"},
     "hu": {"w": "hujan", "ph": "hudʒˈan", "pic": "🌧️"},
-    "he": {"w": "helang", "ph": "həlˈaŋ", "pic": "🦅"},
     "ho": {"w": "hoki", "ph": "hˈoki", "pic": "🏑"},
     "ka": {"w": "kaki", "ph": "kˈaki", "pic": "🦶"},
     "ki": {"w": "kilat", "ph": "kilˈat", "pic": "⚡"},
@@ -1123,7 +1150,7 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
     "le": {"w": "lebah", "ph": "ləbˈah", "pic": "🐝"},
     "lo": {"w": "lori", "ph": "lˈoɾi", "pic": "🚚"},
     "ma": {"w": "mata", "ph": "mˈata", "pic": "👁️"},
-    "mi": {"w": "mi", "ph": "mˈi", "pic": "🍜"},
+    "mi": {"w": "misai", "ph": "mˈisai", "pic": "🥸"},
     "mu": {"w": "muka", "ph": "mˈuka", "pic": "😊"},
     "me": {"w": "menara", "ph": "mənˈaɾa", "pic": "🗼"},
     "mo": {"w": "monyet", "ph": "moɲˈet", "pic": "🐒"},
@@ -1535,7 +1562,7 @@ function speak(text,opt){
   later(finish,1500+text.length*90/rate);
 }
 /* Main voice: Luna's recorded clips (audio/p/* for lines, audio/w/* for words), played back to back. */
-const VOICE_VERSION="bedb9964";  /* set by tools/make_voice.py whenever the clips change */
+const VOICE_VERSION="4252f2af";  /* set by tools/make_voice.py whenever the clips change */
 const clipCache=new Map();
 let sayGen=0,sayNodes=[];
 function loadClip(key){
@@ -2754,7 +2781,7 @@ function renderBMWords(){
   pickMsVoice();
   const L=bmList();
   $("bmWords").innerHTML=L.map((W,i)=>`<button type="button" data-bw="${i}">${bmPic(W)}<span>${esc(W.sk.join("·"))}${W.en?` <small>${esc(W.en)}</small>`:""}${W.rec?"":` <small>(tablet voice)</small>`}</span></button>`).join("");
-  $("bmVoiceSeg").innerHTML=[["luna","Recorded"],["device","Tablet's Malay voice"]].map(([v,t])=>`<button type="button" role="radio" data-bv="${v}" aria-checked="${(S.settings.bmVoice||"luna")===v}">${t}</button>`).join("");
+  $("bmVoiceSeg").innerHTML=[["luna","Recorded Malaysian voice"],["device","Tablet's Malay voice"]].map(([v,t])=>`<button type="button" role="radio" data-bv="${v}" aria-checked="${(S.settings.bmVoice||"luna")===v}">${t}</button>`).join("");
   $("bmVoiceNote").textContent=msVoice?`This tablet's Malay voice: ${msVoice.name}. Words that weren't recorded always use it.`:"No Malay voice found on this tablet yet, so the recorded voice reads the words. (On iPad: Settings → Accessibility → Spoken Content → Voices → Malay. On Android: install Malay in Google's text-to-speech.)";
 }
 /* Bunyi Huruf: the Malay letter sounds, each followed by a word that has it (home, Bahasa tab, and Settings) */
@@ -2776,6 +2803,81 @@ function openBunyi(){
   try{$("bunyiDone").focus({preventScroll:true});}catch(e){}
 }
 function closeBunyi(){if($("bunyiOv").hidden)return;$("bunyiOv").hidden=true;hush();}
+/* Settings → Check the Malay sounds: every Malay recording, for a grown-up to hear and mark. Marks are kept
+   against each clip's signature in audio/list.json, so a mark disappears once that recording is re-made. */
+const SEMAK_KEY="wss.semak";
+const SEMAK={sig:{},wrong:{},heard:{},gen:0};
+function semakGroups(){
+  return [
+    ["Bunyi huruf","letter sounds",BM.sounds.map(d=>["m/b_"+d.id,d.t,"letter sound",d.ex])],
+    ["Contoh perkataan","sound chart words",BM.sounds.map(d=>["m/x_"+d.id,d.ex,"chart word for "+d.t])],
+    ["Suku kata","syllables",Object.keys(BM.syllables).map(x=>["m/s_"+x,x,"syllable"])],
+    ["Gabung!","train picture words",Object.entries(BM.gabung).map(([x,d])=>["m/g_"+x,d.w,"Gabung word for "+x])],
+    ["Ejaan","spelling words",BM.words.map(d=>["m/w_"+d.w,d.w,"spelling word"])],
+    ["Pujian","cheers",Object.entries(BM.cheers).map(([c,v])=>["m/c_"+c,v[1],"cheer"])]];
+}
+function semakLoad(){
+  try{const o=JSON.parse(localStorage.getItem(SEMAK_KEY)||"{}");SEMAK.wrong=o.wrong||{};SEMAK.heard=o.heard||{};}catch(e){}
+}
+function semakSave(){try{localStorage.setItem(SEMAK_KEY,JSON.stringify({wrong:SEMAK.wrong,heard:SEMAK.heard}));}catch(e){}}
+const semakSig=k=>SEMAK.sig[k]||VOICE_VERSION;
+const semakIs=(map,k)=>map[k]===semakSig(k);
+function renderSemak(){
+  $("semakList").innerHTML=semakGroups().map(([ms,en,items],gi)=>`<h3>${ms} <small>${en}</small><button type="button" class="btn" data-sgroup="${gi}">Play all</button></h3><div class="semak-group">${items.map(([k,t,what,ex])=>
+    `<span class="sk${semakIs(SEMAK.wrong,k)?" bad":""}${semakIs(SEMAK.heard,k)?" heard":""}" data-k="${k}"><button type="button" class="sk-play" aria-label="Play ${esc(what)} ${esc(t)}">${esc(t)}${ex?` <small>(${esc(ex)})</small>`:""}</button><button type="button" class="sk-x" aria-pressed="${semakIs(SEMAK.wrong,k)}" aria-label="Mark ${esc(t)} as wrong">✗</button></span>`).join("")}</div>`).join("");
+  semakCount();
+}
+function semakCount(){
+  const all=semakGroups().flatMap(g=>g[2].map(i=>i[0]));
+  const heard=all.filter(k=>semakIs(SEMAK.heard,k)).length,bad=all.filter(k=>semakIs(SEMAK.wrong,k)).length;
+  $("semakCount").textContent=`${heard} of ${all.length} heard · ${bad} marked wrong`;
+}
+function semakEl(k){return document.querySelector(`#semakList .sk[data-k="${k}"]`);}
+function semakStop(){SEMAK.gen++;hush();document.querySelectorAll("#semakList .sk.on").forEach(x=>x.classList.remove("on"));}
+/* plays clips one after another, exactly as recorded (no fallback to the tablet's voice) */
+function semakPlay(keys){
+  semakStop();const gen=SEMAK.gen,ctx=audio();let i=0;
+  const next=()=>{
+    if(gen!==SEMAK.gen)return;
+    document.querySelectorAll("#semakList .sk.on").forEach(x=>x.classList.remove("on"));
+    if(i>=keys.length)return;
+    const k=keys[i++],el=semakEl(k);
+    if(el){el.classList.add("on");el.scrollIntoView({block:"nearest",behavior:"smooth"});}
+    if(!ctx){if(el)el.classList.add("missing");setTimeout(next,200);return;}
+    loadClip(k).then(buf=>{
+      if(gen!==SEMAK.gen)return;
+      const n=ctx.createBufferSource();n.buffer=buf;n.connect(ctx.destination);n.start();sayNodes.push(n);
+      n.onended=()=>{if(gen!==SEMAK.gen)return;SEMAK.heard[k]=semakSig(k);semakSave();if(el)el.classList.add("heard");semakCount();setTimeout(next,keys.length>1?450:0);};
+    }).catch(()=>{if(el)el.classList.add("missing");setTimeout(next,200);});
+  };
+  next();
+}
+function semakMark(k){
+  if(semakIs(SEMAK.wrong,k))delete SEMAK.wrong[k];else SEMAK.wrong[k]=semakSig(k);
+  semakSave();const el=semakEl(k),on=semakIs(SEMAK.wrong,k);
+  if(el){el.classList.toggle("bad",on);el.querySelector(".sk-x").setAttribute("aria-pressed",String(on));}
+  semakCount();
+}
+function semakList(){
+  const lines=semakGroups().flatMap(([ms,en,items])=>items.filter(i=>semakIs(SEMAK.wrong,i[0])).map(([k,t,what])=>`• ${what} “${t}”  [${k}]`));
+  const day=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
+  return lines.length?`Word Snap Showdown: Malay recordings that sound wrong (${day}, recordings ${VOICE_VERSION})\n${lines.join("\n")}`:"";
+}
+function semakCopy(){
+  const text=semakList(),box=$("semakText");
+  if(!text){box.hidden=false;box.value="Nothing is marked wrong yet. Tap ✗ next to a recording that doesn't sound right.";return;}
+  box.hidden=false;box.value=text;
+  const done=()=>{$("semakCopy").textContent="Copied!";setTimeout(()=>{$("semakCopy").textContent="Copy the list";},1800);};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(done,()=>{box.focus();box.select();});
+  else{box.focus();box.select();try{document.execCommand("copy");done();}catch(e){}}
+}
+function openSemak(){
+  audio();semakLoad();const ov=$("semakOv");ov.hidden=false;ov.scrollTop=0;$("semakText").hidden=true;
+  renderSemak();
+  fetch(`audio/list.json?v=${VOICE_VERSION}`).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.clips){SEMAK.sig=j.clips;renderSemak();}}).catch(()=>{});
+  try{$("semakDone").focus({preventScroll:true});}catch(e){}
+}
+function closeSemak(){if($("semakOv").hidden)return;semakStop();$("semakOv").hidden=true;}
 /* Settings → Letter sounds: each letter's phonics sound, then a picture word that has it. */
 const ABC=[["a","cat"],["b","bed"],["c","cup"],["d","dog"],["e","pen"],["f","fox"],["g","get"],["h","hat"],["i","pig"],["j","jam"],["k","kid"],["l","leg"],["m","map"],["n","net"],["o","dog"],["p","pin"],["r","red"],["s","sun"],["t","ten"],["u","bus"],["v","van"],["w","web"],["x","box"],["y","yes"],["z","zip"]];
 function playLetter(b){
@@ -2869,6 +2971,16 @@ function bind(){
   $("abc").addEventListener("click",e=>{const b=e.target.closest("[data-l]");if(b)playLetter(b);});
   renderBunyi($("bunyiChart"));renderBunyi($("bunyiSet"));
   for(const id of ["bunyiChart","bunyiSet"])$(id).addEventListener("click",e=>{const b=e.target.closest("[data-bs]");if(b)playBunyi(b);});
+  $("semakBtn").addEventListener("click",openSemak);
+  $("semakDone").addEventListener("click",closeSemak);
+  $("semakOv").addEventListener("click",e=>{if(e.target===e.currentTarget)closeSemak();});
+  $("semakCopy").addEventListener("click",semakCopy);
+  $("semakClear").addEventListener("click",()=>{SEMAK.wrong={};SEMAK.heard={};semakSave();renderSemak();$("semakText").hidden=true;});
+  $("semakList").addEventListener("click",e=>{
+    const g=e.target.closest("[data-sgroup]");if(g){semakPlay(semakGroups()[+g.dataset.sgroup][2].map(i=>i[0]));return;}
+    const sk=e.target.closest(".sk");if(!sk)return;
+    if(e.target.closest(".sk-x"))semakMark(sk.dataset.k);else semakPlay([sk.dataset.k]);
+  });
   $("bunyiBtn").addEventListener("click",openBunyi);
   $("bunyiDone").addEventListener("click",closeBunyi);
   $("bunyiOv").addEventListener("click",e=>{if(e.target===e.currentTarget)closeBunyi();});
@@ -2889,7 +3001,7 @@ function bind(){
   $("gearBtn").addEventListener("click",openSettings);
   $("doneBtn").addEventListener("click",closeSettings);
   $("settingsOv").addEventListener("click",e=>{if(e.target===e.currentTarget)closeSettings();});
-  document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeSettings();closeBook();closeBunyi();}});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(!$("semakOv").hidden){closeSemak();return;}closeSettings();closeBook();closeBunyi();}});
   $("lunaBtn").addEventListener("click",hiLuna);
   $("judge1").addEventListener("click",e=>{const b=e.target.closest("[data-ok]");if(b)judge(b.dataset.ok==="1");});
   document.addEventListener("visibilitychange",()=>{if(document.hidden){if(inGame())openPause();syncNow();}else{if(inGame())wakeLock();queueSync(800);}});
