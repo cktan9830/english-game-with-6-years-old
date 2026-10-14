@@ -119,6 +119,7 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 .bunyi-chart .abc .v{background:#ffe3ef;box-shadow:0 4px 0 #f3a7c6}
 .bunyi-chart .abc .j{background:#ddf3ff;box-shadow:0 4px 0 #94cdee}
 .bunyi-chart .abc .d{background:#e8e0ff;box-shadow:0 4px 0 #b9a6f2}
+.bunyi-chart .abc .p{background:#e9ecef;box-shadow:0 4px 0 #b9c0c8}
 .bunyi-chart .abc button.on{background:var(--sun);box-shadow:0 4px 0 var(--sun-deep)}
 .bunyi-chart .pic{font-size:1.6rem;line-height:1}
 /* Settings → check every Malay recording */
@@ -891,7 +892,7 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
 
       <div class="panel">
         <h2>Bunyi huruf (Malay letter sounds)</h2>
-        <p class="note">Bahasa Melayu is read with its own sounds, not English ones, and Eja! uses these: a is always "a" as in <i>ayam</i>; e is usually the soft pepet of <i>emak</i> and sometimes the é of <i>merah</i> (taling); i, o and u are pure; c is "ch"; g is always hard; r is rolled; a final h is breathed; p, t and k have no puff of air; ng, ny, sy and kh are one sound each. Tap a sound to hear it, then a word with it.</p>
+        <p class="note">Bahasa Melayu is read with its own sounds, not English ones, and Eja! uses these: a is always "a" as in <i>ayam</i>; e is usually the soft pepet of <i>emak</i> and sometimes the é of <i>merah</i> (taling); i, o and u are pure; c is "ch"; g is always hard; r is rolled; a final h is breathed; p, t and k have no puff of air; ng and ny are one sound each. f, z, sy and kh are borrowed sounds, found only in words from other languages (<i>filem</i>, <i>zirafah</i>, <i>syiling</i>, <i>khemah</i>), so they have their own group at the end. Tap a sound to hear it, then a word with it.</p>
         <div class="bunyi-chart" id="bunyiSet"></div>
         <div class="actions"><button class="btn" id="semakBtn" type="button">Check every Malay recording</button></div>
       </div>
@@ -1093,7 +1094,7 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
     {"id": "b", "t": "b", "g": "k", "ex": "bola", "ph": "bˈola", "pic": "⚽"},
     {"id": "c", "t": "c", "g": "k", "ex": "cicak", "ph": "tʃitʃˈaʔ", "pic": "🦎"},
     {"id": "d", "t": "d", "g": "k", "ex": "dadu", "ph": "dˈadu", "pic": "🎲"},
-    {"id": "f", "t": "f", "g": "k", "ex": "filem", "ph": "filˈəm", "pic": "🎬"},
+    {"id": "f", "t": "f", "g": "p", "ex": "filem", "ph": "filˈəm", "pic": "🎬"},
     {"id": "g", "t": "g", "g": "k", "ex": "gajah", "ph": "ɡadʒˈah", "pic": "🐘"},
     {"id": "h", "t": "h", "g": "k", "ex": "hujan", "ph": "hudʒˈan", "pic": "🌧️"},
     {"id": "j", "t": "j", "g": "k", "ex": "jam", "ph": "dʒˈam", "pic": "⏰"},
@@ -1107,11 +1108,11 @@ body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjus
     {"id": "t", "t": "t", "g": "k", "ex": "topi", "ph": "tˈopi", "pic": "🧢"},
     {"id": "w", "t": "w", "g": "k", "ex": "wau", "ph": "wˈau", "pic": "🪁"},
     {"id": "y", "t": "y", "g": "k", "ex": "yoyo", "ph": "jˈojo", "pic": "🪀"},
-    {"id": "z", "t": "z", "g": "k", "ex": "zirafah", "ph": "ziɾafˈah", "pic": "🦒"},
+    {"id": "z", "t": "z", "g": "p", "ex": "zirafah", "ph": "ziɾafˈah", "pic": "🦒"},
     {"id": "ng", "t": "ng", "g": "j", "ex": "bunga", "ph": "bˈuŋa", "pic": "🌸"},
     {"id": "ny", "t": "ny", "g": "j", "ex": "nyamuk", "ph": "ɲamˈuʔ", "pic": "🦟"},
-    {"id": "sy", "t": "sy", "g": "j", "ex": "syiling", "ph": "ʃilˈiŋ", "pic": "🪙"},
-    {"id": "kh", "t": "kh", "g": "j", "ex": "khemah", "ph": "xemˈah", "pic": "⛺"},
+    {"id": "sy", "t": "sy", "g": "p", "ex": "syiling", "ph": "ʃilˈiŋ", "pic": "🪙"},
+    {"id": "kh", "t": "kh", "g": "p", "ex": "khemah", "ph": "xemˈah", "pic": "⛺"},
     {"id": "ai", "t": "ai", "g": "d", "ex": "pantai", "ph": "pantˈai", "pic": "🏖️"},
     {"id": "au", "t": "au", "g": "d", "ex": "pulau", "ph": "pulˈau", "pic": "🏝️"},
     {"id": "oi", "t": "oi", "g": "d", "ex": "koboi", "ph": "kobˈoi", "pic": "🤠"}
@@ -2785,7 +2786,7 @@ function renderBMWords(){
   $("bmVoiceNote").textContent=msVoice?`This tablet's Malay voice: ${msVoice.name}. Words that weren't recorded always use it.`:"No Malay voice found on this tablet yet, so the recorded voice reads the words. (On iPad: Settings → Accessibility → Spoken Content → Voices → Malay. On Android: install Malay in Google's text-to-speech.)";
 }
 /* Bunyi Huruf: the Malay letter sounds, each followed by a word that has it (home, Bahasa tab, and Settings) */
-const BUNYI_GROUPS=[["v","Vokal","vowels"],["k","Konsonan","consonants"],["j","Huruf bergabung","two letters, one sound"],["d","Diftong","gliding vowels"]];
+const BUNYI_GROUPS=[["v","Vokal","vowels"],["k","Konsonan","consonants"],["j","Huruf bergabung","two letters, one sound"],["d","Diftong","gliding vowels"],["p","Huruf pinjaman","borrowed sounds, only in words from other languages"]];
 function renderBunyi(box){
   box.innerHTML=BUNYI_GROUPS.map(([g,ms,en])=>`<h3>${ms} <small>${en}</small></h3><div class="abc">${BM.sounds.filter(d=>d.g===g).map(d=>
     `<button type="button" class="${g}" data-bs="${d.id}" aria-label="${esc(d.t)}, as in ${esc(d.ex)}"><span>${esc(d.t)}</span><span class="pic" aria-hidden="true">${d.pic}</span><small>${esc(d.ex)}</small></button>`).join("")}</div>`).join("");

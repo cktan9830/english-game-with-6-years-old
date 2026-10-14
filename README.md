@@ -29,9 +29,9 @@ This week's Bahasa Melayu spelling (ejaan) words, learnt by suku kata the way sc
 - **Cari Gambar**: read the Malay word, tap its picture; Luna says what it means in English.
 - **Ujian Ejaan**: Luna reads each word (then syllable by syllable), she writes it on paper, taps Check, and the grown-up marks ✓ or ✗. Missed words come back at the end.
 
-- **Bunyi Huruf** (button under the games): the Malay letter-sound chart. Tap a letter to hear its sound, then a word with it (a… ayam, ny… nyamuk). It's also in Settings.
+- **Bunyi Huruf** (button under the games): the Malay letter-sound chart. Tap a letter to hear its sound, then a word with it (a… ayam, ny… nyamuk). The native Malay sounds come first; f, z, sy and kh, which Malay only has in borrowed words (*filem*, *zirafah*, *syiling*, *khemah*), are in their own group at the end, **Huruf pinjaman**. It's also in Settings.
 
-Bahasa Melayu has its own phonics, so it never uses the English letter sounds: a is always "a" as in *ayam*; e is the soft pepet of *emak* (or the é of *merah*, the taling); i, o and u are pure; c is "ch"; g is always hard; r is rolled; a final h is breathed; p, t and k have no puff of air; ng, ny, sy and kh are single sounds; ai, au and oi glide. When typing a new word with a taling e, write é (e.g. "mérah = red").
+Bahasa Melayu has its own phonics, so it never uses the English letter sounds: a is always "a" as in *ayam*; e is the soft pepet of *emak* (or the é of *merah*, the taling); i, o and u are pure; c is "ch"; g is always hard; r is rolled; a final h is breathed; p, t and k have no puff of air; ng, ny, sy and kh are single sounds (f, z, sy and kh are borrowed, found only in words from other languages); ai, au and oi glide. When typing a new word with a taling e, write é (e.g. "mérah = red").
 
 The recorded words use a native Malaysian Malay voice (see below); words added later are read by the tablet's own Malay voice (Settings can also switch every Malay word to that voice).
 
